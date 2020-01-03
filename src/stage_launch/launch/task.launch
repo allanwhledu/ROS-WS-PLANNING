@@ -1,0 +1,9 @@
+<launch>
+   <node pkg="stage_ros" type="stageros" name="model"
+     args="$(find stage_launch)/worlds/task1.world"/>
+   <node pkg="tf" type="static_transform_publisher" name="odomToMap_broadcaster" args="0 0 0 0 0 0 odom map 100" />
+   <!--node pkg="robot_control" type="robot_control" name="control"/-->
+   <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+     <remap from="scan" to="base_scan"/>
+   </node>
+</launch>

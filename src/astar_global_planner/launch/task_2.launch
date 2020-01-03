@@ -1,0 +1,35 @@
+<launch>
+   <node pkg="stage_ros" type="stageros" name="model"
+     args="$(find stage_launch)/worlds/task1.world"/>
+   <param name="use_sim_time" value="true" />
+   <node pkg="tf" type="static_transform_publisher" name="maptoodom_broadcaster" args="-0.5 -0.5 0 0 0 0 map odom 100" />
+   <node pkg="map_server" type="map_server" name="map_pub" output="screen"
+        args="/home/haili/ROS-WS-INI/src/navigation-kinetic-devel/map_server/test/testmap.yaml" />
+   <node pkg="rviz" type="rviz" name="rviz"
+        args="-d $(find astar_global_planner)/rviz_cfg/astartest.rviz"/>
+
+
+<group ns="rob1">
+<node pkg="astar_global_planner" type="astar_global_planner_node" name="astar_planner" output="screen">
+  <param name="delay" type="int" value="0" />
+  <param name="x_0" type="int" value="3" />
+  <param name="y_0" type="int" value="3" />
+  <param name="x_1" type="int" value="17" />
+  <param name="y_1" type="int" value="3" />
+</node>
+</group>
+
+<group ns="rob2">
+<node pkg="astar_global_planner" type="astar_global_planner_node" name="astar_planner">
+  <param name="delay" type="int" value="4" />
+  <param name="x_0" type="int" value="17" />
+  <param name="y_0" type="int" value="3" />
+  <param name="x_1" type="int" value="3" />
+  <param name="y_1" type="int" value="3" />
+</node>
+</group>
+
+
+   <node pkg="trimap" type="trimap_node" name="trimap_node" />
+
+</launch>
