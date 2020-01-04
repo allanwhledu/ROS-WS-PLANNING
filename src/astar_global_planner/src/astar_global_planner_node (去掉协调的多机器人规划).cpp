@@ -79,9 +79,7 @@ void AddNode2Close(CloseList* close, OpenList* &open)
 
     open=open->next;  //open丢掉第一个
 }
-
-void AStartFindPath::IsChangeParent(OpenList* open,int center_x, int center_y)// 是否有更好的路径
-{
+void AStartFindPath::IsChangeParent(OpenList* open,int center_x, int center_y){
     int i;
     for(i=0; i<4 ; i++)
     {
@@ -97,7 +95,6 @@ void AStartFindPath::IsChangeParent(OpenList* open,int center_x, int center_y)//
         }
     }
 }
-
 bool AStartFindPath::IsAvailable(int x, int y, int time)
 {
     bool flag=true;
@@ -106,13 +103,13 @@ bool AStartFindPath::IsAvailable(int x, int y, int time)
     if(IsInCloseList(x, y))
         flag = false;
 
-    vector<geometry_msgs::Point>::iterator it;
-    for(it = map.data.begin();it!=map.data.end();++it){
-        if ((x==it->x-1 && y==it->y-1 && time==it->z) || (x==it->x-1 && y==it->y-1 && time==it->z-1)){
-            ROS_WARN_STREAM("conflict in "<<x<<","<<y<<","<<time<<".");
-            flag = false;
-        }
-    }
+//  vector<geometry_msgs::Point>::iterator it;
+//  for(it = map.data.begin();it!=map.data.end();++it){
+//    if ((x==it->x-1 && y==it->y-1 && time==it->z) || (x==it->x-1 && y==it->y-1 && time==it->z-1)){
+//      ROS_WARN_STREAM("conflict in "<<x<<","<<y<<","<<time<<".");
+//      flag = false;
+//    }
+//  }
 
     if(m_node[y][x].flag == WALL)
         flag = false;
@@ -133,7 +130,6 @@ bool AStartFindPath::IsInCloseList(int x,int y)
     else
         return false;
 }
-
 bool AStartFindPath::Check_and_Put_to_Openlist(OpenList* open,int center_x, int center_y)
 {
     ROS_INFO_STREAM("now points in open:");
@@ -236,7 +232,6 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     ROS_INFO_STREAM("i= "<<i<<" first point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<plan.poses[i].pose.position.z);
     nav_plan.publish(plan);
 }
-
 unsigned int AStartFindPath::DistanceManhattan(int d_x, int d_y, int x, int y)
 {
     unsigned int temp=((d_x - x)>0?(d_x - x):-(d_x - x) + (d_y-y)>0?(d_y-y):-(d_y-y))*DISTANCE;

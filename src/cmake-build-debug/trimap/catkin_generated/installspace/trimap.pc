@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: trimap
+Description: Description of trimap
+Version: 0.0.0
+Cflags: -I/usr/local/include
+Libs: -L/usr/local/lib 
+Requires: nav_msgs roscpp std_msgs tf message_runtime

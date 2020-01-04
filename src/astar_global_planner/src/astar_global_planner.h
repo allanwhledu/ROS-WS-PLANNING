@@ -25,73 +25,73 @@ enum{VIABLE, WALL, INOPEN, INCLOSE, STARTPOINT, DESTINATION};
 
 struct Node
 {
-	//char perperty;
-	int    flag;
-	char gray_val;
-	unsigned int location_x;
-	unsigned int location_y;
-  unsigned int location_z;
-	unsigned int value_h;
-	unsigned int value_g;
-	unsigned int value_f;
-	Node* parent;
-	Node();
+    //char perperty;
+    int    flag;
+    char gray_val;
+    unsigned int location_x;
+    unsigned int location_y;
+    unsigned int location_z;
+    unsigned int value_h;
+    unsigned int value_g;
+    unsigned int value_f;
+    Node* parent;
+    Node();
 };
 
 struct CloseList
 {
-  Node* closenode;
-	CloseList* next;
-	CloseList(){ next=NULL;};
+    Node* closenode;
+    CloseList* next;
+    CloseList(){ next=NULL;};
 };
 
 struct OpenList
 {
-  Node* opennode;
-	OpenList* next;
-	OpenList(){next= NULL;};
+    Node* opennode;
+    OpenList* next;
+    OpenList(){next= NULL;};
 };
 
 
 class AStartFindPath
 {
 public:
-  ros::NodeHandle n;
-  trimap::Trimap map;
-	Node **m_node;
-	AStartFindPath();
-	virtual ~AStartFindPath(){};
-	int GetPos(int &x,int &y);
-	void FindDestinnation(OpenList* open,CloseList* close);
-  bool Check_and_Put_to_Openlist(OpenList* , int x, int y);
-  bool IsInOpenList(int x, int y);
-  bool IsInCloseList(int x, int y);
-  void IsChangeParent(OpenList*, int x, int y);
-  bool IsAvailable(int x, int y, int time);
-	unsigned int DistanceManhattan(int d_x, int d_y, int x, int y);
-	/*Callback Functions*/
-	void map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg);
-  void map2_Callback(const trimap::Trimap::ConstPtr& msg);
-	void end_Callback(const geometry_msgs::PoseStamped::ConstPtr& msg);
-	ros::Subscriber map_sub;
-  ros::Subscriber map_sub2;
-	ros::Subscriber end_sub;
-	ros::Publisher nav_plan;
-	//TF Scalar Listener
-  tf::TransformListener transform_listener;
-  tf::StampedTransform transform;
+    ros::NodeHandle n;
+    trimap::Trimap map;
+    Node **m_node;
+    AStartFindPath();
+    virtual ~AStartFindPath(){};
+    int GetPos(int &x,int &y);
+    void FindDestinnation(OpenList* open,CloseList* close);
+    bool Check_and_Put_to_Openlist(OpenList* , int x, int y);
+    bool IsInOpenList(int x, int y);
+    bool IsInCloseList(int x, int y);
+    void IsChangeParent(OpenList*, int x, int y);
+    bool IsAvailable(int x, int y, int time);
+    unsigned int DistanceManhattan(int d_x, int d_y, int x, int y);
+    /*Callback Functions*/
+    void map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg);
+    void map2_Callback(const trimap::Trimap::ConstPtr& msg);
+    void end_Callback(const geometry_msgs::PoseStamped::ConstPtr& msg);
+    ros::Subscriber map_sub;
+    ros::Subscriber map_sub2;
+    ros::Subscriber end_sub;
+    ros::Publisher nav_plan;
+    //TF Scalar Listener
+    tf::TransformListener transform_listener;
+    tf::StampedTransform transform;
 
-	unsigned int steps;
-	int startpoint_x;
-	int startpoint_y;
-	int endpoint_x;
-	int endpoint_y;
-	int m_height,m_width;
-  double m_resolution;
-	//Lists
-	OpenList* openlist;
-	CloseList* closelist ;
-	int x,y,des_x,des_y;
-	char Thrs;
-	ros::Publisher map_pub;
+    unsigned int steps;
+    int startpoint_x;
+    int startpoint_y;
+    int endpoint_x;
+    int endpoint_y;
+    int m_height,m_width;
+    double m_resolution;
+    //Lists
+    OpenList* openlist;
+    CloseList* closelist ;
+    int x,y,des_x,des_y;
+    char Thrs;
+    ros::Publisher map_pub;
 };
