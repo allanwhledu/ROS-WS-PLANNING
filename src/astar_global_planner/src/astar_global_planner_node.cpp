@@ -25,11 +25,9 @@ AStartFindPath::AStartFindPath()
     nav_plan = n.advertise<nav_msgs::Path>("astar_path", 1);
 }
 
-// 
+// 获得目的坐标参数的子函数
 int AStartFindPath::GetPos(int& x,int& y)
 {
-    //获取当前位置
-
     try
     {
         transform_listener.lookupTransform("/map", "/base_link",ros::Time(0), transform);
@@ -52,61 +50,7 @@ int AStartFindPath::GetPos(int& x,int& y)
     return 0;
 }
 
-void AddNode2Open(OpenList* openlist, Node* node)
-{
-    if(openlist ==NULL)
-    {
-        cout<<"no data in openlist!"<<endl;
-        return;
-    }
-
-    if(node->flag!=STARTPOINT)
-    {
-        node->flag= INOPEN;
-    }
-    OpenList* temp =  new OpenList;
-    temp->next=NULL;
-    temp->opennode = node;
-    while(openlist->next != NULL)
-    {
-        if(node->value_f < openlist->next->opennode->value_f)
-        {
-            temp->next = openlist->next;
-            openlist->next = temp;
-            break;
-        }
-        else
-            openlist= openlist->next;
-    }
-    openlist->next = temp;
-}
-void AddNode2Close(CloseList* close, OpenList* &open)
-{
-    if(open==NULL)
-    {
-        ROS_INFO_STREAM("no data in openlist!");
-        return;
-    }
-    if(open->opennode->flag != STARTPOINT)
-        open->opennode->flag =INCLOSE;
-
-    if(close->closenode == NULL)
-    {
-        close->closenode = open->opennode;
-        open=open->next;
-        return;
-    }
-    while(close->next!= NULL)
-        close= close->next;
-
-    CloseList* temp= new CloseList;
-    temp->closenode = open->opennode;
-    temp->next=NULL;
-    close->next= temp;  //close接上open
-
-    open=open->next;  //open丢掉第一个
-}
-
+// 计算与检测有关的子函数
 unsigned int AStartFindPath::DistanceManhattan(int d_x, int d_y, int x, int y)
 {
     unsigned int temp=((d_x - x)>0?(d_x - x):-(d_x - x) + (d_y-y)>0?(d_y-y):-(d_y-y))*DISTANCE;
@@ -164,6 +108,64 @@ bool AStartFindPath::IsInCloseList(int x,int y)
         return false;
 }
 
+// 与维护列表有关的子函数
+void AddNode2Open(OpenList* openlist, Node* node)
+{
+    if(openlist ==NULL)
+    {
+        cout<<"no data in openlist!"<<endl;
+        return;
+    }
+
+    if(node->flag!=STARTPOINT)
+    {
+        node->flag= INOPEN;
+    }
+    OpenList* temp =  new OpenList;
+    temp->next=NULL;
+    temp->opennode = node;
+    while(openlist->next != NULL)
+    {
+        if(node->value_f < openlist->next->opennode->value_f)
+        {
+            temp->next = openlist->next;
+            openlist->next = temp;
+            break;
+        }
+        else
+            openlist= openlist->next;
+    }
+    openlist->next = temp;
+}
+void AddNode2Close(CloseList* close, OpenList* &open)
+{
+    if(open==NULL)
+    {
+        ROS_INFO_STREAM("no data in openlist!");
+        return;
+    }
+    if(open->opennode->flag != STARTPOINT)
+        open->opennode->flag =INCLOSE;
+
+    if(close->closenode == NULL)
+    {
+        close->closenode = open->opennode;
+        open=open->next;
+        return;
+    }
+    while(close->next!= NULL)
+        close= close->next;
+
+    CloseList* temp= new CloseList;
+    temp->closenode = open->opennode;
+    temp->next=NULL;
+    close->next= temp;  //close接上open
+
+    open=open->next;  //open丢掉第一个
+}
+
+
+// 不断将未探索点加入探索列表，最终得到路径
 bool AStartFindPath::Check_and_Put_to_Openlist(OpenList* open,int center_x, int center_y)
 {
     ROS_INFO_STREAM("now points in open:");
@@ -267,10 +269,7 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     nav_plan.publish(plan);
 }
 
-
-
-
-
+// 用于交互的ROS回调函数
 void AStartFindPath::map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 {
     m_height=msg->info.height;
@@ -367,7 +366,7 @@ void AStartFindPath::end_Callback(const geometry_msgs::PoseStamped::ConstPtr& ms
     FindDestinnation(openlist,closelist);
 }
 
-
+// 节点主函数
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "astar_planner");
