@@ -15,3 +15,5 @@ build/
 devel/
 
 src/venv/
+
+src/venv2.7/
