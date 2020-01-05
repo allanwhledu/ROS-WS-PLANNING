@@ -1,2 +1,0 @@
-set(astar_global_planner_MESSAGE_FILES "/home/bit/ROS-WS-PLANNING/src/astar_global_planner/msg/Map_with_time.msg")
-set(astar_global_planner_SERVICE_FILES "")

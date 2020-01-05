@@ -1,2 +1,0 @@
-set(trimap_MESSAGE_FILES "/home/bit/ROS-WS-PLANNING/src/trimap/msg/Trimap.msg")
-set(trimap_SERVICE_FILES "")
