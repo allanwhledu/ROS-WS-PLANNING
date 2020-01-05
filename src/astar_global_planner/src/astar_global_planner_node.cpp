@@ -80,8 +80,7 @@ void AddNode2Close(CloseList* close, OpenList* &open)
     open=open->next;  //open丢掉第一个
 }
 
-void AStartFindPath::IsChangeParent(OpenList* open,int center_x, int center_y)// 是否有更好的路径
-{
+void AStartFindPath::IsChangeParent(OpenList* open,int center_x, int center_y){
     int i;
     for(i=0; i<4 ; i++)
     {
