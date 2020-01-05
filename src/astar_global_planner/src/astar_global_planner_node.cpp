@@ -25,6 +25,33 @@ AStartFindPath::AStartFindPath()
     nav_plan = n.advertise<nav_msgs::Path>("astar_path", 1);
 }
 
+// 
+int AStartFindPath::GetPos(int& x,int& y)
+{
+    //获取当前位置
+
+    try
+    {
+        transform_listener.lookupTransform("/map", "/base_link",ros::Time(0), transform);
+    }
+    catch (tf::TransformException ex)
+    {
+        printf("ERROR: %s",ex.what());
+        ros::Duration(1.0).sleep();
+        return 1;
+    }
+//  x=AGV_transform.getOrigin().x()/m_resolution-1;
+//  y=AGV_transform.getOrigin().y()/m_resolution-1;
+
+    int x_0, y_0;
+    ros::param::get("~x_0",x_0);
+    ros::param::get("~y_0",y_0);
+    x=x_0-1;
+    y=y_0-1;
+    ROS_INFO_STREAM("start point in map "<<x_0<<" "<<y_0<<"\n");
+    return 0;
+}
+
 void AddNode2Open(OpenList* openlist, Node* node)
 {
     if(openlist ==NULL)
@@ -80,6 +107,11 @@ void AddNode2Close(CloseList* close, OpenList* &open)
     open=open->next;  //open丢掉第一个
 }
 
+unsigned int AStartFindPath::DistanceManhattan(int d_x, int d_y, int x, int y)
+{
+    unsigned int temp=((d_x - x)>0?(d_x - x):-(d_x - x) + (d_y-y)>0?(d_y-y):-(d_y-y))*DISTANCE;
+    return temp;
+}
 void AStartFindPath::IsChangeParent(OpenList* open,int center_x, int center_y){
     int i;
     for(i=0; i<4 ; i++)
@@ -96,7 +128,6 @@ void AStartFindPath::IsChangeParent(OpenList* open,int center_x, int center_y){
         }
     }
 }
-
 bool AStartFindPath::IsAvailable(int x, int y, int time)
 {
     bool flag=true;
@@ -236,37 +267,9 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     nav_plan.publish(plan);
 }
 
-unsigned int AStartFindPath::DistanceManhattan(int d_x, int d_y, int x, int y)
-{
-    unsigned int temp=((d_x - x)>0?(d_x - x):-(d_x - x) + (d_y-y)>0?(d_y-y):-(d_y-y))*DISTANCE;
-    return temp;
-}
 
-int AStartFindPath::GetPos(int& x,int& y)
-{
-    //获取当前位置
 
-    try
-    {
-        transform_listener.lookupTransform("/map", "/base_link",ros::Time(0), transform);
-    }
-    catch (tf::TransformException ex)
-    {
-        printf("ERROR: %s",ex.what());
-        ros::Duration(1.0).sleep();
-        return 1;
-    }
-//  x=AGV_transform.getOrigin().x()/m_resolution-1;
-//  y=AGV_transform.getOrigin().y()/m_resolution-1;
 
-    int x_0, y_0;
-    ros::param::get("~x_0",x_0);
-    ros::param::get("~y_0",y_0);
-    x=x_0-1;
-    y=y_0-1;
-    ROS_INFO_STREAM("start point in map "<<x_0<<" "<<y_0<<"\n");
-    return 0;
-}
 
 void AStartFindPath::map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 {

@@ -56,27 +56,6 @@ int main(int argc, char **argv)
     tree<string> tr;
     tree<string>::iterator top, one, two, loc, banana;
 
-    tree<align> tr2;
-    tree<align>::iterator top2, one2;
-
-    align first;
-    first.value=32;
-    top2=tr2.begin();
-    one2=tr2.insert(top2,first);
-
-    int *p;
-    int g;
-    p=&g;
-
-    cout<<*p<<endl;
-
-    *p = 4;
-    cout<<*p<<endl;
-
-//    cout<<*(one2->pattern_mode->robot1)<<endl;
-
-
-
 //    top=tr.begin();
 //    one=tr.insert(top, "one");
 //
@@ -106,6 +85,36 @@ int main(int argc, char **argv)
 //    }
 //
 ////    cout << (*one) << endl;
+
+
+    tree<align> tr2;
+    tree<align>::iterator top2, one2;
+
+    pattern p_tmp;
+    p_tmp.robot1 = 1;
+    p_tmp.robot2 = 2;
+
+    align first;
+    first.value=32;
+    first.pattern_mode = &p_tmp;
+    top2=tr2.begin();
+    one2=tr2.insert(top2,first);
+
+    cout << one2->pattern_mode->robot1 << endl;
+
+
+
+
+
+
+//    int *p;
+//    int g;
+//    p=&g;
+//
+//    cout<<*p<<endl;
+//
+//    *p = 4;
+//    cout<<*p<<endl;
 
     ros::spin(); //并不是类的实例化会运行函数，而是这里的回调函数会一直运行callback那里的代码
 
