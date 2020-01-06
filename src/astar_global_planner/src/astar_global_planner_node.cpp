@@ -25,10 +25,10 @@ int main(int argc, char** argv)
 
     tree<leaf>::iterator top2, one2;
     tree<leaf>::iterator init_leaf;
-    std::vector<tree<leaf>::iterator> testid;
-    for(int i=0;i<10;i++){
-        testid.push_back(init_leaf);
-    }
+    std::vector<tree<leaf>::iterator> init_leafv;
+//    for(int i=0;i<10;i++){
+//        init_leafv.push_back(init_leaf);
+//    }
 
 //    for(int i=0;i<10;i++){
 //        string name="leaf";
@@ -46,12 +46,15 @@ int main(int argc, char** argv)
     second.value=36;
     second.prior_mode =&p_tmp;
     top2=tr2.begin();
-    testid.at(0)=tr2.insert(top2,first);
-    testid.at(1)=tr2.insert(testid.at(0),second);
 
-    ROS_INFO_STREAM(testid.at(0)->value);
+    init_leafv.push_back(init_leaf);
+    init_leafv.at(0)=tr2.insert(top2,first);
+    init_leafv.push_back(init_leaf);
+    init_leafv.at(1)=tr2.insert(init_leafv.at(0),second);
+
+    ROS_INFO_STREAM(init_leafv.at(0)->value);
     ROS_INFO_STREAM("and");
-    ROS_INFO_STREAM(testid.at(1)->value);
+    ROS_INFO_STREAM(init_leafv.at(1)->value);
 
     AStartFindPath planner;
 
