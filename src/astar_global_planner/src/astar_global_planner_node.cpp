@@ -221,10 +221,12 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     {
         i++;
         AddNode2Close(close,open);
-        if(open==NULL||i>30000)
+        if(open==NULL||i>5)
         {
-            printf("找不到出口！\n");
-            return;
+//            printf("找不到出口！\n");
+            ROS_INFO_STREAM("completed segment path.");
+            ROS_INFO_STREAM(i);
+            break;
         }
     }
     printf("计算路径成功！！\n");
@@ -232,7 +234,7 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     nav_msgs::Path plan;
 
     Node* forstepcount;
-    forstepcount= &m_node[endpoint_y][endpoint_x];
+    forstepcount= &m_node[open->opennode->location_y-1][open->opennode->location_x-1];
     i=0;
     while(forstepcount->parent->flag!=STARTPOINT)
     {
@@ -246,7 +248,7 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     plan.header.frame_id="odom";
 
     Node* tempnode;
-    tempnode= &m_node[endpoint_y][endpoint_x];
+    tempnode= &m_node[open->opennode->location_y-1][open->opennode->location_x-1];
     plan.poses[i].pose.position.x=tempnode->location_x*m_resolution; //为了使网格到栅格所以减了半个格子
     plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
     plan.poses[i].pose.position.z=tempnode->value_g/10;
