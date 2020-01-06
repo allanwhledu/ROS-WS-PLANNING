@@ -95,3 +95,5 @@ public:
     char Thrs;
     ros::Publisher map_pub;
 };
+
+bool testhfile(int x);
