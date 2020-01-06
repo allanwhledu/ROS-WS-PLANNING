@@ -25,6 +25,7 @@ AStartFindPath::AStartFindPath()
     m_width=0;m_height=0;
     openlist = NULL;
     closelist= NULL;
+    sign_cacul = false;
 
     try
     {
@@ -48,12 +49,9 @@ int AStartFindPath::GetPos(int& x,int& y)
 //  x=AGV_transform.getOrigin().x()/m_resolution-1;
 //  y=AGV_transform.getOrigin().y()/m_resolution-1;
 
-    int x_0, y_0;
-    ros::param::get("~x_0",x_0);
-    ros::param::get("~y_0",y_0);
-    x=x_0-1;
-    y=y_0-1;
-    ROS_INFO_STREAM("start point in map "<<x_0<<" "<<y_0<<"\n");
+    x=startpoint_x-1;
+    y=startpoint_y-1;
+    ROS_INFO_STREAM("start point in map "<<startpoint_x<<" "<<startpoint_y<<"\n");
     return 0;
 }
 
@@ -329,11 +327,9 @@ void AStartFindPath::end_Callback(const geometry_msgs::PoseStamped::ConstPtr& ms
 
     //  des_x=msg->pose.position.x/m_resolution;
     //  des_y=msg->pose.position.y/m_resolution;
-    int x_1, y_1;
-    ros::param::get("~x_1",x_1);
-    ros::param::get("~y_1",y_1);
-    des_x=x_1-1;  //因为，这里des_x,des_y是目标点的-1
-    des_y=y_1-1;
+
+    des_x=endpoint_x-1;  //因为，这里des_x,des_y是目标点的-1
+    des_y=endpoint_y-1;
 
     int delay;
     ros::param::get("~delay",delay);
@@ -371,7 +367,11 @@ void AStartFindPath::end_Callback(const geometry_msgs::PoseStamped::ConstPtr& ms
     endpoint_x= des_x;
     endpoint_y=des_y;
 
-    FindDestinnation(openlist,closelist);
+    if(sign_cacul == true)
+    {
+        FindDestinnation(openlist,closelist);
+        sign_cacul = false;
+    }
 }
 
 

@@ -94,6 +94,9 @@ public:
     int x,y,des_x,des_y;
     char Thrs;
     ros::Publisher map_pub;
+
+    // flag to go
+    bool sign_cacul;
 };
 
 bool testhfile(int x);
