@@ -19,6 +19,6 @@
 </node>
 </group>
 
-   <node pkg="trimap" type="trimap_node" name="trimap_node" />
+   <node pkg="trimap" type="trimap_node" name="trimap_node" output="screen"/>
 
 </launch>

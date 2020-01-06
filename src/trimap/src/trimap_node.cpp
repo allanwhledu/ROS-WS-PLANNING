@@ -29,6 +29,8 @@ void pathCallback_1(const nav_msgs::Path::ConstPtr& msg)
   for(it3 = Points.begin();it3!=Points.end();it3++){
     temp_map.push_back(*it3);
   }
+
+  ROS_INFO_STREAM("get robot1's path.");
   map.data.assign(temp_map.begin(), temp_map.end());
 }
 
@@ -52,6 +54,7 @@ void pathCallback_2(const nav_msgs::Path::ConstPtr& msg)
   for(it3 = Points.begin();it3!=Points.end();it3++){
     temp_map.push_back(*it3);
   }
+    ROS_INFO_STREAM("get robot2's path.");
   map.data.assign(temp_map.begin(), temp_map.end());
 }
 
@@ -140,8 +143,10 @@ main (int argc, char **argv) // 声明主函数
     ros::Rate r(1.0); // 设置回调执行频率（每秒1次）
     while (ros::ok())
     {
-      ros::spinOnce();
-      pub.publish(map);
-      r.sleep();
+        map.data.clear();
+        temp_map.clear();
+        ros::spinOnce();
+        pub.publish(map);
+        r.sleep();
     }
 }
