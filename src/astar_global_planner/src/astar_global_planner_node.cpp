@@ -84,6 +84,9 @@ int main(int argc, char** argv)
 
             ROS_INFO_STREAM("Clear the tmp_plan.");
             planner.clear_tmpplan();
+
+            planner.endpoint_x++;
+            planner.endpoint_y++;
         }
 
         r.sleep();
