@@ -235,7 +235,7 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     }
     printf("计算路径成功！！\n");
 
-    nav_msgs::Path plan;
+
 
     Node* forstepcount;
     forstepcount= &m_node[open->opennode->location_y-1][open->opennode->location_x-1];
@@ -250,6 +250,7 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     ROS_INFO_STREAM("How many steps in path: "<<i+1);
     plan.poses.resize(i+1);
     plan.header.frame_id="odom";
+
 
     Node* tempnode;
     tempnode= &m_node[open->opennode->location_y-1][open->opennode->location_x-1];
@@ -272,6 +273,7 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
     plan.poses[i].pose.position.z=tempnode->value_g/10;
     ROS_INFO_STREAM("i= "<<i<<" first point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<plan.poses[i].pose.position.z);
+
     nav_plan.publish(plan);
 }
 
@@ -372,6 +374,11 @@ void AStartFindPath::end_Callback(const geometry_msgs::PoseStamped::ConstPtr& ms
         FindDestinnation(openlist,closelist);
         sign_cacul = false;
     }
+}
+
+void AStartFindPath::clear_tmpplan()
+{
+    plan = Null_plan;
 }
 
 

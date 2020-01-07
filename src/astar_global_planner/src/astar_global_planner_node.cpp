@@ -9,8 +9,8 @@
 
 struct leaf
 {
-    int value;
-    std::vector<int> *prior_mode;
+    nav_msgs::Path plan;
+    std::vector<int> prior_mode;
 };
 
 // 节点主函数
@@ -40,11 +40,9 @@ int main(int argc, char** argv)
     p_tmp.push_back(22);
 
     leaf first;
-    first.value=32;
-    first.prior_mode = &p_tmp;
+    first.prior_mode = p_tmp;
     leaf second;
-    second.value=36;
-    second.prior_mode =&p_tmp;
+    second.prior_mode =p_tmp;
     top2=tr2.begin();
 
     init_leafv.push_back(init_leaf);
@@ -52,23 +50,42 @@ int main(int argc, char** argv)
     init_leafv.push_back(init_leaf);
     init_leafv.at(1)=tr2.insert(init_leafv.at(0),second);
 
-    ROS_INFO_STREAM(init_leafv.at(0)->value);
-    ROS_INFO_STREAM("and");
-    ROS_INFO_STREAM(init_leafv.at(1)->value);
-
     AStartFindPath planner;
 
-    ros::param::get("~x_0",planner.startpoint_x);
-    ros::param::get("~y_0",planner.startpoint_y);
-
-    ros::param::get("~x_1",planner.endpoint_x);
-    ros::param::get("~y_1",planner.endpoint_y);
-
-    planner.sign_cacul = true;
-    ros::Rate r(1.0); // 设置回调执行频率（每秒1次）
+    bool firstloop = true;
+    ros::Rate r(1.0);
     while (ros::ok())
     {
+        if(!planner.plan.poses.empty())
+        {
+
+        }
+
+        if(firstloop == true)
+        {
+            ros::param::get("~x_0",planner.startpoint_x);
+            ros::param::get("~y_0",planner.startpoint_y);
+            ros::param::get("~x_1",planner.endpoint_x);
+            ros::param::get("~y_1",planner.endpoint_y);
+            firstloop = false;
+        }
+
+
+        planner.sign_cacul = true;
+
         ros::spinOnce();
+        ROS_INFO_STREAM("spin passed.");
+
+        if(!planner.plan.poses.empty())
+        {
+            ROS_INFO_STREAM("Got plan_segment.");
+            planner.startpoint_x = planner.plan.poses.back().pose.position.x;
+            planner.startpoint_y = planner.plan.poses.back().pose.position.y;
+
+            ROS_INFO_STREAM("Clear the tmp_plan.");
+            planner.clear_tmpplan();
+        }
+
         r.sleep();
     }
 }

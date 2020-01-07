@@ -58,6 +58,9 @@ class AStartFindPath
 public:
     ros::NodeHandle n;
     trimap::Trimap map;
+    nav_msgs::Path plan;
+    nav_msgs::Path Null_plan;
+
     Node **m_node;
     AStartFindPath();
     virtual ~AStartFindPath(){};
@@ -97,6 +100,7 @@ public:
 
     // flag to go
     bool sign_cacul;
+    void clear_tmpplan();
 };
 
 bool testhfile(int x);
