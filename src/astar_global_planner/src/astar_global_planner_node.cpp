@@ -8,12 +8,18 @@
 //};
 
 nav_msgs::OccupancyGrid::ConstPtr mapmsg;
-bool iscentermapget = false;
+bool isCenterMapGet = false;
+int m_height;
+int m_width;
+int m_resolution;
 
 void center_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 {
     mapmsg = msg;
-    iscentermapget = true;
+    m_height=msg->info.height;
+    m_width=msg->info.width;
+    m_resolution=msg->info.resolution;
+    isCenterMapGet = true;
     ROS_INFO_STREAM("get map.");
 }
 
@@ -34,8 +40,8 @@ int main(int argc, char** argv)
 
     ros::NodeHandle n;
 
+    // Callback and Publish.
     ros::Subscriber map_sub;
-    ros::Subscriber map_sub2;
     ros::Publisher nav_plan;
 
     map_sub = n.subscribe<nav_msgs::OccupancyGrid>("/map",1,&center_map_Callback);
@@ -72,61 +78,105 @@ int main(int argc, char** argv)
     init_leafv.at(1)=tr2.insert(init_leafv.at(0),second);
 
     AStartFindPath init_planner;
+    init_planner.isRootLoop = true;
 
     ros::param::get("~x_0",init_planner.startpoint_x);
     ros::param::get("~y_0",init_planner.startpoint_y);
     ros::param::get("~x_1",init_planner.endpoint_x);
     ros::param::get("~y_1",init_planner.endpoint_y);
 
-
-    AStartFindPath planner=init_planner;
-
-    ROS_INFO_STREAM("planner's endpoint_x:");
-    ROS_INFO_STREAM(planner.endpoint_x);
-
-//    TESTCOPY test1;
-//    test1.obj1 = 2;
-//
-//    TESTCOPY test2;
-//    test2 = test1;
-//    test2.obj1 = 3;
-//
-//    ROS_INFO_STREAM("test1.obj1:"<< test1.obj1);
+    while (ros::ok)
+    {
+        ros::spinOnce();
+        ROS_INFO_STREAM("outloop spin passed.");
+        if(isCenterMapGet)
+        {
+            ROS_INFO_STREAM("center_map got.");
+            break;
+        }
+    }
 
     ros::Rate r(1.0);
-    while (ros::ok())
+    int loop_count = 1;
+    while (ros::ok() && loop_count<3)
     {
         ros::spinOnce();
         ROS_INFO_STREAM("spin passed.");
 
-        if(iscentermapget)
+        if(loop_count == 1)
         {
-            planner.de_map_Callback(mapmsg);
+
+            init_planner.de_map_Callback(mapmsg);
+            ROS_INFO_STREAM("init_planner.sign_cacul =");
+            ROS_INFO_STREAM(init_planner.sign_cacul);
+            if(init_planner.sign_cacul)
+                init_planner.setTarget();
+            if(!init_planner.plan.poses.empty())
+            {
+                nav_plan.publish(init_planner.plan);
+                ROS_INFO_STREAM("Got init_plan_segment.");
+            }
+            ROS_INFO_STREAM("next loop -----------------------");
         }
 
-
-        ROS_INFO_STREAM("planner.sign_cacul =");
-        ROS_INFO_STREAM(planner.sign_cacul);
-        if(planner.sign_cacul)
-            planner.set_Target();
-
-
-        if(!planner.plan.poses.empty())
+        if(loop_count = 2)
         {
-            nav_plan.publish(planner.plan);
-
-            ROS_INFO_STREAM("Got plan_segment.");
-            planner.startpoint_x = planner.plan.poses.back().pose.position.x;
-            planner.startpoint_y = planner.plan.poses.back().pose.position.y;
-
-            ROS_INFO_STREAM("Clear the tmp_plan.");
-            planner.clear_tmpplan();
-
+            // new planner, wait to add
+            AStartFindPath planner=init_planner;
+            planner.isRootLoop = false;
+//            deepCopyMnode(planner.m_node, m_height, m_width, init_planner.m_node);
+            planner.startpoint_x = init_planner.plan.poses.back().pose.position.x;
+            planner.startpoint_y = init_planner.plan.poses.back().pose.position.y;
             planner.endpoint_x++;
             planner.endpoint_y++;
+
+            ROS_INFO_STREAM("planner's endpoint_x:");
+            ROS_INFO_STREAM(planner.endpoint_x);
+            ROS_INFO_STREAM("check m_node[][].flag:");
+            ROS_INFO_STREAM(planner.m_node[8][3].flag);
+
+            planner.de_map_Callback(mapmsg);
+            ROS_INFO_STREAM("planner.sign_cacul ="<<planner.sign_cacul);
+            if(planner.sign_cacul)
+                planner.setTarget();
+            if(!planner.plan.poses.empty())
+            {
+                nav_plan.publish(planner.plan);
+                ROS_INFO_STREAM("Got plan_segment.");
+            }
+            ROS_INFO_STREAM("next loop -----------------------");
+
+            ROS_INFO_STREAM("check mnode:");
+            init_planner.m_node[4][4].flag = 1;
+            ROS_INFO_STREAM("init_planner.m_node[4][4].flag ="<<init_planner.m_node[4][4].flag);
+            planner.m_node[4][4].flag = 2;
+            ROS_INFO_STREAM("init_planner.m_node[4][4].flag ="<<init_planner.m_node[4][4].flag);
+            ROS_INFO_STREAM("planner.m_node[4][4].flag ="<<planner.m_node[4][4].flag);
         }
-        ROS_INFO_STREAM("at loopend planner.sign_cacul =");
-        ROS_INFO_STREAM(planner.sign_cacul);
+
+
+
+
+//        if(!planner.plan.poses.empty())
+//        {
+//            nav_plan.publish(planner.plan);
+//
+//            ROS_INFO_STREAM("Got plan_segment.");
+//            planner.startpoint_x = planner.plan.poses.back().pose.position.x;
+//            planner.startpoint_y = planner.plan.poses.back().pose.position.y;
+//
+//            ROS_INFO_STREAM("Clear the tmp_plan.");
+//            planner.clear_tmpplan();
+//
+//            planner.endpoint_x++;
+//            planner.endpoint_y++;
+//        }
+//        ROS_INFO_STREAM("at loopend planner.sign_cacul =");
+//        ROS_INFO_STREAM(planner.sign_cacul);
+
+        loop_count++;
         r.sleep();
     }
+
+    return 0;
 }

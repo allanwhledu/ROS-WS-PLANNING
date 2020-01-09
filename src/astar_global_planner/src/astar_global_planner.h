@@ -59,7 +59,7 @@ public:
     nav_msgs::Path plan;
     nav_msgs::Path Null_plan;
 
-    Node **m_node;
+    Node** m_node;
     AStartFindPath();
     virtual ~AStartFindPath(){};
     int GetPos(int &x,int &y);
@@ -75,7 +75,7 @@ public:
 //    void map2_Callback(const trimap::Trimap::ConstPtr& msg);
 
     void de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg);
-    void set_Target();
+    void setTarget();
 
     ros::Subscriber end_sub;
 
@@ -97,6 +97,7 @@ public:
     // flag to go
     bool sign_cacul;
     void clear_tmpplan();
+    bool isRootLoop;
 };
 
 bool testhfile(int x);
@@ -107,3 +108,5 @@ public:
     int obj1 = 1;
     int *obj2 = NULL;
 };
+
+void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[]);

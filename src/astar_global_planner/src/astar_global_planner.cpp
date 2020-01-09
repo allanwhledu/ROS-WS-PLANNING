@@ -26,6 +26,7 @@ AStartFindPath::AStartFindPath()
     openlist = NULL;
     closelist= NULL;
     sign_cacul = false;
+    isRootLoop = false;
 
 }
 
@@ -203,7 +204,7 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     {
         i++;
         AddNode2Close(close,open);
-        if(open==NULL||i>5)
+        if(open==NULL||i>100)
         {
 //            printf("找不到出口！\n");
             ROS_INFO_STREAM("completed segment path.");
@@ -282,9 +283,9 @@ void AStartFindPath::de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& ms
         for(int j=0;j<m_width-1;j++)
         {
             int gray = msg->data[(i)*m_width+(j)];
-            ROS_INFO_STREAM(gray<<" ");
+//            ROS_INFO_STREAM(gray<<" ");
         }
-        ROS_INFO_STREAM("\n");
+//        ROS_INFO_STREAM("\n");
     }
     ROS_INFO_STREAM("now test the nodes");
     for(int i=0;i<m_height;i++)
@@ -292,9 +293,9 @@ void AStartFindPath::de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& ms
         for(int j=0;j<m_width;j++)
         {
             int gray = m_node[i][j].gray_val;
-            ROS_INFO_STREAM("node "<<m_node[i][j].location_x<<" "<<m_node[i][j].location_y<<" and gray value "<<gray<<" ");
+//            ROS_INFO_STREAM("node "<<m_node[i][j].location_x<<" "<<m_node[i][j].location_y<<" and gray value "<<gray<<" ");
         }
-        ROS_INFO_STREAM("\n");
+//        ROS_INFO_STREAM("\n");
     }
     sign_cacul = true;
 
@@ -302,7 +303,7 @@ void AStartFindPath::de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& ms
     ROS_INFO_STREAM(sign_cacul);
 }
 
-void AStartFindPath::set_Target()
+void AStartFindPath::setTarget()
 {
 
     //  des_x=msg->pose.position.x/m_resolution;
@@ -326,17 +327,20 @@ void AStartFindPath::set_Target()
         printf("destination is on the wall!\n");
         return;
     }
+    if(isRootLoop)
+    {
+        printf("重载节点！！\n");
+        if(openlist!=NULL){delete  openlist; openlist=NULL;}
+        if(closelist!=NULL){delete closelist; closelist=NULL;}
+        openlist = new OpenList;
+        closelist= new CloseList;
+        closelist->closenode=NULL;
+        for(int i=0;i<m_height ;i++)
+            for(int j=0;j<m_width;j++)
+                if(m_node[i][j].flag!=WALL) m_node[i][j].flag=VIABLE;
+        printf("重载节点完成！！\n");
+    }
 
-    printf("重载节点！！\n");
-    if(openlist!=NULL){delete  openlist; openlist=NULL;}
-    if(closelist!=NULL){delete closelist; closelist=NULL;}
-    openlist = new OpenList;
-    closelist= new CloseList;
-    closelist->closenode=NULL;
-    for(int i=0;i<m_height ;i++)
-        for(int j=0;j<m_width;j++)
-            if(m_node[i][j].flag!=WALL) m_node[i][j].flag=VIABLE;
-    printf("重载节点完成！！\n");
 
     m_node[y][x].flag = STARTPOINT;
     openlist->next=NULL;
@@ -347,7 +351,6 @@ void AStartFindPath::set_Target()
     endpoint_x= des_x;
     endpoint_y=des_y;
     ROS_INFO_STREAM("setting target...");
-
     FindDestinnation(openlist,closelist);
     ROS_INFO_STREAM("has set the target.");
 }
@@ -355,6 +358,24 @@ void AStartFindPath::set_Target()
 void AStartFindPath::clear_tmpplan()
 {
     plan = Null_plan;
+}
+
+void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[])
+{
+    msg1=new Node* [m_height]; //分配一个动态内存给m_node，它是由m_height个指向Node类的指针构成的数组
+    for(int i=0;i<m_height ;i++)
+    {
+        msg1[i]=new Node[m_width];
+        for(int j=0;j<m_width;j++)
+        {
+//            msg1[i][j].location_x = msg2[i][j].location_x;
+//            msg1[i][j].location_y = msg2[i][j].location_y;
+//            msg1[i][j].parent = msg2[i][j].parent;
+//            msg1[i][j].gray_val=msg2[i][j].gray_val;
+//            msg1[i][j].flag = msg2[i][j].flag;
+            msg1[i][j] = msg2[i][j];
+        }
+    }
 }
 
 
