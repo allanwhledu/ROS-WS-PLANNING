@@ -27,16 +27,6 @@ AStartFindPath::AStartFindPath()
     closelist= NULL;
     sign_cacul = false;
 
-    try
-    {
-        transform_listener.lookupTransform("/map", "/base_link",ros::Time(0), transform);
-    }
-    catch (tf::TransformException ex)
-    {
-        printf("ERROR: %s",ex.what());
-        ros::Duration(1.0).sleep();
-    }
-
     map_sub = n.subscribe<nav_msgs::OccupancyGrid>("/map",1,&AStartFindPath::map_Callback,this);
     map_sub2 = n.subscribe<trimap::Trimap>("/trimap",1,&AStartFindPath::map2_Callback,this);
     end_sub = n.subscribe<geometry_msgs::PoseStamped>("/move_base_simple/goal",1,&AStartFindPath::end_Callback,this);
@@ -368,12 +358,10 @@ void AStartFindPath::end_Callback(const geometry_msgs::PoseStamped::ConstPtr& ms
     m_node[des_y][des_x].flag = DESTINATION;
     endpoint_x= des_x;
     endpoint_y=des_y;
+    ROS_INFO_STREAM("setting target...");
 
-    if(sign_cacul == true)
-    {
-        FindDestinnation(openlist,closelist);
-        sign_cacul = false;
-    }
+    FindDestinnation(openlist,closelist);
+    ROS_INFO_STREAM("has set the target.");
 }
 
 void AStartFindPath::clear_tmpplan()

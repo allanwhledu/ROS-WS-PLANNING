@@ -80,9 +80,6 @@ public:
     ros::Subscriber map_sub2;
     ros::Subscriber end_sub;
     ros::Publisher nav_plan;
-    //TF Scalar Listener
-    tf::TransformListener transform_listener;
-    tf::StampedTransform transform;
 
     unsigned int steps;
     int startpoint_x;

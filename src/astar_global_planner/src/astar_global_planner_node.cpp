@@ -50,29 +50,28 @@ int main(int argc, char** argv)
     init_leafv.push_back(init_leaf);
     init_leafv.at(1)=tr2.insert(init_leafv.at(0),second);
 
-    AStartFindPath planner;
+    AStartFindPath init_planner;
 
     bool firstloop = true;
+
+    if(firstloop == true)
+    {
+        ros::param::get("~x_0",init_planner.startpoint_x);
+        ros::param::get("~y_0",init_planner.startpoint_y);
+        ros::param::get("~x_1",init_planner.endpoint_x);
+        ros::param::get("~y_1",init_planner.endpoint_y);
+        firstloop = false;
+    }
+
+    AStartFindPath planner;
+    planner = init_planner;
+
+    ROS_INFO_STREAM("planner's endpoint_x:");
+    ROS_INFO_STREAM(planner.endpoint_x);
+
     ros::Rate r(1.0);
     while (ros::ok())
     {
-        if(!planner.plan.poses.empty())
-        {
-
-        }
-
-        if(firstloop == true)
-        {
-            ros::param::get("~x_0",planner.startpoint_x);
-            ros::param::get("~y_0",planner.startpoint_y);
-            ros::param::get("~x_1",planner.endpoint_x);
-            ros::param::get("~y_1",planner.endpoint_y);
-            firstloop = false;
-        }
-
-
-        planner.sign_cacul = true;
-
         ros::spinOnce();
         ROS_INFO_STREAM("spin passed.");
 
