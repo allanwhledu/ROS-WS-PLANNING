@@ -56,8 +56,6 @@ struct OpenList
 class AStartFindPath
 {
 public:
-    ros::NodeHandle n;
-    trimap::Trimap map;
     nav_msgs::Path plan;
     nav_msgs::Path Null_plan;
 
@@ -73,13 +71,14 @@ public:
     bool IsAvailable(int x, int y, int time);
     unsigned int DistanceManhattan(int d_x, int d_y, int x, int y);
     /*Callback Functions*/
-    void map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg);
-    void map2_Callback(const trimap::Trimap::ConstPtr& msg);
+//    void map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg);
+//    void map2_Callback(const trimap::Trimap::ConstPtr& msg);
+
+    void de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg);
     void set_Target();
-    ros::Subscriber map_sub;
-    ros::Subscriber map_sub2;
+
     ros::Subscriber end_sub;
-    ros::Publisher nav_plan;
+
 
     unsigned int steps;
     int startpoint_x;
@@ -101,3 +100,10 @@ public:
 };
 
 bool testhfile(int x);
+
+class TESTCOPY
+{
+public:
+    int obj1 = 1;
+    int *obj2 = NULL;
+};

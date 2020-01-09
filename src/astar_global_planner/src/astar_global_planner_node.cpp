@@ -7,6 +7,17 @@
 //    int robot2;
 //};
 
+nav_msgs::OccupancyGrid::ConstPtr mapmsg;
+bool iscentermapget = false;
+
+void center_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg)
+{
+    mapmsg = msg;
+    iscentermapget = true;
+    ROS_INFO_STREAM("get map.");
+}
+
+
 struct leaf
 {
     nav_msgs::Path plan;
@@ -20,6 +31,16 @@ int main(int argc, char** argv)
 
     if(testhfile(1))
         ROS_INFO_STREAM("testhfile success!");
+
+    ros::NodeHandle n;
+
+    ros::Subscriber map_sub;
+    ros::Subscriber map_sub2;
+    ros::Publisher nav_plan;
+
+    map_sub = n.subscribe<nav_msgs::OccupancyGrid>("/map",1,&center_map_Callback);
+    nav_plan = n.advertise<nav_msgs::Path>("astar_path", 1);
+
 
     tree<leaf> tr2;
 
@@ -50,18 +71,27 @@ int main(int argc, char** argv)
     init_leafv.push_back(init_leaf);
     init_leafv.at(1)=tr2.insert(init_leafv.at(0),second);
 
-    AStartFindPath planner;
+    AStartFindPath init_planner;
 
-    ros::param::get("~x_0",planner.startpoint_x);
-    ros::param::get("~y_0",planner.startpoint_y);
-    ros::param::get("~x_1",planner.endpoint_x);
-    ros::param::get("~y_1",planner.endpoint_y);
+    ros::param::get("~x_0",init_planner.startpoint_x);
+    ros::param::get("~y_0",init_planner.startpoint_y);
+    ros::param::get("~x_1",init_planner.endpoint_x);
+    ros::param::get("~y_1",init_planner.endpoint_y);
 
 
-//    AStartFindPath planner=init_planner;
+    AStartFindPath planner=init_planner;
+
+    ROS_INFO_STREAM("planner's endpoint_x:");
+    ROS_INFO_STREAM(planner.endpoint_x);
+
+//    TESTCOPY test1;
+//    test1.obj1 = 2;
 //
-//    ROS_INFO_STREAM("planner's endpoint_x:");
-//    ROS_INFO_STREAM(planner.endpoint_x);
+//    TESTCOPY test2;
+//    test2 = test1;
+//    test2.obj1 = 3;
+//
+//    ROS_INFO_STREAM("test1.obj1:"<< test1.obj1);
 
     ros::Rate r(1.0);
     while (ros::ok())
@@ -69,13 +99,22 @@ int main(int argc, char** argv)
         ros::spinOnce();
         ROS_INFO_STREAM("spin passed.");
 
+        if(iscentermapget)
+        {
+            planner.de_map_Callback(mapmsg);
+        }
+
+
         ROS_INFO_STREAM("planner.sign_cacul =");
         ROS_INFO_STREAM(planner.sign_cacul);
         if(planner.sign_cacul)
             planner.set_Target();
 
+
         if(!planner.plan.poses.empty())
         {
+            nav_plan.publish(planner.plan);
+
             ROS_INFO_STREAM("Got plan_segment.");
             planner.startpoint_x = planner.plan.poses.back().pose.position.x;
             planner.startpoint_y = planner.plan.poses.back().pose.position.y;

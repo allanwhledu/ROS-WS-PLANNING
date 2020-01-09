@@ -27,10 +27,6 @@ AStartFindPath::AStartFindPath()
     closelist= NULL;
     sign_cacul = false;
 
-    map_sub = n.subscribe<nav_msgs::OccupancyGrid>("/map",1,&AStartFindPath::map_Callback,this);
-    map_sub2 = n.subscribe<trimap::Trimap>("/trimap",1,&AStartFindPath::map2_Callback,this);
-//    end_sub = n.subscribe<geometry_msgs::PoseStamped>("/move_base_simple/goal", 1, &AStartFindPath::set_Target, this);
-    nav_plan = n.advertise<nav_msgs::Path>("astar_path", 1);
 }
 
 // 获得目的坐标参数的子函数
@@ -74,14 +70,6 @@ bool AStartFindPath::IsAvailable(int x, int y, int time)
         flag = false;
     if(IsInCloseList(x, y))
         flag = false;
-
-    vector<geometry_msgs::Point>::iterator it;
-    for(it = map.data.begin();it!=map.data.end();++it){
-        if ((x==it->x-1 && y==it->y-1 && time==it->z) || (x==it->x-1 && y==it->y-1 && time==it->z-1)){
-            ROS_WARN_STREAM("conflict in "<<x<<","<<y<<","<<time<<".");
-            flag = false;
-        }
-    }
 
     if(m_node[y][x].flag == WALL)
         flag = false;
@@ -264,11 +252,10 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     plan.poses[i].pose.position.z=tempnode->value_g/10;
     ROS_INFO_STREAM("i= "<<i<<" first point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<plan.poses[i].pose.position.z);
 
-    nav_plan.publish(plan);
 }
 
 // 用于交互的ROS回调函数
-void AStartFindPath::map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg)
+void AStartFindPath::de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 {
     m_height=msg->info.height;
     m_width=msg->info.width;
@@ -310,14 +297,11 @@ void AStartFindPath::map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg)
         ROS_INFO_STREAM("\n");
     }
     sign_cacul = true;
+
     ROS_INFO_STREAM("sign_cacul = true");
     ROS_INFO_STREAM(sign_cacul);
 }
-void AStartFindPath::map2_Callback(const trimap::Trimap::ConstPtr& msg)
-{
-    map.data = msg->data;
-    ROS_INFO_STREAM("get trimap.");
-}
+
 void AStartFindPath::set_Target()
 {
 
