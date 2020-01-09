@@ -29,7 +29,7 @@ AStartFindPath::AStartFindPath()
 
     map_sub = n.subscribe<nav_msgs::OccupancyGrid>("/map",1,&AStartFindPath::map_Callback,this);
     map_sub2 = n.subscribe<trimap::Trimap>("/trimap",1,&AStartFindPath::map2_Callback,this);
-    end_sub = n.subscribe<geometry_msgs::PoseStamped>("/move_base_simple/goal",1,&AStartFindPath::end_Callback,this);
+//    end_sub = n.subscribe<geometry_msgs::PoseStamped>("/move_base_simple/goal", 1, &AStartFindPath::set_Target, this);
     nav_plan = n.advertise<nav_msgs::Path>("astar_path", 1);
 }
 
@@ -309,12 +309,16 @@ void AStartFindPath::map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg)
         }
         ROS_INFO_STREAM("\n");
     }
+    sign_cacul = true;
+    ROS_INFO_STREAM("sign_cacul = true");
+    ROS_INFO_STREAM(sign_cacul);
 }
 void AStartFindPath::map2_Callback(const trimap::Trimap::ConstPtr& msg)
 {
     map.data = msg->data;
+    ROS_INFO_STREAM("get trimap.");
 }
-void AStartFindPath::end_Callback(const geometry_msgs::PoseStamped::ConstPtr& msg)
+void AStartFindPath::set_Target()
 {
 
     //  des_x=msg->pose.position.x/m_resolution;

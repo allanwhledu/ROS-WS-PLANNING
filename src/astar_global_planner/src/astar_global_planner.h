@@ -75,7 +75,7 @@ public:
     /*Callback Functions*/
     void map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg);
     void map2_Callback(const trimap::Trimap::ConstPtr& msg);
-    void end_Callback(const geometry_msgs::PoseStamped::ConstPtr& msg);
+    void set_Target();
     ros::Subscriber map_sub;
     ros::Subscriber map_sub2;
     ros::Subscriber end_sub;
