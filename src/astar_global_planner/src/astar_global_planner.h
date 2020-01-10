@@ -22,6 +22,9 @@ using namespace std;
 const int DISTANCE=10;
 const int direction[4][2]={{-1,0},{0,-1},{0,1},{1,0}};// 方向
 enum{VIABLE, WALL, INOPEN, INCLOSE, STARTPOINT, DESTINATION};
+extern int m_height;
+extern int m_width;
+extern int m_resolution;
 
 struct Node
 {
@@ -77,8 +80,9 @@ public:
     int startpoint_y;
     int endpoint_x;
     int endpoint_y;
-    int m_height,m_width;
-    double m_resolution;
+//    int m_height,m_width;
+//    double m_resolution;
+
     //Lists
     OpenList* openlist;
     CloseList* closelist ;
@@ -101,4 +105,6 @@ public:
     int *obj2 = NULL;
 };
 
-void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[]);
+
+
+void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const nav_msgs::OccupancyGrid::ConstPtr& msg);

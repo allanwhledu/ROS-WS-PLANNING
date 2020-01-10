@@ -21,8 +21,17 @@ AStartFindPath::AStartFindPath()
     startpoint_x = 0;startpoint_y = 0;
     endpoint_y = 0; endpoint_x = 0;
     x=0;y=0;
-    m_node=NULL;
+
+    m_node=new Node*[m_height];
+    for(int i=0;i<m_height ;i++)
+    {
+        m_node[i]=new Node[m_width];
+    }
+
+//    m_node = NULL;
+
     m_width=0;m_height=0;
+
     openlist = NULL;
     closelist= NULL;
     sign_cacul = false;
@@ -350,16 +359,27 @@ void AStartFindPath::setTarget()
             for(int j=0;j<m_width;j++)
                 if(m_node[i][j].flag!=WALL) m_node[i][j].flag=VIABLE;
         printf("重载节点完成！！\n");
+    } else
+    {
+//        if(openlist!=NULL){delete  openlist; openlist=NULL;}
+//        if(closelist!=NULL){delete closelist; closelist=NULL;}
+//        openlist = new OpenList;
+//        closelist= new CloseList;
+//        closelist->PtrToNode=NULL;
     }
 
     // trans start and end information to map.
     // 1. change startpoint's flag and put it into openlist.
+    ROS_INFO_STREAM("debug1");
     m_node[y][x].flag = STARTPOINT;
+
     openlist->next=NULL;
+    ROS_INFO_STREAM("debug2");
     openlist->PtrToNode= &m_node[y][x];
     startpoint_x=x;
     startpoint_y=y;
 
+    ROS_INFO_STREAM("debug3");
     // 2. change endpoint's flag.
     m_node[des_y][des_x].flag = DESTINATION;
     endpoint_x= des_x;
@@ -376,22 +396,33 @@ void AStartFindPath::clear_tmpplan()
     plan = Null_plan;
 }
 
-void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[])
+void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const nav_msgs::OccupancyGrid::ConstPtr& msg)
 {
-    msg1=new Node* [m_height]; //分配一个动态内存给m_node，它是由m_height个指向Node类的指针构成的数组
     for(int i=0;i<m_height ;i++)
     {
-        msg1[i]=new Node[m_width];
         for(int j=0;j<m_width;j++)
         {
-//            msg1[i][j].location_x = msg2[i][j].location_x;
-//            msg1[i][j].location_y = msg2[i][j].location_y;
-//            msg1[i][j].parent = msg2[i][j].parent;
-//            msg1[i][j].gray_val=msg2[i][j].gray_val;
-//            msg1[i][j].flag = msg2[i][j].flag;
-            msg1[i][j] = msg2[i][j];
+            msg1[i][j].location_x = j+1;
+            msg1[i][j].location_y =i+1;
+            msg1[i][j].parent = NULL;
+            msg1[i][j].gray_val=msg->data[(i)*m_width+(j)];
+            if(msg->data[(i)*m_width+(j)]==100) msg1[i][j].flag = WALL;
+            else msg1[i][j].flag = VIABLE;
         }
     }
+
+    for(int i=0;i<m_height ;i++)
+    {
+        for(int j=0;j<m_width;j++)
+        {
+            int x = msg2[i][j].parent->location_y;
+            int y = msg2[i][j].parent->location_x;
+            msg1[i][j].flag = msg2[i][j].flag;
+            msg1[i][j].parent = &msg1[y][x];
+        }
+    }
+
+    ROS_INFO_STREAM("deepCopyNode completed.");
 }
 
 
