@@ -135,16 +135,20 @@ int main(int argc, char** argv)
 
             deepCopyMnode(planner.m_node, m_height, m_width, init_planner.m_node, mapmsg, planner.openlist, init_planner.openlist, planner.closelist, init_planner.closelist);
 
+//            while(planner.openlist->next!=NULL)
+//            {
+//                ROS_INFO_STREAM("planner.openlist->next->PtrToNode->location_x:"<<planner.openlist->next->PtrToNode->location_x);
+//                planner.openlist = planner.openlist->next;
+//            }
 
             ROS_INFO_STREAM("planner's endpoint_x:");
             ROS_INFO_STREAM(planner.endpoint_x);
             ROS_INFO_STREAM("check m_node[][].flag:");
-            ROS_INFO_STREAM(planner.m_node[8][4].flag);
+            ROS_INFO_STREAM(planner.m_node[8][5].flag);
 
-            planner.de_map_Callback(mapmsg);
-            ROS_INFO_STREAM("planner.sign_cacul ="<<planner.sign_cacul);
-            if(planner.sign_cacul)
-                planner.setTarget();
+//            planner.de_map_Callback(mapmsg);
+            planner.setTarget();
+
             if(!planner.plan.poses.empty())
             {
                 nav_plan.publish(planner.plan);

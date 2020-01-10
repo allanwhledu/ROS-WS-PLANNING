@@ -372,16 +372,22 @@ void AStartFindPath::setTarget()
     // 1. change startpoint's flag and put it into openlist.
 
     m_node[y][x].flag = STARTPOINT;
-    openlist->next=NULL;
-    openlist->PtrToNode= &m_node[y][x];
-    startpoint_x=x;
-    startpoint_y=y;
+    if(isRootLoop)
+    {
+        openlist->next=NULL;
+        openlist->PtrToNode= &m_node[y][x];
+        startpoint_x=x;
+        startpoint_y=y;
+    }
 
 
     // 2. change endpoint's flag.
-    m_node[des_y][des_x].flag = DESTINATION;
-    endpoint_x= des_x;
-    endpoint_y=des_y;
+    if(isRootLoop)
+    {
+        m_node[des_y][des_x].flag = DESTINATION;
+        endpoint_x= des_x;
+        endpoint_y=des_y;
+    }
 
     // run algorithm.
     ROS_INFO_STREAM("getting path...");
@@ -427,11 +433,11 @@ void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const n
         }
     }
 
-    if(open1!=NULL){delete  open1; open1=NULL;}
-    if(close1!=NULL){delete close1; close1=NULL;}
-    open1 = new OpenList;
-    close1= new CloseList;
-    ROS_INFO_STREAM("debug1");
+//    if(open1!=NULL){delete  open1; open1=NULL;}
+//    if(close1!=NULL){delete close1; close1=NULL;}
+//    open1 = new OpenList;
+//    close1= new CloseList;
+//    ROS_INFO_STREAM("debug1");
 
 
     ROS_INFO_STREAM("check mnode1 same location:"<<msg1[2][7].location_x<<msg1[2][7].location_y);
@@ -446,7 +452,7 @@ void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const n
     open2_tmp = open2;
     auto open1_tmp = open1;
 
-    while (open2_tmp->next!=NULL)
+    while (open2->next!=NULL)
     {
         auto new_open = new OpenList;
         open2 = open2->next;
@@ -462,14 +468,47 @@ void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const n
     open1 = open1_tmp;
     open2 = open2_tmp;
 
-    while(open2_tmp->next!=NULL)
-    {
-        ROS_INFO_STREAM("open2->next->PtrToNode->location_x:"<<open2_tmp->next->PtrToNode->location_x);
-        ROS_INFO_STREAM("open1->next->PtrToNode->location_x:"<<open1_tmp->next->PtrToNode->location_x);
+    close1->PtrToNode = &msg1[close2->PtrToNode->location_y][close2->PtrToNode->location_x];
+    ROS_INFO_STREAM("check close1 location:"<<close1->PtrToNode->location_x);
+    ROS_INFO_STREAM("check close2 location:"<<close2->PtrToNode->location_x);
 
-        open2_tmp = open2_tmp->next;
-        open1_tmp = open1_tmp->next;
+    auto close2_tmp = new CloseList;
+    close2_tmp = close2;
+    auto close1_tmp = close1;
+
+    while (close2->next!=NULL)
+    {
+        auto new_close = new CloseList;
+        close2 = close2->next;
+        if(close2->next==NULL)
+            break;
+
+        new_close->PtrToNode = &msg1[close2->PtrToNode->location_y][close2->PtrToNode->location_x];
+
+        close1->next = new_close;
+        close1 = close1->next;
     }
+
+    close1 = close1_tmp;
+    close2 = close2_tmp;
+
+//    while(open2_tmp->next!=NULL)
+//    {
+//        ROS_INFO_STREAM("open2->next->PtrToNode->location_x:"<<open2_tmp->next->PtrToNode->location_x);
+//        ROS_INFO_STREAM("open1->next->PtrToNode->location_x:"<<open1_tmp->next->PtrToNode->location_x);
+//
+//        open2_tmp = open2_tmp->next;
+//        open1_tmp = open1_tmp->next;
+//    }
+
+//    while(close2_tmp->next!=NULL)
+//    {
+//        ROS_INFO_STREAM("close2->next->PtrToNode->location_x:"<<close2_tmp->next->PtrToNode->location_x);
+//        ROS_INFO_STREAM("close1->next->PtrToNode->location_x:"<<close1_tmp->next->PtrToNode->location_x);
+//
+//        close2_tmp = close2_tmp->next;
+//        close1_tmp = close1_tmp->next;
+//    }
 
 
     ROS_INFO_STREAM("deepCopyNode completed.");
