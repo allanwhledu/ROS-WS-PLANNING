@@ -32,8 +32,8 @@ AStartFindPath::AStartFindPath()
 
 //    m_width=0;m_height=0;
 
-    openlist = NULL;
-    closelist= NULL;
+    openlist = new OpenList;
+    closelist= new CloseList;
     sign_cacul = false;
     isRootLoop = false;
 
