@@ -25,12 +25,10 @@ enum{VIABLE, WALL, INOPEN, INCLOSE, STARTPOINT, DESTINATION};
 
 struct Node
 {
-    //char perperty;
     int    flag;
     char gray_val;
     unsigned int location_x;
     unsigned int location_y;
-    unsigned int location_z;
     unsigned int value_h;
     unsigned int value_g;
     unsigned int value_f;
@@ -40,14 +38,14 @@ struct Node
 
 struct CloseList
 {
-    Node* closenode;
+    Node* PtrToNode;
     CloseList* next;
     CloseList(){ next=NULL;};
 };
 
 struct OpenList
 {
-    Node* opennode;
+    Node* PtrToNode;
     OpenList* next;
     OpenList(){next= NULL;};
 };
@@ -68,17 +66,11 @@ public:
     bool IsInOpenList(int x, int y);
     bool IsInCloseList(int x, int y);
     void IsChangeParent(OpenList*, int x, int y);
-    bool IsAvailable(int x, int y, int time);
+    bool IsAvailable(int x, int y);
     unsigned int DistanceManhattan(int d_x, int d_y, int x, int y);
-    /*Callback Functions*/
-//    void map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg);
-//    void map2_Callback(const trimap::Trimap::ConstPtr& msg);
 
     void de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg);
     void setTarget();
-
-    ros::Subscriber end_sub;
-
 
     unsigned int steps;
     int startpoint_x;
@@ -92,7 +84,7 @@ public:
     CloseList* closelist ;
     int x,y,des_x,des_y;
     char Thrs;
-    ros::Publisher map_pub;
+
 
     // flag to go
     bool sign_cacul;
