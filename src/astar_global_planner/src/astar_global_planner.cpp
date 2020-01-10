@@ -45,8 +45,8 @@ int AStartFindPath::GetPos(int& x,int& y)
 // 计算与检测有关的子函数
 unsigned int AStartFindPath::DistanceManhattan(int d_x, int d_y, int x, int y)
 {
-    unsigned int temp=((d_x - x)>=0?(d_x - x):-(d_x - x) + (d_y-y)>=0?(d_y-y):-(d_y-y))*DISTANCE;
-//    int temp = (std::abs(d_x-x)+std::abs(d_y-y))*DISTANCE;
+//    unsigned int temp=((d_x - x)>=0?(d_x - x):-(d_x - x) + (d_y-y)>=0?(d_y-y):-(d_y-y))*DISTANCE;
+    int temp = (std::abs(d_x-x)+std::abs(d_y-y))*DISTANCE;
     return temp;
 }
 void AStartFindPath::IsChangeParent(OpenList* open,int center_x, int center_y){
