@@ -246,8 +246,11 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     while(forstepcount->parent->flag!=STARTPOINT)
     {
         ROS_INFO_STREAM("debugdebug.");
+        ROS_INFO_STREAM("point:"<<" "<<forstepcount->location_x<<" "<<forstepcount->location_y);
         forstepcount=forstepcount->parent;
         i++;
+        if(forstepcount->parent==NULL)
+            break;
     }
     i++;
     ROS_INFO_STREAM("How many steps in path: "<<i+1);
@@ -268,11 +271,15 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
         plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution; //为了使网格到栅格所以减了半个格子
         plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
         ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<plan.poses[i].pose.position.z<<" "<<tempnode->value_f);
+        if(tempnode->parent == NULL)
+            break;
     }
-    tempnode=tempnode->parent;
-    plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution; //为了使网格到栅格所以减了半个格子
-    plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
-    ROS_INFO_STREAM("i= "<<i<<" first point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<plan.poses[i].pose.position.z);
+
+    ROS_INFO_STREAM("path constructed.");
+//    tempnode=tempnode->parent;
+//    plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution; //为了使网格到栅格所以减了半个格子
+//    plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
+//    ROS_INFO_STREAM("i= "<<i<<" first point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<plan.poses[i].pose.position.z);
 
 }
 
@@ -435,6 +442,7 @@ void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const n
                 msg1[i][j].parent = &msg1[y][x];
                 ROS_INFO_STREAM("msg1[y][x]"<<msg1[y][x].location_y<<" "<<msg1[y][x].location_x);
             }
+
             if(msg2[i][j].flag==4)
             {
                 int x = msg2[i][j].location_y;
