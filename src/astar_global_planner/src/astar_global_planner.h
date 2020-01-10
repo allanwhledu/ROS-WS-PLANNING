@@ -107,4 +107,4 @@ public:
 
 
 
-void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const nav_msgs::OccupancyGrid::ConstPtr& msg);
+void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const nav_msgs::OccupancyGrid::ConstPtr& msg, OpenList* open1, OpenList* open2, CloseList* close1, CloseList* close2);

@@ -14,7 +14,7 @@
   <param name="delay" type="int" value="0" />
   <param name="x_0" type="int" value="8" />
   <param name="y_0" type="int" value="3" />
-  <param name="x_1" type="int" value="14" />
+  <param name="x_1" type="int" value="13" />
   <param name="y_1" type="int" value="7" />
 </node>
 </group>

@@ -122,15 +122,19 @@ int main(int argc, char** argv)
         if(loop_count = 2)
         {
             // new planner, wait to add
+            ROS_INFO_STREAM("m_width:"<<m_width);
+
             AStartFindPath planner;
             planner.isRootLoop = false;
             planner.startpoint_x = init_planner.plan.poses.back().pose.position.x;
             planner.startpoint_y = init_planner.plan.poses.back().pose.position.y;
-            planner.endpoint_x = init_planner.endpoint_x++;
-            planner.endpoint_x = init_planner.endpoint_x++;
-            planner.endpoint_y = init_planner.endpoint_y++;
-            planner.endpoint_y = init_planner.endpoint_y++;
-            deepCopyMnode(planner.m_node, m_height, m_width, init_planner.m_node, mapmsg);
+            planner.endpoint_x = init_planner.endpoint_x;
+            planner.endpoint_y = init_planner.endpoint_y;
+
+            ROS_INFO_STREAM("m_width:"<<m_width);
+
+            deepCopyMnode(planner.m_node, m_height, m_width, init_planner.m_node, mapmsg, planner.openlist, init_planner.openlist, planner.closelist, init_planner.closelist);
+
 
             ROS_INFO_STREAM("planner's endpoint_x:");
             ROS_INFO_STREAM(planner.endpoint_x);

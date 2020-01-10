@@ -30,7 +30,7 @@ AStartFindPath::AStartFindPath()
 
 //    m_node = NULL;
 
-    m_width=0;m_height=0;
+//    m_width=0;m_height=0;
 
     openlist = NULL;
     closelist= NULL;
@@ -45,8 +45,8 @@ int AStartFindPath::GetPos(int& x,int& y)
 //  x=AGV_transform.getOrigin().x()/m_resolution-1;
 //  y=AGV_transform.getOrigin().y()/m_resolution-1;
 
-    x=startpoint_x-1;
-    y=startpoint_y-1;
+    x=startpoint_x;
+    y=startpoint_y;
     ROS_INFO_STREAM("start point in map "<<startpoint_x<<" "<<startpoint_y<<"\n");
     return 0;
 }
@@ -222,7 +222,7 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     AddNode2Close(close,open);
 
     // circulate check...
-    while(!Check_and_Put_to_Openlist(open, open->PtrToNode->location_x - 1, open->PtrToNode->location_y - 1))
+    while(!Check_and_Put_to_Openlist(open, open->PtrToNode->location_x, open->PtrToNode->location_y))
     {
         i++;
         AddNode2Close(close,open);
@@ -238,7 +238,7 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
 
     // count path step.
     Node* forstepcount;
-    forstepcount= &m_node[open->PtrToNode->location_y - 1][open->PtrToNode->location_x - 1];
+    forstepcount= &m_node[open->PtrToNode->location_y][open->PtrToNode->location_x];
     i=0;
     while(forstepcount->parent->flag!=STARTPOINT)
     {
@@ -253,7 +253,7 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
 
     // construct path from map.
     Node* tempnode;
-    tempnode= &m_node[open->PtrToNode->location_y - 1][open->PtrToNode->location_x - 1];
+    tempnode= &m_node[open->PtrToNode->location_y][open->PtrToNode->location_x];
     plan.poses[i].pose.position.x=tempnode->location_x*m_resolution; //为了使网格到栅格所以减了半个格子
     plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
     ROS_INFO_STREAM("i= "<<i<<" last point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<plan.poses[i].pose.position.z<<" "<<tempnode->value_f);
@@ -287,8 +287,8 @@ void AStartFindPath::de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& ms
         m_node[i]=new Node[m_width];
         for(int j=0;j<m_width;j++)
         {
-            m_node[i][j].location_x = j+1;
-            m_node[i][j].location_y =i+1;
+            m_node[i][j].location_x = j;
+            m_node[i][j].location_y =i;
             m_node[i][j].parent = NULL;
             m_node[i][j].gray_val=msg->data[(i)*m_width+(j)];
             if(msg->data[(i)*m_width+(j)]==100) m_node[i][j].flag = WALL;
@@ -296,9 +296,9 @@ void AStartFindPath::de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& ms
         }
     }
     ROS_INFO_STREAM("now test the map");
-    for(int i=0;i<m_height-1 ;i++)
+    for(int i=0;i<m_height ;i++)
     {
-        for(int j=0;j<m_width-1;j++)
+        for(int j=0;j<m_width;j++)
         {
             int gray = msg->data[(i)*m_width+(j)];
 //            ROS_INFO_STREAM(gray<<" ");
@@ -328,8 +328,8 @@ void AStartFindPath::setTarget()
     //  des_y=msg->pose.position.y/m_resolution;
 
     // set target.
-    des_x=endpoint_x-1;  //因为，这里des_x,des_y是目标点的-1
-    des_y=endpoint_y-1;
+    des_x=endpoint_x;  //因为，这里des_x,des_y是目标点的-1
+    des_y=endpoint_y;
     int delay;
     ros::param::get("~delay",delay);
     ros::Duration(delay).sleep();
@@ -370,16 +370,14 @@ void AStartFindPath::setTarget()
 
     // trans start and end information to map.
     // 1. change startpoint's flag and put it into openlist.
-    ROS_INFO_STREAM("debug1");
-    m_node[y][x].flag = STARTPOINT;
 
+    m_node[y][x].flag = STARTPOINT;
     openlist->next=NULL;
-    ROS_INFO_STREAM("debug2");
     openlist->PtrToNode= &m_node[y][x];
     startpoint_x=x;
     startpoint_y=y;
 
-    ROS_INFO_STREAM("debug3");
+
     // 2. change endpoint's flag.
     m_node[des_y][des_x].flag = DESTINATION;
     endpoint_x= des_x;
@@ -396,14 +394,15 @@ void AStartFindPath::clear_tmpplan()
     plan = Null_plan;
 }
 
-void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const nav_msgs::OccupancyGrid::ConstPtr& msg)
+void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const nav_msgs::OccupancyGrid::ConstPtr& msg, OpenList* open1, OpenList* open2, CloseList* close1, CloseList* close2)
 {
     for(int i=0;i<m_height ;i++)
     {
+
         for(int j=0;j<m_width;j++)
         {
-            msg1[i][j].location_x = j+1;
-            msg1[i][j].location_y =i+1;
+            msg1[i][j].location_x = j;
+            msg1[i][j].location_y =i;
             msg1[i][j].parent = NULL;
             msg1[i][j].gray_val=msg->data[(i)*m_width+(j)];
             if(msg->data[(i)*m_width+(j)]==100) msg1[i][j].flag = WALL;
@@ -415,12 +414,63 @@ void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const n
     {
         for(int j=0;j<m_width;j++)
         {
-            int x = msg2[i][j].parent->location_y;
-            int y = msg2[i][j].parent->location_x;
-            msg1[i][j].flag = msg2[i][j].flag;
-            msg1[i][j].parent = &msg1[y][x];
+
+            if(msg2[i][j].parent!=NULL)
+            {
+                ROS_INFO_STREAM("debug0");
+                int x = msg2[i][j].parent->location_y;
+                int y = msg2[i][j].parent->location_x;
+                msg1[i][j].flag = msg2[i][j].flag;
+                msg1[i][j].parent = &msg1[y][x];
+                ROS_INFO_STREAM("msg1[y][x]"<<msg1[y][x].location_y<<" "<<msg1[y][x].location_x);
+            }
         }
     }
+
+    if(open1!=NULL){delete  open1; open1=NULL;}
+    if(close1!=NULL){delete close1; close1=NULL;}
+    open1 = new OpenList;
+    close1= new CloseList;
+    ROS_INFO_STREAM("debug1");
+
+
+    ROS_INFO_STREAM("check mnode1 same location:"<<msg1[2][7].location_x<<msg1[2][7].location_y);
+    ROS_INFO_STREAM("check mnode2 same location:"<<msg2[2][7].location_x<<msg2[2][7].location_y);
+
+
+    open1->PtrToNode = &msg1[open2->PtrToNode->location_y][open2->PtrToNode->location_x];
+    ROS_INFO_STREAM("check open1 location:"<<open1->PtrToNode->location_x);
+    ROS_INFO_STREAM("check open2 location:"<<open2->PtrToNode->location_x);
+
+    auto open2_tmp = new OpenList;
+    open2_tmp = open2;
+    auto open1_tmp = open1;
+
+    while (open2_tmp->next!=NULL)
+    {
+        auto new_open = new OpenList;
+        open2 = open2->next;
+        if(open2->next==NULL)
+            break;
+
+        new_open->PtrToNode = &msg1[open2->PtrToNode->location_y][open2->PtrToNode->location_x];
+
+        open1->next = new_open;
+        open1 = open1->next;
+    }
+
+    open1 = open1_tmp;
+    open2 = open2_tmp;
+
+    while(open2_tmp->next!=NULL)
+    {
+        ROS_INFO_STREAM("open2->next->PtrToNode->location_x:"<<open2_tmp->next->PtrToNode->location_x);
+        ROS_INFO_STREAM("open1->next->PtrToNode->location_x:"<<open1_tmp->next->PtrToNode->location_x);
+
+        open2_tmp = open2_tmp->next;
+        open1_tmp = open1_tmp->next;
+    }
+
 
     ROS_INFO_STREAM("deepCopyNode completed.");
 }
