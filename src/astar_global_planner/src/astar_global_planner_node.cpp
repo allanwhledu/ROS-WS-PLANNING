@@ -126,8 +126,8 @@ int main(int argc, char** argv)
 
             AStartFindPath planner;
             planner.isRootLoop = false;
-            planner.startpoint_x = init_planner.plan.poses.back().pose.position.x;
-            planner.startpoint_y = init_planner.plan.poses.back().pose.position.y;
+            planner.startpoint_x = init_planner.startpoint_x;
+            planner.startpoint_y = init_planner.startpoint_y;
             planner.endpoint_x = init_planner.endpoint_x;
             planner.endpoint_y = init_planner.endpoint_y;
 
@@ -135,18 +135,15 @@ int main(int argc, char** argv)
 
             deepCopyMnode(planner.m_node, m_height, m_width, init_planner.m_node, mapmsg, planner.openlist, init_planner.openlist, planner.closelist, init_planner.closelist);
 
-//            while(planner.openlist->next!=NULL)
-//            {
-//                ROS_INFO_STREAM("planner.openlist->next->PtrToNode->location_x:"<<planner.openlist->next->PtrToNode->location_x);
-//                planner.openlist = planner.openlist->next;
-//            }
 
             ROS_INFO_STREAM("planner's endpoint_x:");
             ROS_INFO_STREAM(planner.endpoint_x);
             ROS_INFO_STREAM("check m_node[][].flag:");
             ROS_INFO_STREAM(planner.m_node[8][5].flag);
 
-//            planner.de_map_Callback(mapmsg);
+            ROS_INFO_STREAM(planner.m_node[8][5].flag);
+
+
             planner.setTarget();
 
             if(!planner.plan.poses.empty())

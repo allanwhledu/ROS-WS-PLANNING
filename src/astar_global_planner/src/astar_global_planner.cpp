@@ -167,13 +167,14 @@ bool AStartFindPath::Check_and_Put_to_Openlist(OpenList* open,int center_x, int 
     ROS_INFO_STREAM("now points in open:");
     while(tempopen->next!=NULL)
     {
-        ROS_INFO_STREAM(tempopen->PtrToNode->location_x << " " << tempopen->PtrToNode->location_y);
+        ROS_INFO_STREAM(tempopen->PtrToNode->location_x << " " << tempopen->PtrToNode->location_y<<" flag"<<tempopen->PtrToNode->flag<<" f"<<tempopen->PtrToNode->value_f);
         tempopen = tempopen->next;
     }
-    ROS_INFO_STREAM(tempopen->PtrToNode->location_x << " " << tempopen->PtrToNode->location_y);
+    ROS_INFO_STREAM(tempopen->PtrToNode->location_x << " " << tempopen->PtrToNode->location_y<<" flag"<<tempopen->PtrToNode->flag<<" f"<<tempopen->PtrToNode->value_f);
+
 
     // 利用传入的center xy信息开始check
-    ROS_INFO_STREAM("checking point "<<m_node[center_y][center_x].location_x<<","<<m_node[center_y][center_x].location_y<<","<<", g:"<<m_node[center_y][center_x].value_g<<", f:"<<m_node[center_y][center_x].value_f);
+    ROS_INFO_STREAM("checking point "<<m_node[center_y][center_x].location_x<<","<<m_node[center_y][center_x].location_y<<","<<", g:"<<m_node[center_y][center_x].value_g<<", f:"<<m_node[center_y][center_x].value_f<<", flag:"<<m_node[center_y][center_x].flag);
     int i;
     for(i=0; i<4 ; i++)
     {
@@ -216,10 +217,11 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     printf("开始计算路径！\n");
 
     // check 1 step from startpoint.
-    Check_and_Put_to_Openlist(open,startpoint_x,startpoint_y);
-
-    // take 1st openlist node to closelist.
-    AddNode2Close(close,open);
+    ROS_INFO_STREAM("start points:"<<startpoint_x<<" "<<startpoint_y);
+//    Check_and_Put_to_Openlist(open,startpoint_x,startpoint_y);
+//
+//    // take 1st openlist node to closelist.
+//    AddNode2Close(close,open);
 
     // circulate check...
     while(!Check_and_Put_to_Openlist(open, open->PtrToNode->location_x, open->PtrToNode->location_y))
@@ -239,9 +241,11 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     // count path step.
     Node* forstepcount;
     forstepcount= &m_node[open->PtrToNode->location_y][open->PtrToNode->location_x];
+
     i=0;
     while(forstepcount->parent->flag!=STARTPOINT)
     {
+        ROS_INFO_STREAM("debugdebug.");
         forstepcount=forstepcount->parent;
         i++;
     }
@@ -265,7 +269,6 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
         plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
         ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<plan.poses[i].pose.position.z<<" "<<tempnode->value_f);
     }
-
     tempnode=tempnode->parent;
     plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution; //为了使网格到栅格所以减了半个格子
     plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
@@ -343,6 +346,7 @@ void AStartFindPath::setTarget()
 
     // set start.
     GetPos(x,y);
+
     ROS_INFO_STREAM("start and it's flag "<<m_node[y][x].location_x<<" "<<m_node[y][x].location_y<<" "<<m_node[y][x].flag);
 
 
@@ -420,14 +424,22 @@ void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const n
     {
         for(int j=0;j<m_width;j++)
         {
-
             if(msg2[i][j].parent!=NULL)
             {
-                ROS_INFO_STREAM("debug0");
                 int x = msg2[i][j].parent->location_y;
                 int y = msg2[i][j].parent->location_x;
                 msg1[i][j].flag = msg2[i][j].flag;
+                msg1[i][j].value_g = msg2[i][j].value_g;
+                msg1[i][j].value_h = msg2[i][j].value_h;
+                msg1[i][j].value_f = msg2[i][j].value_f;
                 msg1[i][j].parent = &msg1[y][x];
+                ROS_INFO_STREAM("msg1[y][x]"<<msg1[y][x].location_y<<" "<<msg1[y][x].location_x);
+            }
+            if(msg2[i][j].flag==4)
+            {
+                int x = msg2[i][j].location_y;
+                int y = msg2[i][j].location_x;
+                msg1[i][j].flag = msg2[i][j].flag;
                 ROS_INFO_STREAM("msg1[y][x]"<<msg1[y][x].location_y<<" "<<msg1[y][x].location_x);
             }
         }
@@ -448,12 +460,24 @@ void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const n
     ROS_INFO_STREAM("check open1 location:"<<open1->PtrToNode->location_x);
     ROS_INFO_STREAM("check open2 location:"<<open2->PtrToNode->location_x);
 
+
+
     auto open2_tmp = new OpenList;
     open2_tmp = open2;
     auto open1_tmp = open1;
 
+//    while(open2_tmp->next!=NULL)
+//    {
+//        ROS_INFO_STREAM("open2->next->PtrToNode->location_x:"<<open2_tmp->next->PtrToNode->location_x);
+//        ROS_INFO_STREAM("open2->next->PtrToNode->location_y:"<<open2_tmp->next->PtrToNode->location_y);
+//
+//        open2_tmp = open2_tmp->next;
+//    }
+
+
     while (open2->next!=NULL)
     {
+        ROS_INFO_STREAM("get a opennode.");
         auto new_open = new OpenList;
         open2 = open2->next;
         if(open2->next==NULL)
@@ -466,6 +490,20 @@ void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const n
     }
 
     open1 = open1_tmp;
+    auto fakeopen1 = new OpenList;
+    fakeopen1->next = open1;
+    while(open1_tmp->next!=NULL)
+    {
+        if(open1_tmp->PtrToNode->flag==3)
+        {
+            fakeopen1->next = open1_tmp->next;
+            open1_tmp = open1_tmp->next;
+            continue;
+        }
+        open1_tmp=open1_tmp->next;
+        fakeopen1 = fakeopen1->next;
+    }
+
     open2 = open2_tmp;
 
     close1->PtrToNode = &msg1[close2->PtrToNode->location_y][close2->PtrToNode->location_x];
@@ -478,6 +516,7 @@ void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const n
 
     while (close2->next!=NULL)
     {
+        ROS_INFO_STREAM("get a closenode.");
         auto new_close = new CloseList;
         close2 = close2->next;
         if(close2->next==NULL)
