@@ -94,29 +94,32 @@ int main(int argc, char** argv)
 
     ros::Rate r(1.0);
     int loop_count = 1;
-    while (ros::ok() && loop_count<3)
+    while (ros::ok() && loop_count<2)
     {
         ros::spinOnce();
         ROS_INFO_STREAM("spin passed.");
 
         if(loop_count == 1)
         {
-
+            ROS_INFO_STREAM("loop 1");
             init_planner.de_map_Callback(mapmsg);
-            ROS_INFO_STREAM("init_planner.sign_cacul =");
-            ROS_INFO_STREAM(init_planner.sign_cacul);
-            if(init_planner.sign_cacul)
-                init_planner.setTarget();
+
+            init_planner.setTarget();
+
             if(!init_planner.plan.poses.empty())
             {
                 nav_plan.publish(init_planner.plan);
                 ROS_INFO_STREAM("Got init_plan_segment.");
             }
+
+            ROS_INFO_STREAM("0, 0: "<<init_planner.m_node[0][0].flag);
             ROS_INFO_STREAM("next loop -----------------------");
         }
 
-        if(loop_count = 2)
+//        if(loop_count = 2)
+        if(0)
         {
+            ROS_INFO_STREAM("loop 2");
             // new planner, wait to add
             ROS_INFO_STREAM("m_width:"<<m_width);
 

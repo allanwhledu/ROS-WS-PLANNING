@@ -28,13 +28,9 @@ AStartFindPath::AStartFindPath()
         m_node[i]=new Node[m_width];
     }
 
-//    m_node = NULL;
-
-//    m_width=0;m_height=0;
-
     openlist = new OpenList;
     closelist= new CloseList;
-    sign_cacul = false;
+
     isRootLoop = false;
 
 }
@@ -42,9 +38,6 @@ AStartFindPath::AStartFindPath()
 // 获得目的坐标参数的子函数
 int AStartFindPath::GetPos(int& x,int& y)
 {
-//  x=AGV_transform.getOrigin().x()/m_resolution-1;
-//  y=AGV_transform.getOrigin().y()/m_resolution-1;
-
     x=startpoint_x;
     y=startpoint_y;
     ROS_INFO_STREAM("start point in map "<<startpoint_x<<" "<<startpoint_y<<"\n");
@@ -96,7 +89,7 @@ bool AStartFindPath::IsInOpenList(int x,int y)
 }
 bool AStartFindPath::IsInCloseList(int x,int y)
 {
-    if(m_node[y][x].flag == INCLOSE|| m_node[y][x].flag==STARTPOINT)
+    if(m_node[y][x].flag == INCLOSE)
         return true;
     else
         return false;
@@ -191,7 +184,6 @@ bool AStartFindPath::Check_and_Put_to_Openlist(OpenList* open,int center_x, int 
                 return true;
             }
 
-            m_node[new_y][new_x].flag =INOPEN;
             m_node[new_y][new_x].parent = &m_node[center_y][center_x];
 
             m_node[new_y][new_x].value_h = DistanceManhattan(endpoint_x, endpoint_y, new_x,new_y);//曼哈顿距离
@@ -242,50 +234,48 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     Node* forstepcount;
     forstepcount= &m_node[open->PtrToNode->location_y][open->PtrToNode->location_x];
 
-    i=0;
+    i=1;
     while(forstepcount->parent->flag!=STARTPOINT)
     {
         ROS_INFO_STREAM("debugdebug.");
         ROS_INFO_STREAM("point:"<<" "<<forstepcount->location_x<<" "<<forstepcount->location_y);
         forstepcount=forstepcount->parent;
         i++;
-        if(forstepcount->parent==NULL)
-            break;
     }
     i++;
-    ROS_INFO_STREAM("How many steps in path: "<<i+1);
-    plan.poses.resize(i+1);
+    ROS_INFO_STREAM("How many steps in path: "<<i);
+    plan.poses.resize(i);
     plan.header.frame_id="odom";
 
 
     // construct path from map.
     Node* tempnode;
     tempnode= &m_node[open->PtrToNode->location_y][open->PtrToNode->location_x];
-    plan.poses[i].pose.position.x=tempnode->location_x*m_resolution; //为了使网格到栅格所以减了半个格子
-    plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
-    ROS_INFO_STREAM("i= "<<i<<" last point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<plan.poses[i].pose.position.z<<" "<<tempnode->value_f);
 
     while(tempnode->parent->flag!=STARTPOINT)
     {
-        tempnode=tempnode->parent;
-        plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution; //为了使网格到栅格所以减了半个格子
+
+        plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
         plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
         ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<plan.poses[i].pose.position.z<<" "<<tempnode->value_f);
-        if(tempnode->parent == NULL)
-            break;
+
+        tempnode=tempnode->parent;
     }
+    plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
+    plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
+    ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<plan.poses[i].pose.position.z<<" "<<tempnode->value_f);
+
+    plan.poses[--i].pose.position.x=startpoint_x*m_resolution;
+    plan.poses[i].pose.position.y=startpoint_x*m_resolution;
+    ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<plan.poses[i].pose.position.z<<" "<<tempnode->value_f);
+
 
     ROS_INFO_STREAM("path constructed.");
-//    tempnode=tempnode->parent;
-//    plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution; //为了使网格到栅格所以减了半个格子
-//    plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
-//    ROS_INFO_STREAM("i= "<<i<<" first point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<plan.poses[i].pose.position.z);
-
 }
 
-// 用于交互的ROS回调函数
 void AStartFindPath::de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 {
+    // global var.
     m_height=msg->info.height;
     m_width=msg->info.width;
     m_resolution=msg->info.resolution;
@@ -305,6 +295,7 @@ void AStartFindPath::de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& ms
             else m_node[i][j].flag = VIABLE;
         }
     }
+
     ROS_INFO_STREAM("now test the map");
     for(int i=0;i<m_height ;i++)
     {
@@ -325,24 +316,17 @@ void AStartFindPath::de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& ms
         }
 //        ROS_INFO_STREAM("\n");
     }
-    sign_cacul = true;
-
-    ROS_INFO_STREAM("sign_cacul = true");
-    ROS_INFO_STREAM(sign_cacul);
 }
 
 void AStartFindPath::setTarget()
 {
-
-    //  des_x=msg->pose.position.x/m_resolution;
-    //  des_y=msg->pose.position.y/m_resolution;
-
-    // set target.
-    des_x=endpoint_x;  //因为，这里des_x,des_y是目标点的-1
-    des_y=endpoint_y;
     int delay;
     ros::param::get("~delay",delay);
     ros::Duration(delay).sleep();
+
+    // set target.
+    des_x=endpoint_x;
+    des_y=endpoint_y;
     ROS_INFO_STREAM("goal and it's flag "<<m_node[des_y][des_x].location_x<<" "<<m_node[des_y][des_x].location_y<<" "<<m_node[des_y][des_x].flag);
     // check target.
     if(m_node[des_y][des_x].flag==WALL)
@@ -353,7 +337,6 @@ void AStartFindPath::setTarget()
 
     // set start.
     GetPos(x,y);
-
     ROS_INFO_STREAM("start and it's flag "<<m_node[y][x].location_x<<" "<<m_node[y][x].location_y<<" "<<m_node[y][x].flag);
 
 
@@ -361,14 +344,12 @@ void AStartFindPath::setTarget()
     if(isRootLoop)
     {
         printf("重载节点！！\n");
-        if(openlist!=NULL){delete  openlist; openlist=NULL;}
-        if(closelist!=NULL){delete closelist; closelist=NULL;}
-        openlist = new OpenList;
-        closelist= new CloseList;
+
         closelist->PtrToNode=NULL;
         for(int i=0;i<m_height ;i++)
             for(int j=0;j<m_width;j++)
                 if(m_node[i][j].flag!=WALL) m_node[i][j].flag=VIABLE;
+
         printf("重载节点完成！！\n");
     } else
     {
