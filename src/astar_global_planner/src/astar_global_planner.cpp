@@ -239,6 +239,8 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     {
         ROS_INFO_STREAM("debugdebug.");
         ROS_INFO_STREAM("point:"<<" "<<forstepcount->location_x<<" "<<forstepcount->location_y);
+
+        ROS_INFO_STREAM("forstepcount->parent->flag:"<<forstepcount->parent->flag);
         forstepcount=forstepcount->parent;
         i++;
     }
@@ -257,17 +259,18 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
 
         plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
         plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
-        ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<plan.poses[i].pose.position.z<<" "<<tempnode->value_f);
+        ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
 
         tempnode=tempnode->parent;
     }
     plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
     plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
-    ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<plan.poses[i].pose.position.z<<" "<<tempnode->value_f);
+    ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
 
+//    tempnode=tempnode->parent;
     plan.poses[--i].pose.position.x=startpoint_x*m_resolution;
-    plan.poses[i].pose.position.y=startpoint_x*m_resolution;
-    ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<plan.poses[i].pose.position.z<<" "<<tempnode->value_f);
+    plan.poses[i].pose.position.y=startpoint_y*m_resolution;
+    ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<m_node[startpoint_y][startpoint_x].flag<<" "<<m_node[startpoint_y][startpoint_x].value_f);
 
 
     ROS_INFO_STREAM("path constructed.");
@@ -465,35 +468,73 @@ void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const n
 
     while (open2->next!=NULL)
     {
-        ROS_INFO_STREAM("get a opennode.");
         auto new_open = new OpenList;
         open2 = open2->next;
         if(open2->next==NULL)
             break;
 
         new_open->PtrToNode = &msg1[open2->PtrToNode->location_y][open2->PtrToNode->location_x];
+        ROS_INFO_STREAM("get a opennode. "<<new_open->PtrToNode->location_x<<" "<<new_open->PtrToNode->location_y<<" "<<new_open->PtrToNode->flag);
 
         open1->next = new_open;
         open1 = open1->next;
     }
 
     // filter openlist.
-    open1 = open1_tmp;
+//    open1 = open1_tmp;
+
     auto fakeopen1 = new OpenList;
-    fakeopen1->next = open1;
+    auto fakeopen2 = new OpenList;
+    fakeopen1 = open1_tmp;
+    fakeopen2->next = open1_tmp;
+
+//    if(open1_tmp->PtrToNode->flag==4)
+//    {
+//        open1_tmp = open1_tmp->next;
+//    }
+//    else
+//        open1_tmp = open1_tmp->next;
+
+    fakeopen1 = fakeopen1->next;
+    while(fakeopen1->next!=NULL)
+    {
+        if(fakeopen1->PtrToNode->flag==4 || fakeopen1->PtrToNode->flag==3)
+        {
+            fakeopen2->next->next = fakeopen1->next;
+            ROS_INFO_STREAM("filt openlist: "<<fakeopen1->PtrToNode->location_x<<" "<<fakeopen1->PtrToNode->location_y<<" "<<fakeopen1->PtrToNode->flag);
+            fakeopen1 = fakeopen1->next;
+        } else
+        {
+            fakeopen2 = fakeopen2->next;
+            fakeopen1 = fakeopen1->next;
+        }
+
+
+//        if(open1_tmp->PtrToNode->flag==4)
+//        {
+//            ROS_INFO_STREAM("filt openlist: "<<open1_tmp->PtrToNode->location_x<<" "<<open1_tmp->PtrToNode->location_y<<" "<<open1_tmp->PtrToNode->flag);
+//            open1_tmp = open1_tmp->next;
+//            fakeopen1 = open1_tmp;
+//            continue;
+//        } else
+//        {
+//            open1_tmp = open1_tmp->next;
+//            fakeopen1 = fakeopen1->next;
+//            continue;
+//        }
+    }
+    open1 = open1_tmp;
+
+
+    open1_tmp = open1;
     while(open1_tmp->next!=NULL)
     {
-        if(open1_tmp->PtrToNode->flag==3)
-        {
-            fakeopen1->next = open1_tmp->next;
-            open1_tmp = open1_tmp->next;
-            continue;
-        }
-        open1_tmp=open1_tmp->next;
-        fakeopen1 = fakeopen1->next;
+        ROS_INFO_STREAM("open1->next->PtrToNode:"<<open2_tmp->PtrToNode->location_x<<" "<<open1_tmp->PtrToNode->location_y<<" "<<open1_tmp->PtrToNode->flag);
+
+        open1_tmp = open1_tmp->next;
     }
 
-    open2 = open2_tmp;
+//    open2 = open2_tmp;
 
     close1->PtrToNode = &msg1[close2->PtrToNode->location_y][close2->PtrToNode->location_x];
     ROS_INFO_STREAM("check close1 location:"<<close1->PtrToNode->location_x);

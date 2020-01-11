@@ -116,8 +116,8 @@ int main(int argc, char** argv)
             ROS_INFO_STREAM("next loop -----------------------");
         }
 
-//        if(loop_count = 2)
-        if(0)
+        if(loop_count = 2)
+//        if(0)
         {
             ROS_INFO_STREAM("loop 2");
             // new planner, wait to add
