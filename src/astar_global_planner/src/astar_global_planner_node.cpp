@@ -84,7 +84,7 @@ int main(int argc, char** argv)
     ros::param::get("~y_1",init_planner.endpoint_y);
 
 
-    AStartFindPath planner2;
+
 
     // wait for mapmsg.
     while (ros::ok)
@@ -104,6 +104,9 @@ int main(int argc, char** argv)
     {
         ros::spinOnce();
         ROS_INFO_STREAM("spin passed.");
+
+        AStartFindPath planner1;
+        AStartFindPath planner2;
 
         if(loop_count == 1)
         {
@@ -130,7 +133,7 @@ int main(int argc, char** argv)
         if(loop_count ==2 )
 //        if(0)
         {
-            AStartFindPath planner1;
+
             ROS_INFO_STREAM("loop: "<<loop_count);
             // new planner, wait to add
             ROS_INFO_STREAM("m_width:"<<m_width);
@@ -182,44 +185,43 @@ int main(int argc, char** argv)
             // new planner, wait to add
             ROS_INFO_STREAM("m_width:"<<m_width);
 
-            AStartFindPath planner;
-            planner.isRootLoop = false;
-            planner.startpoint_x = init_planner.startpoint_x;
-            planner.startpoint_y = init_planner.startpoint_y;
-            planner.endpoint_x = init_planner.endpoint_x;
-            planner.endpoint_y = init_planner.endpoint_y;
-            planner.last_endpoint_x = vlast_endpoint_x.back();
-            planner.last_endpoint_y = vlast_endpoint_y.back();
+            planner2.isRootLoop = false;
+            planner2.startpoint_x = planner1.startpoint_x;
+            planner2.startpoint_y = planner1.startpoint_y;
+            planner2.endpoint_x = planner1.endpoint_x;
+            planner2.endpoint_y = planner1.endpoint_y;
+            planner2.last_endpoint_x = vlast_endpoint_x.back();
+            planner2.last_endpoint_y = vlast_endpoint_y.back();
 
             ROS_INFO_STREAM("m_width:"<<m_width);
 
-            deepCopyMnode(planner.m_node, m_height, m_width, init_planner.m_node, mapmsg, planner.openlist, init_planner.openlist, planner.closelist, init_planner.closelist);
+            deepCopyMnode(planner2.m_node, m_height, m_width, planner1.m_node, mapmsg, planner2.openlist, planner1.openlist, planner2.closelist, planner1.closelist);
 
 
             ROS_INFO_STREAM("planner's endpoint_x:");
-            ROS_INFO_STREAM(planner.endpoint_x);
+            ROS_INFO_STREAM(planner2.endpoint_x);
             ROS_INFO_STREAM("check m_node[][].flag:");
-            ROS_INFO_STREAM(planner.m_node[8][5].flag);
-            ROS_INFO_STREAM(planner.m_node[8][5].flag);
+            ROS_INFO_STREAM(planner2.m_node[8][5].flag);
+            ROS_INFO_STREAM(planner2.m_node[8][5].flag);
 
 
-            planner.setTarget();
+            planner2.setTarget();
 
-            if(!planner.plan.poses.empty())
+            if(!planner2.plan.poses.empty())
             {
-                nav_plan.publish(planner.plan);
-                vlast_endpoint_x.push_back(planner.plan.poses.back().pose.position.x);
-                vlast_endpoint_y.push_back(planner.plan.poses.back().pose.position.y);
+                nav_plan.publish(planner2.plan);
+                vlast_endpoint_x.push_back(planner2.plan.poses.back().pose.position.x);
+                vlast_endpoint_y.push_back(planner2.plan.poses.back().pose.position.y);
                 ROS_INFO_STREAM("Got plan_segment.");
             }
             ROS_INFO_STREAM("next loop -----------------------");
 
             ROS_INFO_STREAM("check mnode:");
-            init_planner.m_node[4][4].flag = 1;
-            ROS_INFO_STREAM("init_planner.m_node[4][4].flag ="<<init_planner.m_node[4][4].flag);
-            planner.m_node[4][4].flag = 2;
-            ROS_INFO_STREAM("init_planner.m_node[4][4].flag ="<<init_planner.m_node[4][4].flag);
-            ROS_INFO_STREAM("planner.m_node[4][4].flag ="<<planner.m_node[4][4].flag);
+            planner1.m_node[4][4].flag = 1;
+            ROS_INFO_STREAM("planner1.m_node[4][4].flag ="<<planner1.m_node[4][4].flag);
+            planner2.m_node[4][4].flag = 2;
+            ROS_INFO_STREAM("planner1.m_node[4][4].flag ="<<planner1.m_node[4][4].flag);
+            ROS_INFO_STREAM("planner.m_node[4][4].flag ="<<planner2.m_node[4][4].flag);
         }
 
 
