@@ -22,6 +22,7 @@ using namespace std;
 const int DISTANCE=10;
 const int direction[4][2]={{-1,0},{0,-1},{0,1},{1,0}};// 方向
 enum{VIABLE, WALL, INOPEN, INCLOSE, STARTPOINT, DESTINATION};
+
 extern int m_height;
 extern int m_width;
 extern int m_resolution;

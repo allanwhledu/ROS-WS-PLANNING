@@ -482,7 +482,6 @@ void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const n
 //        open2_tmp = open2_tmp->next;
 //    }
 
-
     while (open2->next!=NULL)
     {
         ROS_INFO_STREAM("get a opennode.");
@@ -497,6 +496,7 @@ void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const n
         open1 = open1->next;
     }
 
+    // filter openlist.
     open1 = open1_tmp;
     auto fakeopen1 = new OpenList;
     fakeopen1->next = open1;

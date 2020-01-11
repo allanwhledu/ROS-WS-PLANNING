@@ -1,12 +1,6 @@
 #include "astar_global_planner.h"
 #include "tree.hh"
 
-//struct pattern
-//{
-//    int robot1;
-//    int robot2;
-//};
-
 nav_msgs::OccupancyGrid::ConstPtr mapmsg;
 bool isCenterMapGet = false;
 int m_height;
@@ -77,6 +71,7 @@ int main(int argc, char** argv)
     init_leafv.push_back(init_leaf);
     init_leafv.at(1)=tr2.insert(init_leafv.at(0),second);
 
+    // path planning part.
     AStartFindPath init_planner;
     init_planner.isRootLoop = true;
 
@@ -85,6 +80,7 @@ int main(int argc, char** argv)
     ros::param::get("~x_1",init_planner.endpoint_x);
     ros::param::get("~y_1",init_planner.endpoint_y);
 
+    // wait for mapmsg.
     while (ros::ok)
     {
         ros::spinOnce();
@@ -140,7 +136,6 @@ int main(int argc, char** argv)
             ROS_INFO_STREAM(planner.endpoint_x);
             ROS_INFO_STREAM("check m_node[][].flag:");
             ROS_INFO_STREAM(planner.m_node[8][5].flag);
-
             ROS_INFO_STREAM(planner.m_node[8][5].flag);
 
 
