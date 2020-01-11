@@ -61,11 +61,13 @@ void AStartFindPath::IsChangeParent(OpenList* open,int center_x, int center_y){
         {
             if(m_node[new_y][new_x].value_g > m_node[center_y][center_x].value_g+10)
             {
+                ROS_INFO_STREAM("changing parents.");
                 m_node[new_y][new_x].parent = &m_node[center_y][center_x];
                 m_node[new_y][new_x].value_g = m_node[center_y][center_x].value_g+10;
             }
         }
     }
+
 }
 bool AStartFindPath::IsAvailable(int x, int y)
 {
@@ -96,8 +98,9 @@ bool AStartFindPath::IsInCloseList(int x,int y)
 }
 
 // 与维护列表有关的子函数
-void AddNode2Open(OpenList* openlist, Node* node)
+void  AddNode2Open(OpenList* openlist, Node* node)
 {
+    ROS_INFO_STREAM("added node "<<node->location_x<<","<<node->location_y<<","<<", h:"<<node->value_h<<","<<", g:"<<node->value_g<<", f:"<<node->value_f);
     if(openlist ==NULL)
     {
         cout<<"no data in openlist!"<<endl;
@@ -160,10 +163,10 @@ bool AStartFindPath::Check_and_Put_to_Openlist(OpenList* open,int center_x, int 
     ROS_INFO_STREAM("now points in open:");
     while(tempopen->next!=NULL)
     {
-        ROS_INFO_STREAM(tempopen->PtrToNode->location_x << " " << tempopen->PtrToNode->location_y<<" flag"<<tempopen->PtrToNode->flag<<" f"<<tempopen->PtrToNode->value_f);
+        ROS_INFO_STREAM(tempopen->PtrToNode->location_x << " " << tempopen->PtrToNode->location_y<<" flag"<<tempopen->PtrToNode->flag<<" h"<<tempopen->PtrToNode->value_h<<" g"<<tempopen->PtrToNode->value_g<<" f"<<tempopen->PtrToNode->value_f);
         tempopen = tempopen->next;
     }
-    ROS_INFO_STREAM(tempopen->PtrToNode->location_x << " " << tempopen->PtrToNode->location_y<<" flag"<<tempopen->PtrToNode->flag<<" f"<<tempopen->PtrToNode->value_f);
+    ROS_INFO_STREAM(tempopen->PtrToNode->location_x << " " << tempopen->PtrToNode->location_y<<" flag"<<tempopen->PtrToNode->flag<<" h"<<tempopen->PtrToNode->value_h<<" g"<<tempopen->PtrToNode->value_g<<" f"<<tempopen->PtrToNode->value_f);
 
 
     // 利用传入的center xy信息开始check
@@ -191,8 +194,9 @@ bool AStartFindPath::Check_and_Put_to_Openlist(OpenList* open,int center_x, int 
             m_node[new_y][new_x].value_f = m_node[new_y][new_x].value_g+m_node[new_y][new_x].value_h;
 
             // 加入到 openlist中
+
+            ROS_INFO_STREAM("add node "<<m_node[new_y][new_x].location_x<<","<<m_node[new_y][new_x].location_y<<","<<", h:"<<m_node[new_y][new_x].value_h<<","<<", g:"<<m_node[new_y][new_x].value_g<<", f:"<<m_node[new_y][new_x].value_f);
             AddNode2Open(open, &m_node[new_y][new_x]);
-            ROS_INFO_STREAM("add node "<<m_node[new_y][new_x].location_x<<","<<m_node[new_y][new_x].location_y<<","<<", g:"<<m_node[new_y][new_x].value_g<<", f:"<<m_node[new_y][new_x].value_f);
         }
         else
             ROS_INFO_STREAM("will not add node "<<m_node[new_y][new_x].location_x<<","<<m_node[new_y][new_x].location_y<<","<<", g:"<<m_node[new_y][new_x].value_g<<", f:"<<m_node[new_y][new_x].value_f);
@@ -457,8 +461,10 @@ void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const n
     {
         for(int j=0;j<m_width;j++)
         {
+//            ROS_INFO_STREAM("is that there no parents?");
             if(msg2[i][j].parent!=NULL)
             {
+
                 int x = msg2[i][j].parent->location_y;
                 int y = msg2[i][j].parent->location_x;
                 msg1[i][j].flag = msg2[i][j].flag;
@@ -511,7 +517,7 @@ void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const n
 //
 //        open2_tmp = open2_tmp->next;
 //    }
-
+    ROS_INFO_STREAM("debug test.");
     while (open2->next!=NULL)
     {
         auto new_open = new OpenList;

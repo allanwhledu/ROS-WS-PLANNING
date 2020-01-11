@@ -98,15 +98,16 @@ int main(int argc, char** argv)
         }
     }
 
+
+    AStartFindPath planner1;
+    AStartFindPath planner2;
+
     ros::Rate r(1.0);
     int loop_count = 1;
     while (ros::ok() && loop_count<5)
     {
         ros::spinOnce();
         ROS_INFO_STREAM("spin passed.");
-
-        AStartFindPath planner1;
-        AStartFindPath planner2;
 
         if(loop_count == 1)
         {
@@ -170,12 +171,12 @@ int main(int argc, char** argv)
             }
             ROS_INFO_STREAM("next loop -----------------------");
 
-            ROS_INFO_STREAM("check mnode:");
-            init_planner.m_node[4][4].flag = 1;
-            ROS_INFO_STREAM("init_planner.m_node[4][4].flag ="<<init_planner.m_node[4][4].flag);
-            planner1.m_node[4][4].flag = 2;
-            ROS_INFO_STREAM("init_planner.m_node[4][4].flag ="<<init_planner.m_node[4][4].flag);
-            ROS_INFO_STREAM("planner.m_node[4][4].flag ="<<planner1.m_node[4][4].flag);
+//            ROS_INFO_STREAM("check mnode:");
+////            init_planner.m_node[4][4].flag = 1;
+//            ROS_INFO_STREAM("init_planner.m_node[4][4].flag ="<<init_planner.m_node[4][4].flag);
+////            planner1.m_node[4][4].flag = 2;
+//            ROS_INFO_STREAM("init_planner.m_node[4][4].flag ="<<init_planner.m_node[4][4].flag);
+//            ROS_INFO_STREAM("planner.m_node[4][4].flag ="<<planner1.m_node[4][4].flag);
         }
 
         if(loop_count ==3 )
@@ -215,13 +216,6 @@ int main(int argc, char** argv)
                 ROS_INFO_STREAM("Got plan_segment.");
             }
             ROS_INFO_STREAM("next loop -----------------------");
-
-            ROS_INFO_STREAM("check mnode:");
-            planner1.m_node[4][4].flag = 1;
-            ROS_INFO_STREAM("planner1.m_node[4][4].flag ="<<planner1.m_node[4][4].flag);
-            planner2.m_node[4][4].flag = 2;
-            ROS_INFO_STREAM("planner1.m_node[4][4].flag ="<<planner1.m_node[4][4].flag);
-            ROS_INFO_STREAM("planner.m_node[4][4].flag ="<<planner2.m_node[4][4].flag);
         }
 
 
