@@ -95,6 +95,9 @@ public:
     bool sign_cacul;
     void clear_tmpplan();
     bool isRootLoop;
+
+    int last_endpoint_x;
+    int last_endpoint_y;
 };
 
 bool testhfile(int x);

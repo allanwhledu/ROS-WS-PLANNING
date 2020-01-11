@@ -7,6 +7,9 @@ int m_height;
 int m_width;
 int m_resolution;
 
+std::vector<int> vlast_endpoint_x;
+std::vector<int> vlast_endpoint_y;
+
 void center_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 {
     mapmsg = msg;
@@ -80,6 +83,9 @@ int main(int argc, char** argv)
     ros::param::get("~x_1",init_planner.endpoint_x);
     ros::param::get("~y_1",init_planner.endpoint_y);
 
+
+    AStartFindPath planner2;
+
     // wait for mapmsg.
     while (ros::ok)
     {
@@ -94,7 +100,7 @@ int main(int argc, char** argv)
 
     ros::Rate r(1.0);
     int loop_count = 1;
-    while (ros::ok() && loop_count<2)
+    while (ros::ok() && loop_count<5)
     {
         ros::spinOnce();
         ROS_INFO_STREAM("spin passed.");
@@ -113,13 +119,66 @@ int main(int argc, char** argv)
             }
 
             ROS_INFO_STREAM("0, 0: "<<init_planner.m_node[0][0].flag);
+
+            vlast_endpoint_x.push_back(init_planner.plan.poses.back().pose.position.x);
+            vlast_endpoint_y.push_back(init_planner.plan.poses.back().pose.position.y);
+
             ROS_INFO_STREAM("next loop -----------------------");
         }
 
-        if(loop_count = 2)
+
+        if(loop_count ==2 )
 //        if(0)
         {
-            ROS_INFO_STREAM("loop 2");
+            AStartFindPath planner1;
+            ROS_INFO_STREAM("loop: "<<loop_count);
+            // new planner, wait to add
+            ROS_INFO_STREAM("m_width:"<<m_width);
+
+
+            planner1.isRootLoop = false;
+            planner1.startpoint_x = init_planner.startpoint_x;
+            planner1.startpoint_y = init_planner.startpoint_y;
+            planner1.endpoint_x = init_planner.endpoint_x;
+            planner1.endpoint_y = init_planner.endpoint_y;
+            planner1.last_endpoint_x = vlast_endpoint_x.back();
+            planner1.last_endpoint_y = vlast_endpoint_y.back();
+
+            ROS_INFO_STREAM("m_width:"<<m_width);
+
+            deepCopyMnode(planner1.m_node, m_height, m_width, init_planner.m_node, mapmsg, planner1.openlist, init_planner.openlist, planner1.closelist, init_planner.closelist);
+
+
+            ROS_INFO_STREAM("planner's endpoint_x:");
+            ROS_INFO_STREAM(planner1.endpoint_x);
+            ROS_INFO_STREAM("check m_node[][].flag:");
+            ROS_INFO_STREAM(planner1.m_node[8][5].flag);
+            ROS_INFO_STREAM(planner1.m_node[8][5].flag);
+
+
+            planner1.setTarget();
+
+            if(!planner1.plan.poses.empty())
+            {
+                nav_plan.publish(planner1.plan);
+                vlast_endpoint_x.push_back(planner1.plan.poses.back().pose.position.x);
+                vlast_endpoint_y.push_back(planner1.plan.poses.back().pose.position.y);
+                ROS_INFO_STREAM("Got plan_segment.");
+            }
+            ROS_INFO_STREAM("next loop -----------------------");
+
+            ROS_INFO_STREAM("check mnode:");
+            init_planner.m_node[4][4].flag = 1;
+            ROS_INFO_STREAM("init_planner.m_node[4][4].flag ="<<init_planner.m_node[4][4].flag);
+            planner1.m_node[4][4].flag = 2;
+            ROS_INFO_STREAM("init_planner.m_node[4][4].flag ="<<init_planner.m_node[4][4].flag);
+            ROS_INFO_STREAM("planner.m_node[4][4].flag ="<<planner1.m_node[4][4].flag);
+        }
+
+        if(loop_count ==3 )
+//        if(0)
+        {
+            ROS_INFO_STREAM("loop: "<<loop_count);
             // new planner, wait to add
             ROS_INFO_STREAM("m_width:"<<m_width);
 
@@ -129,6 +188,8 @@ int main(int argc, char** argv)
             planner.startpoint_y = init_planner.startpoint_y;
             planner.endpoint_x = init_planner.endpoint_x;
             planner.endpoint_y = init_planner.endpoint_y;
+            planner.last_endpoint_x = vlast_endpoint_x.back();
+            planner.last_endpoint_y = vlast_endpoint_y.back();
 
             ROS_INFO_STREAM("m_width:"<<m_width);
 
@@ -147,6 +208,8 @@ int main(int argc, char** argv)
             if(!planner.plan.poses.empty())
             {
                 nav_plan.publish(planner.plan);
+                vlast_endpoint_x.push_back(planner.plan.poses.back().pose.position.x);
+                vlast_endpoint_y.push_back(planner.plan.poses.back().pose.position.y);
                 ROS_INFO_STREAM("Got plan_segment.");
             }
             ROS_INFO_STREAM("next loop -----------------------");
@@ -158,8 +221,6 @@ int main(int argc, char** argv)
             ROS_INFO_STREAM("init_planner.m_node[4][4].flag ="<<init_planner.m_node[4][4].flag);
             ROS_INFO_STREAM("planner.m_node[4][4].flag ="<<planner.m_node[4][4].flag);
         }
-
-
 
 
 //        if(!planner.plan.poses.empty())
@@ -180,7 +241,11 @@ int main(int argc, char** argv)
 //        ROS_INFO_STREAM(planner.sign_cacul);
 
         loop_count++;
-        r.sleep();
+
+        for(int i=0;i<5;i++)
+        {
+            r.sleep();
+        }
     }
 
     return 0;

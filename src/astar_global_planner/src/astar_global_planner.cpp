@@ -241,10 +241,47 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
         ROS_INFO_STREAM("point:"<<" "<<forstepcount->location_x<<" "<<forstepcount->location_y);
 
         ROS_INFO_STREAM("forstepcount->parent->flag:"<<forstepcount->parent->flag);
+
         forstepcount=forstepcount->parent;
+        ROS_INFO_STREAM("debug point1");
         i++;
+
+        if(forstepcount->location_x == last_endpoint_x && forstepcount->location_y == last_endpoint_y && isRootLoop!=1)
+//            i--;
+            break;
     }
     i++;
+
+    if(isRootLoop == false)
+    {
+        i--;
+        ROS_INFO_STREAM("How many steps in path: "<<i);
+        plan.poses.resize(i);
+        plan.header.frame_id="odom";
+
+        Node* tempnode;
+        tempnode= &m_node[open->PtrToNode->location_y][open->PtrToNode->location_x];
+
+
+        while(!(tempnode->location_x==last_endpoint_x && tempnode->location_y==last_endpoint_y))
+        {
+            ROS_INFO_STREAM("debug imformation3.");
+            plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
+            plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
+            ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
+            tempnode=tempnode->parent;
+        }
+
+        plan.poses[--i].pose.position.x=last_endpoint_x*m_resolution;
+        plan.poses[i].pose.position.y=last_endpoint_y*m_resolution;
+        ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
+
+        ROS_INFO_STREAM("soon return.");
+        return;
+
+    }
+
+
     ROS_INFO_STREAM("How many steps in path: "<<i);
     plan.poses.resize(i);
     plan.header.frame_id="odom";
@@ -254,23 +291,28 @@ void AStartFindPath::FindDestinnation(OpenList* open,CloseList* close)
     Node* tempnode;
     tempnode= &m_node[open->PtrToNode->location_y][open->PtrToNode->location_x];
 
+
+
     while(tempnode->parent->flag!=STARTPOINT)
     {
-
+        ROS_INFO_STREAM("debug imformation1.");
         plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
         plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
         ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
 
         tempnode=tempnode->parent;
     }
+    ROS_INFO_STREAM("debug imformation.");
     plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
     plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
     ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
 
 //    tempnode=tempnode->parent;
+    ROS_INFO_STREAM("this is the first loop.");
     plan.poses[--i].pose.position.x=startpoint_x*m_resolution;
     plan.poses[i].pose.position.y=startpoint_y*m_resolution;
     ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<m_node[startpoint_y][startpoint_x].flag<<" "<<m_node[startpoint_y][startpoint_x].value_f);
+
 
 
     ROS_INFO_STREAM("path constructed.");
@@ -424,7 +466,9 @@ void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const n
                 msg1[i][j].value_h = msg2[i][j].value_h;
                 msg1[i][j].value_f = msg2[i][j].value_f;
                 msg1[i][j].parent = &msg1[y][x];
-                ROS_INFO_STREAM("msg1[y][x]"<<msg1[y][x].location_y<<" "<<msg1[y][x].location_x);
+                ROS_INFO_STREAM("for m_node.yx"<<y<<" "<<x);
+                ROS_INFO_STREAM("for parents msg2[y][x]"<<msg2[y][x].location_y<<" "<<msg1[y][x].location_x);
+                ROS_INFO_STREAM("for parents msg1[y][x]"<<msg1[y][x].location_y<<" "<<msg1[y][x].location_x);
             }
 
             if(msg2[i][j].flag==4)
@@ -432,10 +476,12 @@ void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const n
                 int x = msg2[i][j].location_y;
                 int y = msg2[i][j].location_x;
                 msg1[i][j].flag = msg2[i][j].flag;
-                ROS_INFO_STREAM("msg1[y][x]"<<msg1[y][x].location_y<<" "<<msg1[y][x].location_x);
+                ROS_INFO_STREAM("for m_node.yx"<<y<<" "<<x);
+                ROS_INFO_STREAM("forflag msg1[y][x]"<<msg1[y][x].location_y<<" "<<msg1[y][x].location_x);
             }
         }
     }
+
 
 //    if(open1!=NULL){delete  open1; open1=NULL;}
 //    if(close1!=NULL){delete close1; close1=NULL;}
@@ -487,13 +533,6 @@ void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const n
     auto fakeopen2 = new OpenList;
     fakeopen1 = open1_tmp;
     fakeopen2->next = open1_tmp;
-
-//    if(open1_tmp->PtrToNode->flag==4)
-//    {
-//        open1_tmp = open1_tmp->next;
-//    }
-//    else
-//        open1_tmp = open1_tmp->next;
 
     fakeopen1 = fakeopen1->next;
     while(fakeopen1->next!=NULL)
