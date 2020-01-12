@@ -27,6 +27,8 @@ struct leaf
     std::vector<int> prior_mode;
 };
 
+
+
 // 节点主函数
 int main(int argc, char** argv)
 {
@@ -104,7 +106,8 @@ int main(int argc, char** argv)
 
     ros::Rate r(1.0);
     int loop_count = 1;
-    while (ros::ok() && loop_count<5)
+    bool arrived = false;
+    while (ros::ok() && loop_count<5 && arrived == false)
     {
         ros::spinOnce();
         ROS_INFO_STREAM("spin passed.");
@@ -126,6 +129,8 @@ int main(int argc, char** argv)
 
             vlast_endpoint_x.push_back(init_planner.plan.poses.back().pose.position.x);
             vlast_endpoint_y.push_back(init_planner.plan.poses.back().pose.position.y);
+
+            arrived = init_planner.arrived;
 
             ROS_INFO_STREAM("next loop -----------------------");
         }
@@ -170,6 +175,9 @@ int main(int argc, char** argv)
                 vlast_endpoint_y.push_back(planner1.plan.poses.back().pose.position.y);
                 ROS_INFO_STREAM("Got plan_segment.");
             }
+
+            arrived = planner1.arrived;
+
             ROS_INFO_STREAM("next loop -----------------------");
 
 //            ROS_INFO_STREAM("check mnode:");
@@ -218,6 +226,8 @@ int main(int argc, char** argv)
                 vlast_endpoint_y.push_back(planner2.plan.poses.back().pose.position.y);
                 ROS_INFO_STREAM("Got plan_segment.");
             }
+
+            arrived = planner2.arrived;
             ROS_INFO_STREAM("next loop -----------------------");
         }
 

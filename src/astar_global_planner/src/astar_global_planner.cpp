@@ -7,6 +7,28 @@ bool testhfile(int x){
         return false;
 }
 
+extern bool CompOpen(OpenNode first, OpenNode second)
+{
+    if(first.PtrToNode->value_f >= second.PtrToNode->value_f) //由大到小排序 //如果想要由小到大，改为大于即可
+    {
+        return false;
+    } else
+    {
+        return true;
+    }
+}
+
+extern bool CompClose(CloseNode first, CloseNode second)
+{
+    if(first.PtrToNode->value_f >= second.PtrToNode->value_f) //由大到小排序 //如果想要由小到大，改为大于即可
+    {
+        return false;
+    } else
+    {
+        return true;
+    }
+}
+
 // 结构体和类的初始化
 Node::Node()
 {
@@ -28,10 +50,12 @@ AStartFindPath::AStartFindPath()
         m_node[i]=new Node[m_width];
     }
 
-    openlist = new OpenNode;
-    closelist= new CloseNode;
+    openlist = new std::list<OpenNode>;
+    closelist= new std::list<CloseNode>;
 
     isRootLoop = false;
+
+    arrived = false;
 
 }
 
@@ -77,7 +101,7 @@ bool AStartFindPath::IsAvailable(int x, int y)
         flag = false;
     if(IsInCloseList(x, y))
         flag = false;
-    if(m_node[y][x].flag == WALL)
+    if(m_node[y][x].flag == WALL || m_node[y][x].flag == STARTPOINT)
         flag = false;
 
     return flag;
@@ -98,15 +122,15 @@ bool AStartFindPath::IsInCloseList(int x,int y)
 }
 
 // 与维护列表有关的子函数
-void  AddNode2Open(std::list<OpenNode>* openlist, Node* node)
+void  AStartFindPath::AddNode2Open(std::list<OpenNode>* openlist, Node* node)
 {
-    ROS_INFO_STREAM("added node "<<node->location_x<<","<<node->location_y<<","<<", h:"<<node->value_h<<","<<", g:"<<node->value_g<<", f:"<<node->value_f);
+//    ROS_INFO_STREAM("added node "<<node->location_x<<","<<node->location_y<<","<<", h:"<<node->value_h<<","<<", g:"<<node->value_g<<", f:"<<node->value_f);
 
-    if(openlist->empty())
-    {
-        cout<<"no data in openlist!"<<endl;
-        return;
-    }
+//    if(openlist->empty())
+//    {
+//        cout<<"no data in openlist!"<<endl;
+//        return;
+//    }
 
     if(node->flag!=STARTPOINT)
     {
@@ -135,7 +159,7 @@ void  AddNode2Open(std::list<OpenNode>* openlist, Node* node)
 //    }
 //    openlist->next = temp;
 }
-void AddNode2Close(std::list<CloseNode>* close, std::list<OpenNode>* &open)
+void AStartFindPath::AddNode2Close(std::list<CloseNode>* close, std::list<OpenNode>* open)
 {
     if(open==NULL)
     {
@@ -145,9 +169,9 @@ void AddNode2Close(std::list<CloseNode>* close, std::list<OpenNode>* &open)
     if(open->front().PtrToNode->flag != STARTPOINT)
         open->front().PtrToNode->flag =INCLOSE;
 
-    auto closenode = new CloseNode;
-    closenode->PtrToNode = open->front().PtrToNode;
-    close->push_back(*closenode);
+    CloseNode closenode;
+    closenode.PtrToNode = open->front().PtrToNode;
+    close->push_back(closenode);
     open->pop_front();
 
 
@@ -169,14 +193,17 @@ void AddNode2Close(std::list<CloseNode>* close, std::list<OpenNode>* &open)
 }
 
 // 不断将未探索点加入探索列表，最终得到路径
-bool AStartFindPath::Check_and_Put_to_Openlist(std::list<OpenNode>* open, int center_x, int center_y)
+bool AStartFindPath::Check_and_Put_to_Openlist(std::list<OpenNode>* open, std::list<CloseNode>* close)
 {
     // 遍历openlist，并输出其中的所有点坐标
+    int center_x = open->front().PtrToNode->location_x;
+    int center_y = open->front().PtrToNode->location_y;
 
-    ROS_INFO_STREAM("now points in open:");
+    ROS_INFO_STREAM("now points in open: "<<open->size());
     for (list<OpenNode>::iterator it = open->begin(); it != open->end(); ++it)
         ROS_INFO_STREAM(it->PtrToNode->location_x << " " << it->PtrToNode->location_y<<" flag"<<it->PtrToNode->flag<<" h"<<it->PtrToNode->value_h<<" g"<<it->PtrToNode->value_g<<" f"<<it->PtrToNode->value_f);
 
+    AddNode2Close(close,open);
     // 利用传入的center xy信息开始check
     ROS_INFO_STREAM("checking point "<<m_node[center_y][center_x].location_x<<","<<m_node[center_y][center_x].location_y<<","<<", g:"<<m_node[center_y][center_x].value_g<<", f:"<<m_node[center_y][center_x].value_f<<", flag:"<<m_node[center_y][center_x].flag);
     int i;
@@ -192,6 +219,9 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list<OpenNode>* open, int ce
             {
                 m_node[new_y][new_x].parent = &m_node[center_y][center_x];
                 m_node[new_y][new_x].value_g = m_node[center_y][center_x].value_g+10;
+                AddNode2Open(open, &m_node[new_y][new_x]);
+                ROS_INFO_STREAM("destination already got in openlist.");
+                arrived = true;
                 return true;
             }
 
@@ -222,19 +252,14 @@ void AStartFindPath::FindDestinnation(std::list<OpenNode>* open, std::list<Close
 
     // check 1 step from startpoint.
     ROS_INFO_STREAM("start points:"<<startpoint_x<<" "<<startpoint_y);
-//    Check_and_Put_to_Openlist(open,startpoint_x,startpoint_y);
-//
-//    // take 1st openlist node to closelist.
-//    AddNode2Close(close,open);
 
     // circulate check...
-    while(!Check_and_Put_to_Openlist(open, open->front().PtrToNode->location_x, open->front().PtrToNode->location_y))
+    while(!Check_and_Put_to_Openlist(open, close))
     {
         i++;
-        AddNode2Close(close,open);
-        int length = loop_count*2;
+        int length = 5;
 
-        if(open==NULL||i>length)
+        if(open==NULL||i>5)
         {
             ROS_INFO_STREAM("completed segment path.");
             ROS_INFO_STREAM(i);
@@ -425,8 +450,9 @@ void AStartFindPath::setTarget()
     m_node[y][x].flag = STARTPOINT;
     if(isRootLoop)
     {
-
-        openlist->front().PtrToNode= &m_node[y][x];
+        OpenNode newopen;
+        newopen.PtrToNode = &m_node[y][x];
+        openlist->push_back(newopen);
         startpoint_x=x;
         startpoint_y=y;
     }
@@ -487,7 +513,7 @@ void deepCopyMnode(Node* msg1[], int m_height, int m_width, Node* msg2[], const 
                 ROS_INFO_STREAM("for parents msg1[y][x]"<<msg1[y][x].location_y<<" "<<msg1[y][x].location_x);
             }
 
-            if(msg2[i][j].flag==4)
+            if(msg2[i][j].flag==4 || msg2[i][j].flag==5)
             {
                 int x = msg2[i][j].location_y;
                 int y = msg2[i][j].location_x;
@@ -506,115 +532,97 @@ void deepCopyMnode(Node* msg1[], int m_height, int m_width, Node* msg2[], const 
 //    ROS_INFO_STREAM("debug1");
 
 
-    ROS_INFO_STREAM("check mnode1 same location:"<<msg1[2][7].location_x<<msg1[2][7].location_y);
-    ROS_INFO_STREAM("check mnode2 same location:"<<msg2[2][7].location_x<<msg2[2][7].location_y);
 
+//    auto open2_tmp = new OpenNode;
+//    open2_tmp = open2;
+//    auto open1_tmp = open1;
 
-    open1->PtrToNode = &msg1[open2->PtrToNode->location_y][open2->PtrToNode->location_x];
-    ROS_INFO_STREAM("check open1 location:"<<open1->PtrToNode->location_x);
-    ROS_INFO_STREAM("check open2 location:"<<open2->PtrToNode->location_x);
-
-
-
-    auto open2_tmp = new OpenNode;
-    open2_tmp = open2;
-    auto open1_tmp = open1;
-
-//    while(open2_tmp->next!=NULL)
-//    {
-//        ROS_INFO_STREAM("open2->next->PtrToNode->location_x:"<<open2_tmp->next->PtrToNode->location_x);
-//        ROS_INFO_STREAM("open2->next->PtrToNode->location_y:"<<open2_tmp->next->PtrToNode->location_y);
-//
-//        open2_tmp = open2_tmp->next;
-//    }
-    ROS_INFO_STREAM("debug test.");
-    while (open2->next!=NULL)
+    ROS_INFO_STREAM("translate openlist...");
+    for (std::list<OpenNode>::iterator it = open2->begin(); it != open2->end(); ++it)
     {
-        auto new_open = new OpenNode;
-        open2 = open2->next;
-        if(open2->next==NULL)
-            break;
-
-        new_open->PtrToNode = &msg1[open2->PtrToNode->location_y][open2->PtrToNode->location_x];
-        ROS_INFO_STREAM("get a opennode. "<<new_open->PtrToNode->location_x<<" "<<new_open->PtrToNode->location_y<<" "<<new_open->PtrToNode->flag);
-
-        open1->next = new_open;
-        open1 = open1->next;
+        OpenNode new_open;
+        new_open.PtrToNode = &msg1[it->PtrToNode->location_y][it->PtrToNode->location_x];
+        open1->push_back(new_open);
+        ROS_INFO_STREAM("get a opennode. "<<new_open.PtrToNode->location_x<<" "<<new_open.PtrToNode->location_y<<" "<<new_open.PtrToNode->flag);
     }
 
     // filter openlist.
 //    open1 = open1_tmp;
 
-    auto fakeopen1 = new OpenNode;
-    auto fakeopen2 = new OpenNode;
-    fakeopen1 = open1_tmp;
-    fakeopen2->next = open1_tmp;
-
-    fakeopen1 = fakeopen1->next;
-    while(fakeopen1->next!=NULL)
-    {
-        if(fakeopen1->PtrToNode->flag==4 || fakeopen1->PtrToNode->flag==3)
-        {
-            fakeopen2->next->next = fakeopen1->next;
-            ROS_INFO_STREAM("filt openlist: "<<fakeopen1->PtrToNode->location_x<<" "<<fakeopen1->PtrToNode->location_y<<" "<<fakeopen1->PtrToNode->flag);
-            fakeopen1 = fakeopen1->next;
-        } else
-        {
-            fakeopen2 = fakeopen2->next;
-            fakeopen1 = fakeopen1->next;
-        }
-
-
-//        if(open1_tmp->PtrToNode->flag==4)
+//    auto fakeopen1 = new OpenNode;
+//    auto fakeopen2 = new OpenNode;
+//    fakeopen1 = open1_tmp;
+//    fakeopen2->next = open1_tmp;
+//
+//    fakeopen1 = fakeopen1->next;
+//    while(fakeopen1->next!=NULL)
+//    {
+//        if(fakeopen1->PtrToNode->flag==4 || fakeopen1->PtrToNode->flag==3)
 //        {
-//            ROS_INFO_STREAM("filt openlist: "<<open1_tmp->PtrToNode->location_x<<" "<<open1_tmp->PtrToNode->location_y<<" "<<open1_tmp->PtrToNode->flag);
-//            open1_tmp = open1_tmp->next;
-//            fakeopen1 = open1_tmp;
-//            continue;
+//            fakeopen2->next->next = fakeopen1->next;
+//            ROS_INFO_STREAM("filt openlist: "<<fakeopen1->PtrToNode->location_x<<" "<<fakeopen1->PtrToNode->location_y<<" "<<fakeopen1->PtrToNode->flag);
+//            fakeopen1 = fakeopen1->next;
 //        } else
 //        {
-//            open1_tmp = open1_tmp->next;
+//            fakeopen2 = fakeopen2->next;
 //            fakeopen1 = fakeopen1->next;
-//            continue;
 //        }
-    }
-    open1 = open1_tmp;
+//
+//
+////        if(open1_tmp->PtrToNode->flag==4)
+////        {
+////            ROS_INFO_STREAM("filt openlist: "<<open1_tmp->PtrToNode->location_x<<" "<<open1_tmp->PtrToNode->location_y<<" "<<open1_tmp->PtrToNode->flag);
+////            open1_tmp = open1_tmp->next;
+////            fakeopen1 = open1_tmp;
+////            continue;
+////        } else
+////        {
+////            open1_tmp = open1_tmp->next;
+////            fakeopen1 = fakeopen1->next;
+////            continue;
+////        }
+//    }
+//    open1 = open1_tmp;
 
+    for (std::list<OpenNode>::iterator it = open2->begin(); it != open2->end(); ++it)
+        ROS_INFO_STREAM("open1->next->PtrToNode:"<<it->PtrToNode->location_x<<" "<<it->PtrToNode->location_y<<" "<<it->PtrToNode->flag);
 
-    open1_tmp = open1;
-    while(open1_tmp->next!=NULL)
-    {
-        ROS_INFO_STREAM("open1->next->PtrToNode:"<<open2_tmp->PtrToNode->location_x<<" "<<open1_tmp->PtrToNode->location_y<<" "<<open1_tmp->PtrToNode->flag);
-
-        open1_tmp = open1_tmp->next;
-    }
 
 //    open2 = open2_tmp;
 
-    close1->PtrToNode = &msg1[close2->PtrToNode->location_y][close2->PtrToNode->location_x];
-    ROS_INFO_STREAM("check close1 location:"<<close1->PtrToNode->location_x);
-    ROS_INFO_STREAM("check close2 location:"<<close2->PtrToNode->location_x);
-
-    auto close2_tmp = new CloseNode;
-    close2_tmp = close2;
-    auto close1_tmp = close1;
-
-    while (close2->next!=NULL)
+    ROS_INFO_STREAM("translate closelist...");
+    for (std::list<CloseNode>::iterator it = close2->begin(); it != close2->end(); ++it)
     {
-        ROS_INFO_STREAM("get a closenode.");
-        auto new_close = new CloseNode;
-        close2 = close2->next;
-        if(close2->next==NULL)
-            break;
-
-        new_close->PtrToNode = &msg1[close2->PtrToNode->location_y][close2->PtrToNode->location_x];
-
-        close1->next = new_close;
-        close1 = close1->next;
+        CloseNode new_close;
+        new_close.PtrToNode = &msg1[it->PtrToNode->location_y][it->PtrToNode->location_x];
+        close1->push_back(new_close);
+        ROS_INFO_STREAM("get a closenode. "<<new_close.PtrToNode->location_x<<" "<<new_close.PtrToNode->location_y<<" "<<new_close.PtrToNode->flag);
     }
 
-    close1 = close1_tmp;
-    close2 = close2_tmp;
+//    close1->PtrToNode = &msg1[close2->PtrToNode->location_y][close2->PtrToNode->location_x];
+//    ROS_INFO_STREAM("check close1 location:"<<close1->PtrToNode->location_x);
+//    ROS_INFO_STREAM("check close2 location:"<<close2->PtrToNode->location_x);
+//
+//    auto close2_tmp = new CloseNode;
+//    close2_tmp = close2;
+//    auto close1_tmp = close1;
+//
+//    while (close2->next!=NULL)
+//    {
+//        ROS_INFO_STREAM("get a closenode.");
+//        auto new_close = new CloseNode;
+//        close2 = close2->next;
+//        if(close2->next==NULL)
+//            break;
+//
+//        new_close->PtrToNode = &msg1[close2->PtrToNode->location_y][close2->PtrToNode->location_x];
+//
+//        close1->next = new_close;
+//        close1 = close1->next;
+//    }
+//
+//    close1 = close1_tmp;
+//    close2 = close2_tmp;
 
 //    while(open2_tmp->next!=NULL)
 //    {

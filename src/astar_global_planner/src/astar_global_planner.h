@@ -27,6 +27,7 @@ extern int m_height;
 extern int m_width;
 extern int m_resolution;
 
+
 struct Node
 {
     int    flag;
@@ -62,32 +63,15 @@ struct OpenNode
     OpenNode(){ PtrToNode= NULL;};
 };
 
-bool CompOpen(OpenNode first, OpenNode second)
-{
-    if(first.PtrToNode->value_f >= second.PtrToNode->value_f) //由大到小排序 //如果想要由小到大，改为大于即可
-    {
-        return false;
-    } else
-    {
-        return true;
-    }
-}
-
-bool CompClose(CloseNode first, CloseNode second)
-{
-    if(first.PtrToNode->value_f >= second.PtrToNode->value_f) //由大到小排序 //如果想要由小到大，改为大于即可
-    {
-        return false;
-    } else
-    {
-        return true;
-    }
-}
+extern bool CompOpen(OpenNode first, OpenNode second);
+extern bool CompClose(CloseNode first, CloseNode second);
 
 
 class AStartFindPath
 {
 public:
+
+
     nav_msgs::Path plan;
     nav_msgs::Path Null_plan;
 
@@ -96,12 +80,14 @@ public:
     virtual ~AStartFindPath(){};
     int GetPos(int &x,int &y);
     void FindDestinnation(std::list<OpenNode>* open, std::list<CloseNode>* close);
-    bool Check_and_Put_to_Openlist(std::list<OpenNode>* open , int x, int y);
+    bool Check_and_Put_to_Openlist(std::list<OpenNode>* open, std::list<CloseNode>* close);
     bool IsInOpenList(int x, int y);
     bool IsInCloseList(int x, int y);
     void IsChangeParent(std::list<OpenNode>* open, int x, int y);
     bool IsAvailable(int x, int y);
     unsigned int DistanceManhattan(int d_x, int d_y, int x, int y);
+    void AddNode2Open(std::list<OpenNode>* openlist, Node* node);
+    void AddNode2Close(std::list<CloseNode>* close, std::list<OpenNode>* open);
 
     void de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg);
     void setTarget();
@@ -134,6 +120,8 @@ public:
     int last_endpoint_y;
 
     int loop_count;
+
+    bool arrived;
 };
 
 bool testhfile(int x);
