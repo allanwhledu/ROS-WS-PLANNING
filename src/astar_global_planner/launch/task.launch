@@ -15,7 +15,7 @@
   <param name="x_0" type="int" value="8" />
   <param name="y_0" type="int" value="3" />
   <param name="x_1" type="int" value="13" />
-  <param name="y_1" type="int" value="7" />
+  <param name="y_1" type="int" value="10" />
 </node>
 </group>
 

@@ -41,30 +41,18 @@ struct Node
     Node();
 };
 
-struct CloseNode
+struct ListNode
 {
     Node* PtrToNode;
 
-    bool operator()(const CloseNode& t1,const CloseNode& t2){
+    bool operator()(const ListNode& t1, const ListNode& t2){
         return t1.PtrToNode->value_f<t2.PtrToNode->value_f;    //会产生升序排序,若改为>,则变为降序
     }
 
-    CloseNode(){ PtrToNode=NULL;};
+    ListNode(){ PtrToNode= NULL;};
 };
 
-struct OpenNode
-{
-    Node* PtrToNode;
-
-    bool operator()(const OpenNode& t1,const OpenNode& t2){
-        return t1.PtrToNode->value_f<t2.PtrToNode->value_f;    //会产生升序排序,若改为>,则变为降序
-    }
-
-    OpenNode(){ PtrToNode= NULL;};
-};
-
-extern bool CompOpen(OpenNode first, OpenNode second);
-extern bool CompClose(CloseNode first, CloseNode second);
+extern bool CompOpen(ListNode first, ListNode second);
 
 
 class AStartFindPath
@@ -79,15 +67,15 @@ public:
     AStartFindPath();
     virtual ~AStartFindPath(){};
     int GetPos(int &x,int &y);
-    void FindDestinnation(std::list<OpenNode>* open, std::list<CloseNode>* close);
-    bool Check_and_Put_to_Openlist(std::list<OpenNode>* open, std::list<CloseNode>* close);
+    void FindDestinnation(std::list<ListNode>* open, std::list<ListNode>* close);
+    bool Check_and_Put_to_Openlist(std::list<ListNode>* open, std::list<ListNode>* close);
     bool IsInOpenList(int x, int y);
     bool IsInCloseList(int x, int y);
-    void IsChangeParent(std::list<OpenNode>* open, int x, int y);
+    void IsChangeParent(std::list<ListNode>* open, int x, int y);
     bool IsAvailable(int x, int y);
     unsigned int DistanceManhattan(int d_x, int d_y, int x, int y);
-    void AddNode2Open(std::list<OpenNode>* openlist, Node* node);
-    void AddNode2Close(std::list<CloseNode>* close, std::list<OpenNode>* open);
+    void AddNode2Open(std::list<ListNode>* openlist, Node* node);
+    void AddNode2Close(std::list<ListNode>* close, std::list<ListNode>* open);
 
     void de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg);
     void setTarget();
@@ -101,10 +89,10 @@ public:
 //    double m_resolution;
 
     //Lists
-//    OpenNode* openlist;
-//    CloseNode* closelist ;
-    std::list<CloseNode>* closelist;
-    std::list<OpenNode>* openlist;
+//    ListNode* openlist;
+//    ListNode* closelist ;
+    std::list<ListNode>* closelist;
+    std::list<ListNode>* openlist;
 
 
     int x,y,des_x,des_y;
@@ -135,4 +123,4 @@ public:
 
 
 
-void deepCopyMnode(Node* msg1[], int m_height, int m_width, Node* msg2[], const nav_msgs::OccupancyGrid::ConstPtr& msg, std::list<OpenNode>* open1, std::list<OpenNode>* open2, std::list<CloseNode>* close1, std::list<CloseNode>* close2);
+void deepCopyMnode(Node* msg1[], int m_height, int m_width, Node* msg2[], const nav_msgs::OccupancyGrid::ConstPtr& msg, std::list<ListNode>* open1, std::list<ListNode>* open2, std::list<ListNode>* close1, std::list<ListNode>* close2);

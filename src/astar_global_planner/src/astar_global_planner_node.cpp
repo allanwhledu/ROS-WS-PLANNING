@@ -52,14 +52,6 @@ int main(int argc, char** argv)
     tree<leaf>::iterator top2, one2;
     tree<leaf>::iterator init_leaf;
     std::vector<tree<leaf>::iterator> init_leafv;
-//    for(int i=0;i<10;i++){
-//        init_leafv.push_back(init_leaf);
-//    }
-
-//    for(int i=0;i<10;i++){
-//        string name="leaf";
-//        name.append(to_string(i));
-//    }
 
     std::vector<int> p_tmp;
     p_tmp.push_back(11);
@@ -84,9 +76,6 @@ int main(int argc, char** argv)
     ros::param::get("~y_0",init_planner.startpoint_y);
     ros::param::get("~x_1",init_planner.endpoint_x);
     ros::param::get("~y_1",init_planner.endpoint_y);
-
-
-
 
     // wait for mapmsg.
     while (ros::ok)
@@ -137,7 +126,6 @@ int main(int argc, char** argv)
 
 
         if(loop_count ==2 )
-//        if(0)
         {
 
             ROS_INFO_STREAM("loop: "<<loop_count);
@@ -179,17 +167,9 @@ int main(int argc, char** argv)
             arrived = planner1.arrived;
 
             ROS_INFO_STREAM("next loop -----------------------");
-
-//            ROS_INFO_STREAM("check mnode:");
-////            init_planner.m_node[4][4].flag = 1;
-//            ROS_INFO_STREAM("init_planner.m_node[4][4].flag ="<<init_planner.m_node[4][4].flag);
-////            planner1.m_node[4][4].flag = 2;
-//            ROS_INFO_STREAM("init_planner.m_node[4][4].flag ="<<init_planner.m_node[4][4].flag);
-//            ROS_INFO_STREAM("planner.m_node[4][4].flag ="<<planner1.m_node[4][4].flag);
         }
 
         if(loop_count ==3 )
-//        if(0)
         {
             ROS_INFO_STREAM("loop: "<<loop_count);
             // new planner, wait to add
@@ -230,24 +210,6 @@ int main(int argc, char** argv)
             arrived = planner2.arrived;
             ROS_INFO_STREAM("next loop -----------------------");
         }
-
-
-//        if(!planner.plan.poses.empty())
-//        {
-//            nav_plan.publish(planner.plan);
-//
-//            ROS_INFO_STREAM("Got plan_segment.");
-//            planner.startpoint_x = planner.plan.poses.back().pose.position.x;
-//            planner.startpoint_y = planner.plan.poses.back().pose.position.y;
-//
-//            ROS_INFO_STREAM("Clear the tmp_plan.");
-//            planner.clear_tmpplan();
-//
-//            planner.endpoint_x++;
-//            planner.endpoint_y++;
-//        }
-//        ROS_INFO_STREAM("at loopend planner.sign_cacul =");
-//        ROS_INFO_STREAM(planner.sign_cacul);
 
         loop_count++;
 
