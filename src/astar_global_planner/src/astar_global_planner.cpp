@@ -160,10 +160,11 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list<ListNode>* open, std::l
 
     ROS_INFO_STREAM("now points in open: "<<open->size());
     for (list<ListNode>::iterator it = open->begin(); it != open->end(); ++it)
-        ROS_INFO_STREAM(it->PtrToNode->location_x << " " << it->PtrToNode->location_y<<" flag"<<it->PtrToNode->flag<<" h"<<it->PtrToNode->value_h<<" g"<<it->PtrToNode->value_g<<" f"<<it->PtrToNode->value_f);
+        if(it->PtrToNode->parent != NULL)
+            ROS_INFO_STREAM(it->PtrToNode->location_x << " " << it->PtrToNode->location_y<<" flag"<<it->PtrToNode->flag<<" h"<<it->PtrToNode->value_h<<" g"<<it->PtrToNode->value_g<<" f"<<it->PtrToNode->value_f<<" parent-> "<<it->PtrToNode->parent->location_y<<" "<<it->PtrToNode->parent->location_x);
 
-    AddNode2Close(close,open);
     // 利用传入的center xy信息开始check
+    AddNode2Close(close,open);
     ROS_INFO_STREAM("checking point "<<m_node[center_y][center_x].location_x<<","<<m_node[center_y][center_x].location_y<<","<<", g:"<<m_node[center_y][center_x].value_g<<", f:"<<m_node[center_y][center_x].value_f<<", flag:"<<m_node[center_y][center_x].flag);
     int i;
     for(i=0; i<4 ; i++)
@@ -185,7 +186,6 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list<ListNode>* open, std::l
             }
 
             m_node[new_y][new_x].parent = &m_node[center_y][center_x];
-
             m_node[new_y][new_x].value_h = DistanceManhattan(endpoint_x, endpoint_y, new_x,new_y);//曼哈顿距离
             m_node[new_y][new_x].value_g = m_node[center_y][center_x].value_g+10;
             m_node[new_y][new_x].value_f = m_node[new_y][new_x].value_g+m_node[new_y][new_x].value_h;
@@ -232,84 +232,98 @@ void AStartFindPath::FindDestinnation(std::list<ListNode>* open, std::list<ListN
     Node* forstepcount;
     forstepcount= &m_node[open->front().PtrToNode->location_y][open->front().PtrToNode->location_x];
 
-    i=1;
-    while(forstepcount->parent->flag!=STARTPOINT)
+    plan.header.frame_id = plan.header.frame_id="odom";
+    while(forstepcount->flag!=STARTPOINT)
     {
-        ROS_INFO_STREAM("debugdebug.");
-        ROS_INFO_STREAM("point:"<<" "<<forstepcount->location_x<<" "<<forstepcount->location_y);
+        ROS_INFO_STREAM("point:"<<" "<<forstepcount->location_x<<" "<<forstepcount->location_y<<" flag: "<<forstepcount->flag);
 
-        ROS_INFO_STREAM("forstepcount->parent->flag:"<<forstepcount->parent->flag);
+        if(forstepcount->parent!=NULL)
+            ROS_INFO_STREAM("parents:"<<" "<<forstepcount->parent->location_x<<" "<<forstepcount->parent->location_y);
+
+        geometry_msgs::PoseStamped point;
+        point.pose.position.x = forstepcount->location_x;
+        point.pose.position.y = forstepcount->location_y;
+
+        plan.poses.push_back(point);
 
         forstepcount=forstepcount->parent;
         ROS_INFO_STREAM("debug point1");
-        i++;
 
-        if(forstepcount->location_x == last_endpoint_x && forstepcount->location_y == last_endpoint_y && isRootLoop!=1)
-//            i--;
-            break;
+//        if(forstepcount->location_x == last_endpoint_x && forstepcount->location_y == last_endpoint_y && isRootLoop!=1)
+//            break;
+
+        if(forstepcount->flag==STARTPOINT)
+            ROS_INFO_STREAM("reaching start.");
     }
-    i++;
-
-    if(isRootLoop == false)
-    {
-        i--;
-        ROS_INFO_STREAM("How many steps in path: "<<i);
-        plan.poses.resize(i);
-        plan.header.frame_id="odom";
-
-        Node* tempnode;
-        tempnode= &m_node[open->front().PtrToNode->location_y][open->front().PtrToNode->location_x];
+    // here is the startpoint.
+    ROS_INFO_STREAM("point:"<<" "<<forstepcount->location_x<<" "<<forstepcount->location_y<<" flag: "<<forstepcount->flag);
+    geometry_msgs::PoseStamped point;
+    point.pose.position.x = forstepcount->location_x;
+    point.pose.position.y = forstepcount->location_y;
+    plan.poses.push_back(point);
 
 
-        while(!(tempnode->location_x==last_endpoint_x && tempnode->location_y==last_endpoint_y))
-        {
-            ROS_INFO_STREAM("debug imformation3.");
-            plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
-            plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
-            ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
-            tempnode=tempnode->parent;
-        }
-
-        plan.poses[--i].pose.position.x=last_endpoint_x*m_resolution;
-        plan.poses[i].pose.position.y=last_endpoint_y*m_resolution;
-        ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
-
-        ROS_INFO_STREAM("soon return.");
-        return;
-
-    }
-
-
-    ROS_INFO_STREAM("How many steps in path: "<<i);
-    plan.poses.resize(i);
-    plan.header.frame_id="odom";
-
-
-    // construct path from map.
-    Node* tempnode;
-    tempnode= &m_node[open->front().PtrToNode->location_y][open->front().PtrToNode->location_x];
-
-
-
-    while(tempnode->parent->flag!=STARTPOINT)
-    {
-        ROS_INFO_STREAM("debug imformation1.");
-        plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
-        plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
-        ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
-
-        tempnode=tempnode->parent;
-    }
-    ROS_INFO_STREAM("debug imformation.");
-    plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
-    plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
-    ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
-
-//    tempnode=tempnode->parent;
-    ROS_INFO_STREAM("this is the first loop.");
-    plan.poses[--i].pose.position.x=startpoint_x*m_resolution;
-    plan.poses[i].pose.position.y=startpoint_y*m_resolution;
-    ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<m_node[startpoint_y][startpoint_x].flag<<" "<<m_node[startpoint_y][startpoint_x].value_f);
+//
+//    if(isRootLoop == false)
+//    {
+//        i--;
+//        ROS_INFO_STREAM("How many steps in path: "<<i);
+//        plan.poses.resize(i);
+//        plan.header.frame_id="odom";
+//
+//        Node* tempnode;
+//        tempnode= &m_node[open->front().PtrToNode->location_y][open->front().PtrToNode->location_x];
+//
+//
+//        while(!(tempnode->location_x==last_endpoint_x && tempnode->location_y==last_endpoint_y))
+//        {
+//            ROS_INFO_STREAM("debug imformation3.");
+//            plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
+//            plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
+//            ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
+//            tempnode=tempnode->parent;
+//        }
+//
+//        plan.poses[--i].pose.position.x=last_endpoint_x*m_resolution;
+//        plan.poses[i].pose.position.y=last_endpoint_y*m_resolution;
+//        ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
+//
+//        ROS_INFO_STREAM("soon return.");
+//        return;
+//
+//    }
+//
+//
+//    ROS_INFO_STREAM("How many steps in path: "<<i);
+//    plan.poses.resize(i);
+//    plan.header.frame_id="odom";
+//
+//
+//    // construct path from map.
+//    Node* tempnode;
+//    tempnode= &m_node[open->front().PtrToNode->location_y][open->front().PtrToNode->location_x];
+//
+//
+//
+//    while(tempnode->parent->flag!=STARTPOINT)
+//    {
+//        ROS_INFO_STREAM("debug imformation1.");
+//        plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
+//        plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
+//        ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
+//
+//        tempnode=tempnode->parent;
+//    }
+//    ROS_INFO_STREAM("debug imformation.");
+//    plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
+//    plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
+//    ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
+//
+////    tempnode=tempnode->parent;
+//    ROS_INFO_STREAM("this is the first loop.");
+//    plan.poses[--i].pose.position.x=startpoint_x*m_resolution;
+//    plan.poses[i].pose.position.y=startpoint_y*m_resolution;
+//    ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<m_node[startpoint_y][startpoint_x].flag<<" "<<m_node[startpoint_y][startpoint_x].value_f);
 
 
 
@@ -438,10 +452,21 @@ void deepCopyMnode(Node* msg1[], int m_height, int m_width, Node* msg2[], const 
         {
             msg1[i][j].location_x = j;
             msg1[i][j].location_y =i;
-            msg1[i][j].parent = NULL;
+            if(msg2[i][j].parent != NULL)
+            {
+                unsigned int x = msg2[i][j].parent->location_y;
+                unsigned int y = msg2[i][j].parent->location_x;
+                msg1[i][j].parent = &msg1[y][x];
+                ROS_INFO_STREAM("get parents.");
+            } else
+                msg1[i][j].parent = NULL;
+
             msg1[i][j].gray_val=msg->data[(i)*m_width+(j)];
-            if(msg->data[(i)*m_width+(j)]==100) msg1[i][j].flag = WALL;
-            else msg1[i][j].flag = VIABLE;
+            msg1[i][j].flag = msg2[i][j].flag;
+
+            msg1[i][j].value_g = msg2[i][j].value_g;
+            msg1[i][j].value_h = msg2[i][j].value_h;
+            msg1[i][j].value_f = msg2[i][j].value_f;
         }
     }
 
@@ -449,20 +474,20 @@ void deepCopyMnode(Node* msg1[], int m_height, int m_width, Node* msg2[], const 
     {
         for(int j=0;j<m_width;j++)
         {
-            if(msg2[i][j].parent!=NULL)
-            {
-
-                int x = msg2[i][j].parent->location_y;
-                int y = msg2[i][j].parent->location_x;
-                msg1[i][j].flag = msg2[i][j].flag;
-                msg1[i][j].value_g = msg2[i][j].value_g;
-                msg1[i][j].value_h = msg2[i][j].value_h;
-                msg1[i][j].value_f = msg2[i][j].value_f;
-                msg1[i][j].parent = &msg1[y][x];
-                ROS_INFO_STREAM("for m_node.yx"<<y<<" "<<x);
-                ROS_INFO_STREAM("for parents msg2[y][x]"<<msg2[y][x].location_y<<" "<<msg1[y][x].location_x);
-                ROS_INFO_STREAM("for parents msg1[y][x]"<<msg1[y][x].location_y<<" "<<msg1[y][x].location_x);
-            }
+//            if(msg2[i][j].parent!=NULL)
+//            {
+//
+//                int x = msg2[i][j].parent->location_y;
+//                int y = msg2[i][j].parent->location_x;
+//                msg1[i][j].flag = msg2[i][j].flag;
+//                msg1[i][j].value_g = msg2[i][j].value_g;
+//                msg1[i][j].value_h = msg2[i][j].value_h;
+//                msg1[i][j].value_f = msg2[i][j].value_f;
+//                msg1[i][j].parent = &msg1[y][x];
+//                ROS_INFO_STREAM("for m_node.yx"<<y<<" "<<x);
+//                ROS_INFO_STREAM("for parents msg2[y][x]"<<msg2[y][x].location_y<<" "<<msg1[y][x].location_x);
+//                ROS_INFO_STREAM("for parents msg1[y][x]"<<msg1[y][x].location_y<<" "<<msg1[y][x].location_x);
+//            }
 
             if(msg2[i][j].flag==4 || msg2[i][j].flag==5)
             {

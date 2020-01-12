@@ -147,11 +147,11 @@ int main(int argc, char** argv)
             deepCopyMnode(planner1.m_node, m_height, m_width, init_planner.m_node, mapmsg, planner1.openlist, init_planner.openlist, planner1.closelist, init_planner.closelist);
 
 
-            ROS_INFO_STREAM("planner's endpoint_x:");
-            ROS_INFO_STREAM(planner1.endpoint_x);
-            ROS_INFO_STREAM("check m_node[][].flag:");
-            ROS_INFO_STREAM(planner1.m_node[8][5].flag);
-            ROS_INFO_STREAM(planner1.m_node[8][5].flag);
+//            ROS_INFO_STREAM("planner's endpoint_x:");
+//            ROS_INFO_STREAM(planner1.endpoint_x);
+//            ROS_INFO_STREAM("check m_node[][].flag:");
+//            ROS_INFO_STREAM(planner1.m_node[8][5].flag);
+//            ROS_INFO_STREAM(planner1.m_node[8][5].flag);
 
 
             planner1.setTarget();
