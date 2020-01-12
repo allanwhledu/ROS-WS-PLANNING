@@ -454,8 +454,8 @@ void deepCopyMnode(Node* msg1[], int m_height, int m_width, Node* msg2[], const 
             msg1[i][j].location_y =i;
             if(msg2[i][j].parent != NULL)
             {
-                unsigned int x = msg2[i][j].parent->location_y;
-                unsigned int y = msg2[i][j].parent->location_x;
+                unsigned int x = msg2[i][j].parent->location_x;
+                unsigned int y = msg2[i][j].parent->location_y;
                 msg1[i][j].parent = &msg1[y][x];
                 ROS_INFO_STREAM("get parents.");
             } else
@@ -491,8 +491,8 @@ void deepCopyMnode(Node* msg1[], int m_height, int m_width, Node* msg2[], const 
 
             if(msg2[i][j].flag==4 || msg2[i][j].flag==5)
             {
-                int x = msg2[i][j].location_y;
-                int y = msg2[i][j].location_x;
+                int x = msg2[i][j].location_x;
+                int y = msg2[i][j].location_y;
                 msg1[i][j].flag = msg2[i][j].flag;
                 ROS_INFO_STREAM("for m_node.yx"<<y<<" "<<x);
                 ROS_INFO_STREAM("forflag msg1[y][x]"<<msg1[y][x].location_y<<" "<<msg1[y][x].location_x);
