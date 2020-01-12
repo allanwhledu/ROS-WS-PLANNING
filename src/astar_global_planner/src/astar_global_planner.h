@@ -40,19 +40,49 @@ struct Node
     Node();
 };
 
-struct CloseList
+struct CloseNode
 {
     Node* PtrToNode;
-    CloseList* next;
-    CloseList(){ next=NULL;};
+
+    bool operator()(const CloseNode& t1,const CloseNode& t2){
+        return t1.PtrToNode->value_f<t2.PtrToNode->value_f;    //会产生升序排序,若改为>,则变为降序
+    }
+
+    CloseNode(){ PtrToNode=NULL;};
 };
 
-struct OpenList
+struct OpenNode
 {
     Node* PtrToNode;
-    OpenList* next;
-    OpenList(){next= NULL;};
+
+    bool operator()(const OpenNode& t1,const OpenNode& t2){
+        return t1.PtrToNode->value_f<t2.PtrToNode->value_f;    //会产生升序排序,若改为>,则变为降序
+    }
+
+    OpenNode(){ PtrToNode= NULL;};
 };
+
+bool CompOpen(OpenNode first, OpenNode second)
+{
+    if(first.PtrToNode->value_f >= second.PtrToNode->value_f) //由大到小排序 //如果想要由小到大，改为大于即可
+    {
+        return false;
+    } else
+    {
+        return true;
+    }
+}
+
+bool CompClose(CloseNode first, CloseNode second)
+{
+    if(first.PtrToNode->value_f >= second.PtrToNode->value_f) //由大到小排序 //如果想要由小到大，改为大于即可
+    {
+        return false;
+    } else
+    {
+        return true;
+    }
+}
 
 
 class AStartFindPath
@@ -65,11 +95,11 @@ public:
     AStartFindPath();
     virtual ~AStartFindPath(){};
     int GetPos(int &x,int &y);
-    void FindDestinnation(OpenList* open,CloseList* close);
-    bool Check_and_Put_to_Openlist(OpenList* , int x, int y);
+    void FindDestinnation(std::list<OpenNode>* open, std::list<CloseNode>* close);
+    bool Check_and_Put_to_Openlist(std::list<OpenNode>* open , int x, int y);
     bool IsInOpenList(int x, int y);
     bool IsInCloseList(int x, int y);
-    void IsChangeParent(OpenList*, int x, int y);
+    void IsChangeParent(std::list<OpenNode>* open, int x, int y);
     bool IsAvailable(int x, int y);
     unsigned int DistanceManhattan(int d_x, int d_y, int x, int y);
 
@@ -85,8 +115,12 @@ public:
 //    double m_resolution;
 
     //Lists
-    OpenList* openlist;
-    CloseList* closelist ;
+//    OpenNode* openlist;
+//    CloseNode* closelist ;
+    std::list<CloseNode>* closelist;
+    std::list<OpenNode>* openlist;
+
+
     int x,y,des_x,des_y;
     char Thrs;
 
@@ -98,6 +132,8 @@ public:
 
     int last_endpoint_x;
     int last_endpoint_y;
+
+    int loop_count;
 };
 
 bool testhfile(int x);
@@ -111,4 +147,4 @@ public:
 
 
 
-void deepCopyMnode(Node* msg1[],int m_height, int m_width, Node* msg2[], const nav_msgs::OccupancyGrid::ConstPtr& msg, OpenList* open1, OpenList* open2, CloseList* close1, CloseList* close2);
+void deepCopyMnode(Node* msg1[], int m_height, int m_width, Node* msg2[], const nav_msgs::OccupancyGrid::ConstPtr& msg, std::list<OpenNode>* open1, std::list<OpenNode>* open2, std::list<CloseNode>* close1, std::list<CloseNode>* close2);

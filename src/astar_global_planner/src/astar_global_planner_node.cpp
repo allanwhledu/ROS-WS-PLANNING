@@ -138,6 +138,7 @@ int main(int argc, char** argv)
             ROS_INFO_STREAM("loop: "<<loop_count);
             // new planner, wait to add
             ROS_INFO_STREAM("m_width:"<<m_width);
+            planner1.loop_count = loop_count;
 
 
             planner1.isRootLoop = false;
@@ -185,6 +186,8 @@ int main(int argc, char** argv)
             ROS_INFO_STREAM("loop: "<<loop_count);
             // new planner, wait to add
             ROS_INFO_STREAM("m_width:"<<m_width);
+
+            planner2.loop_count = loop_count;
 
             planner2.isRootLoop = false;
             planner2.startpoint_x = planner1.startpoint_x;
