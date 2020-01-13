@@ -251,8 +251,8 @@ void AStartFindPath::FindDestinnation(std::list<ListNode>* open, std::list<ListN
             ROS_INFO_STREAM("parents:"<<" "<<forstepcount->parent->location_x<<" "<<forstepcount->parent->location_y);
 
         geometry_msgs::PoseStamped point;
-        point.pose.position.x = forstepcount->location_x;
-        point.pose.position.y = forstepcount->location_y;
+        point.pose.position.x = forstepcount->location_x+1;
+        point.pose.position.y = forstepcount->location_y+1;
 
         plan.poses.push_back(point);
 
@@ -268,8 +268,8 @@ void AStartFindPath::FindDestinnation(std::list<ListNode>* open, std::list<ListN
     // here is the startpoint.
     ROS_INFO_STREAM("point:"<<" "<<forstepcount->location_x<<" "<<forstepcount->location_y<<" flag: "<<forstepcount->flag);
     geometry_msgs::PoseStamped point;
-    point.pose.position.x = forstepcount->location_x;
-    point.pose.position.y = forstepcount->location_y;
+    point.pose.position.x = forstepcount->location_x+1;
+    point.pose.position.y = forstepcount->location_y+1;
     plan.poses.push_back(point);
 
 

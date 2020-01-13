@@ -75,7 +75,7 @@ int main(int argc, char** argv)
     ros::Rate r(1.0);
     int loop_count = 1;
     bool arrived = false;
-    while (ros::ok() && loop_count<15 && arrived == false)
+        while (ros::ok() && arrived == false)
     {
         ros::spinOnce();
         ROS_INFO_STREAM("spin passed.");
