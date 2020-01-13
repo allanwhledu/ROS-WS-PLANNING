@@ -11,7 +11,10 @@ extern bool Comp(ListNode first, ListNode second)
 {
     if(first.PtrToNode->value_f >= second.PtrToNode->value_f) //由大到小排序 //如果想要由小到大，改为大于即可
     {
-        return false;
+        if(first.PtrToNode->value_h >= second.PtrToNode->value_h)
+            return false;
+        else
+            return true;
     } else
     {
         return true;
@@ -211,7 +214,7 @@ void AStartFindPath::FindDestinnation(std::list<ListNode>* open, std::list<ListN
         i++;
         int length = 5;
 
-        if(open==NULL||i>15)
+        if(open==NULL||i>length)
         {
             ROS_INFO_STREAM("completed segment path.");
             ROS_INFO_STREAM(i);
