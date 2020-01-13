@@ -7,18 +7,7 @@ bool testhfile(int x){
         return false;
 }
 
-extern bool CompOpen(ListNode first, ListNode second)
-{
-    if(first.PtrToNode->value_f >= second.PtrToNode->value_f) //由大到小排序 //如果想要由小到大，改为大于即可
-    {
-        return false;
-    } else
-    {
-        return true;
-    }
-}
-
-extern bool CompClose(ListNode first, ListNode second)
+extern bool Comp(ListNode first, ListNode second)
 {
     if(first.PtrToNode->value_f >= second.PtrToNode->value_f) //由大到小排序 //如果想要由小到大，改为大于即可
     {
@@ -132,7 +121,7 @@ void  AStartFindPath::AddNode2Open(std::list<ListNode>* openlist, Node* node)
     opennode.PtrToNode = node;
 
     openlist->push_front(opennode);
-    openlist->sort(CompOpen);
+    openlist->sort(Comp);
 }
 
 void AStartFindPath::AddNode2Close(std::list<ListNode>* close, std::list<ListNode>* open)
@@ -147,7 +136,11 @@ void AStartFindPath::AddNode2Close(std::list<ListNode>* close, std::list<ListNod
 
     ListNode closenode;
     closenode.PtrToNode = open->front().PtrToNode;
-    close->push_back(closenode);
+
+    if(closenode.PtrToNode->flag!=STARTPOINT)
+        close->push_back(closenode);
+
+    close->sort(Comp);
     open->pop_front();
 }
 
@@ -161,7 +154,7 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list<ListNode>* open, std::l
     ROS_INFO_STREAM("now points in open: "<<open->size());
     for (list<ListNode>::iterator it = open->begin(); it != open->end(); ++it)
         if(it->PtrToNode->parent != NULL)
-            ROS_INFO_STREAM(it->PtrToNode->location_x << " " << it->PtrToNode->location_y<<" flag"<<it->PtrToNode->flag<<" h"<<it->PtrToNode->value_h<<" g"<<it->PtrToNode->value_g<<" f"<<it->PtrToNode->value_f<<" parent-> "<<it->PtrToNode->parent->location_y<<" "<<it->PtrToNode->parent->location_x);
+            ROS_INFO_STREAM(it->PtrToNode->location_x << " " << it->PtrToNode->location_y<<" flag"<<it->PtrToNode->flag<<" h"<<it->PtrToNode->value_h<<" g"<<it->PtrToNode->value_g<<" f"<<it->PtrToNode->value_f<<" parent-> "<<it->PtrToNode->parent->location_x<<" "<<it->PtrToNode->parent->location_y);
 
     // 利用传入的center xy信息开始check
     AddNode2Close(close,open);
@@ -218,7 +211,7 @@ void AStartFindPath::FindDestinnation(std::list<ListNode>* open, std::list<ListN
         i++;
         int length = 5;
 
-        if(open==NULL||i>5)
+        if(open==NULL||i>15)
         {
             ROS_INFO_STREAM("completed segment path.");
             ROS_INFO_STREAM(i);
@@ -229,8 +222,22 @@ void AStartFindPath::FindDestinnation(std::list<ListNode>* open, std::list<ListN
 
 
     // count path step.
+
+    list<ListNode>* closeAndopen;
+    closeAndopen = new std::list<ListNode>;
+
+    closeAndopen->assign(openlist->begin(),openlist->end());
+    for (list<ListNode>::iterator it = closelist->begin(); it != closelist->end(); ++it)
+        closeAndopen->push_back(*it);
+    closeAndopen->sort(Comp);
+
+    ROS_INFO_STREAM("now points in closeAndopen: "<<closeAndopen->size());
+    for (list<ListNode>::iterator it = closeAndopen->begin(); it != closeAndopen->end(); ++it)
+        if(it->PtrToNode->parent != NULL)
+            ROS_INFO_STREAM(it->PtrToNode->location_x << " " << it->PtrToNode->location_y<<" flag"<<it->PtrToNode->flag<<" h"<<it->PtrToNode->value_h<<" g"<<it->PtrToNode->value_g<<" f"<<it->PtrToNode->value_f<<" parent-> "<<it->PtrToNode->parent->location_x<<" "<<it->PtrToNode->parent->location_y);
+
     Node* forstepcount;
-    forstepcount= &m_node[open->front().PtrToNode->location_y][open->front().PtrToNode->location_x];
+    forstepcount= &m_node[closeAndopen->front().PtrToNode->location_y][closeAndopen->front().PtrToNode->location_x];
 
     plan.header.frame_id = plan.header.frame_id="odom";
     while(forstepcount->flag!=STARTPOINT)
@@ -418,6 +425,9 @@ void AStartFindPath::setTarget()
     {
         ListNode newopen;
         newopen.PtrToNode = &m_node[y][x];
+//        m_node[y][x].value_h = DistanceManhattan(x,y,des_x,des_y);
+//        m_node[y][x].value_g = 0;
+//        m_node[y][x].value_f = m_node[y][x].value_g + m_node[y][x].value_h;
         openlist->push_back(newopen);
         startpoint_x=x;
         startpoint_y=y;

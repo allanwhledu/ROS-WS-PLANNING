@@ -52,7 +52,7 @@ struct ListNode
     ListNode(){ PtrToNode= NULL;};
 };
 
-extern bool CompOpen(ListNode first, ListNode second);
+extern bool Comp(ListNode first, ListNode second);
 
 
 class AStartFindPath
