@@ -212,7 +212,7 @@ void AStartFindPath::FindDestinnation(std::list<ListNode>* open, std::list<ListN
     while(!Check_and_Put_to_Openlist(open, close))
     {
         i++;
-        int length = 5;
+        int length = 12;
 
         if(open==NULL||i>length)
         {
@@ -251,8 +251,8 @@ void AStartFindPath::FindDestinnation(std::list<ListNode>* open, std::list<ListN
             ROS_INFO_STREAM("parents:"<<" "<<forstepcount->parent->location_x<<" "<<forstepcount->parent->location_y);
 
         geometry_msgs::PoseStamped point;
-        point.pose.position.x = forstepcount->location_x+1;
-        point.pose.position.y = forstepcount->location_y+1;
+        point.pose.position.x = forstepcount->location_x;
+        point.pose.position.y = forstepcount->location_y;
 
         plan.poses.push_back(point);
 
@@ -268,8 +268,8 @@ void AStartFindPath::FindDestinnation(std::list<ListNode>* open, std::list<ListN
     // here is the startpoint.
     ROS_INFO_STREAM("point:"<<" "<<forstepcount->location_x<<" "<<forstepcount->location_y<<" flag: "<<forstepcount->flag);
     geometry_msgs::PoseStamped point;
-    point.pose.position.x = forstepcount->location_x+1;
-    point.pose.position.y = forstepcount->location_y+1;
+    point.pose.position.x = forstepcount->location_x;
+    point.pose.position.y = forstepcount->location_y;
     plan.poses.push_back(point);
 
 
@@ -408,42 +408,27 @@ void AStartFindPath::setTarget()
 
 
     // load map in rootloop.
-    if(isRootLoop)
-    {
-        printf("重载节点！！\n");
 
-        closelist->front().PtrToNode = NULL;
-        for(int i=0;i<m_height ;i++)
-            for(int j=0;j<m_width;j++)
-                if(m_node[i][j].flag!=WALL) m_node[i][j].flag=VIABLE;
+    closelist->front().PtrToNode = NULL;
 
-        printf("重载节点完成！！\n");
-    }
 
     // trans start and end information to map.
     // 1. change startpoint's flag and put it into openlist.
 
     m_node[y][x].flag = STARTPOINT;
-    if(isRootLoop)
-    {
-        ListNode newopen;
-        newopen.PtrToNode = &m_node[y][x];
-//        m_node[y][x].value_h = DistanceManhattan(x,y,des_x,des_y);
-//        m_node[y][x].value_g = 0;
-//        m_node[y][x].value_f = m_node[y][x].value_g + m_node[y][x].value_h;
-        openlist->push_back(newopen);
-        startpoint_x=x;
-        startpoint_y=y;
-    }
+
+    ListNode newopen;
+    newopen.PtrToNode = &m_node[y][x];
+    openlist->push_back(newopen);
+    startpoint_x=x;
+    startpoint_y=y;
 
 
     // 2. change endpoint's flag.
-    if(isRootLoop)
-    {
-        m_node[des_y][des_x].flag = DESTINATION;
-        endpoint_x= des_x;
-        endpoint_y=des_y;
-    }
+    m_node[des_y][des_x].flag = DESTINATION;
+    endpoint_x= des_x;
+    endpoint_y=des_y;
+
 
     // run algorithm.
     ROS_INFO_STREAM("getting path...");
