@@ -58,8 +58,6 @@ extern bool Comp(ListNode first, ListNode second);
 class AStartFindPath
 {
 public:
-
-
     nav_msgs::Path plan;
     nav_msgs::Path Null_plan;
 
@@ -110,7 +108,14 @@ public:
     int loop_count;
 
     bool arrived;
+
+    int feedback;
+    int prior;
 };
+
+
+
+
 
 bool testhfile(int x);
 

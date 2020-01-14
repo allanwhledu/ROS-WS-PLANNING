@@ -7,6 +7,7 @@ bool testhfile(int x){
         return false;
 }
 
+
 extern bool Comp(ListNode first, ListNode second)
 {
     if(first.PtrToNode->value_f >= second.PtrToNode->value_f) //由大到小排序 //如果想要由小到大，改为大于即可
@@ -30,6 +31,8 @@ Node::Node()
     value_f =  0;
     parent= NULL;
 }
+
+// init planner class.
 AStartFindPath::AStartFindPath()
 {
     startpoint_x = 0;startpoint_y = 0;
@@ -48,6 +51,7 @@ AStartFindPath::AStartFindPath()
     isRootLoop = false;
 
     arrived = false;
+    feedback = 0;
 
 }
 
@@ -212,7 +216,7 @@ void AStartFindPath::FindDestinnation(std::list<ListNode>* open, std::list<ListN
     while(!Check_and_Put_to_Openlist(open, close))
     {
         i++;
-        int length = 12;
+        int length = 8;
 
         if(open==NULL||i>length)
         {
@@ -265,12 +269,15 @@ void AStartFindPath::FindDestinnation(std::list<ListNode>* open, std::list<ListN
         if(forstepcount->flag==STARTPOINT)
             ROS_INFO_STREAM("reaching start.");
     }
+
     // here is the startpoint.
     ROS_INFO_STREAM("point:"<<" "<<forstepcount->location_x<<" "<<forstepcount->location_y<<" flag: "<<forstepcount->flag);
     geometry_msgs::PoseStamped point;
     point.pose.position.x = forstepcount->location_x;
     point.pose.position.y = forstepcount->location_y;
     plan.poses.push_back(point);
+
+
 
 
 //
@@ -335,11 +342,10 @@ void AStartFindPath::FindDestinnation(std::list<ListNode>* open, std::list<ListN
 //    plan.poses[i].pose.position.y=startpoint_y*m_resolution;
 //    ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<m_node[startpoint_y][startpoint_x].flag<<" "<<m_node[startpoint_y][startpoint_x].value_f);
 
-
-
     ROS_INFO_STREAM("path constructed.");
 }
 
+// get map to planner class.
 void AStartFindPath::de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 {
     // global var.
@@ -414,7 +420,6 @@ void AStartFindPath::setTarget()
 
     // trans start and end information to map.
     // 1. change startpoint's flag and put it into openlist.
-
     m_node[y][x].flag = STARTPOINT;
 
     ListNode newopen;

@@ -97,6 +97,7 @@ int main(int argc, char **argv)
     align first;
     first.value=32;
     first.pattern_mode = &p_tmp;
+
     top2=tr2.begin();
     one2=tr2.insert(top2,first);
 

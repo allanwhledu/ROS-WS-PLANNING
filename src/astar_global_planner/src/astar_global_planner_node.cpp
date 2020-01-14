@@ -1,5 +1,4 @@
-#include "astar_global_planner.h"
-#include "tree.hh"
+#include "multi_robot_astar_planner.h"
 
 nav_msgs::OccupancyGrid::ConstPtr mapmsg;
 bool isCenterMapGet = false;
@@ -37,6 +36,8 @@ int main(int argc, char** argv)
     if(testhfile(1))
         ROS_INFO_STREAM("testhfile success!");
 
+
+
     ros::NodeHandle n;
 
     // Callback and Publish.
@@ -59,7 +60,15 @@ int main(int argc, char** argv)
         }
     }
 
+//    tree<int> tr_test;
+//    tree<int>::iterator top = tr_test.begin();
+//    tree<int>::iterator int_it;
+//    int test_int = 0;
+//    int_it = tr_test.append_child(top,test_int);
+//    ROS_INFO_STREAM("IT_TREE:"<< (top==tr_test.parent(int_it)));
 
+
+    multi_robot_astar_planner test;
 
     std::vector<AStartFindPath*> vec_planner;
 
@@ -101,16 +110,16 @@ int main(int argc, char** argv)
             ROS_INFO_STREAM("Got init_plan_segment.");
         }
 
-        ROS_INFO_STREAM("0, 0: "<<init_planner->m_node[0][0].flag);
+        // save the last end of path.
+        vlast_endpoint_x.push_back(init_planner->plan.poses.front().pose.position.x);
+        vlast_endpoint_y.push_back(init_planner->plan.poses.front().pose.position.y);
 
-        vlast_endpoint_x.push_back(init_planner->plan.poses.at(4).pose.position.x);
-        vlast_endpoint_y.push_back(init_planner->plan.poses.at(4).pose.position.y);
-
+        // state feed back.
         arrived = init_planner->arrived;
 
+        // save the last planner class.
         vec_planner.push_back(init_planner);
 
-        ROS_INFO_STREAM("next loop -----------------------");
 
         loop_count++;
 
@@ -118,6 +127,9 @@ int main(int argc, char** argv)
         {
             r.sleep();
         }
+
+
+        ROS_INFO_STREAM("next loop -----------------------");
     }
 
     return 0;
