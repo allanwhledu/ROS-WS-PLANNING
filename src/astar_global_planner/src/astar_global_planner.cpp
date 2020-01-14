@@ -261,15 +261,10 @@ void AStartFindPath::FindDestinnation(std::list<ListNode>* open, std::list<ListN
         plan.poses.push_back(point);
 
         forstepcount=forstepcount->parent;
-        ROS_INFO_STREAM("debug point1");
-
-//        if(forstepcount->location_x == last_endpoint_x && forstepcount->location_y == last_endpoint_y && isRootLoop!=1)
-//            break;
-
+        
         if(forstepcount->flag==STARTPOINT)
             ROS_INFO_STREAM("reaching start.");
     }
-
     // here is the startpoint.
     ROS_INFO_STREAM("point:"<<" "<<forstepcount->location_x<<" "<<forstepcount->location_y<<" flag: "<<forstepcount->flag);
     geometry_msgs::PoseStamped point;

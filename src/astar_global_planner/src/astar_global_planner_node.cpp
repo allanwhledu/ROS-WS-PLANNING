@@ -6,6 +6,8 @@ int m_height;
 int m_width;
 int m_resolution;
 
+
+
 std::vector<int> vlast_endpoint_x;
 std::vector<int> vlast_endpoint_y;
 
@@ -26,6 +28,39 @@ struct leaf
     std::vector<int> prior_mode;
 };
 
+int startpoint_x = 0;
+int startpoint_y = 0;
+int endpoint_x = 0;
+int endpoint_y = 0;
+
+tree<planner_group>::iterator grow_tree(tree<planner_group>::iterator last_leaf, nav_msgs::Path& null_path)
+{
+    tree<planner_group>::iterator newpg;
+    newpg = last_leaf->grow_new_leaf();
+    ROS_INFO_STREAM("newpg got.");
+
+    newpg->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
+    newpg->set_planner_group();
+    if(newpg->planners.empty())
+        ROS_INFO_STREAM("planners init failed.");
+
+    ROS_INFO_STREAM("first leaf!");
+    newpg->planners.at(0)->isRootLoop = true;
+    ROS_INFO_STREAM("we can access the tr.planner.");
+
+    newpg->planners.at(0)->de_map_Callback(mapmsg);
+
+    newpg->planners.at(0)->setTarget();
+
+    if(!newpg->planners.at(0)->plan.poses.empty())
+    {
+        null_path = newpg->planners.at(0)->plan;
+        newpg->path = newpg->planners.at(0)->plan;
+        ROS_INFO_STREAM("Got init_plan_segment.");
+    }
+
+    return newpg;
+}
 
 
 // 节点主函数
@@ -36,7 +71,10 @@ int main(int argc, char** argv)
     if(testhfile(1))
         ROS_INFO_STREAM("testhfile success!");
 
-
+    ros::param::get("~x_0",startpoint_x);
+    ros::param::get("~y_0",startpoint_y);
+    ros::param::get("~x_1",endpoint_x);
+    ros::param::get("~y_1",endpoint_y);
 
     ros::NodeHandle n;
 
@@ -69,59 +107,54 @@ int main(int argc, char** argv)
 
 
     multi_robot_astar_planner test;
+    ROS_INFO_STREAM("solid multi_robot_planner.");
 
     std::vector<AStartFindPath*> vec_planner;
 
     ros::Rate r(1.0);
     int loop_count = 1;
     bool arrived = false;
-        while (ros::ok() && arrived == false)
+        while (ros::ok() && arrived == false && loop_count<3)
     {
         ros::spinOnce();
         ROS_INFO_STREAM("spin passed.");
 
-        // test tree.
-        test.tr.begin_leaf()->planners.at(0).de_map_Callback(mapmsg);
+        //test tree.
+        tree<planner_group>::iterator init_planner = test.tr->child(test.top, 0);
+        init_planner->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
+        init_planner->set_planner_group();
+        if(init_planner->planners.empty())
+            ROS_INFO_STREAM("planners init failed.");
 
-//        // path planning part.
-//        auto init_planner = new AStartFindPath;
-//
-//
-//        if(loop_count == 1)
-//        {
-//            init_planner->isRootLoop = true;
-//            ros::param::get("~x_1",init_planner->endpoint_x);
-//            ros::param::get("~y_1",init_planner->endpoint_y);
-//            ros::param::get("~x_0",init_planner->startpoint_x);
-//            ros::param::get("~y_0",init_planner->startpoint_y);
-//        } else
-//        {
-//            init_planner->isRootLoop = false;
-//            ros::param::get("~x_1",init_planner->endpoint_x);
-//            ros::param::get("~y_1",init_planner->endpoint_y);
-//            init_planner->startpoint_x = vlast_endpoint_x.back();
-//            init_planner->startpoint_y = vlast_endpoint_y.back();
-//        }
-//
-//        init_planner->de_map_Callback(mapmsg);
-//
-//        init_planner->setTarget();
-//
-//        if(!init_planner->plan.poses.empty())
-//        {
-//            nav_plan.publish(init_planner->plan);
-//            ROS_INFO_STREAM("Got init_plan_segment.");
-//        }
-//
-//        // save the last end of path.
-//        vlast_endpoint_x.push_back(init_planner->plan.poses.front().pose.position.x);
-//        vlast_endpoint_y.push_back(init_planner->plan.poses.front().pose.position.y);
-//
-//        // state feed back.
-//        arrived = init_planner->arrived;
-//
-//        // save the last planner class.
-//        vec_planner.push_back(init_planner);
+        ROS_INFO_STREAM("first leaf!");
+        init_planner->planners.at(0)->isRootLoop = true;
+        ROS_INFO_STREAM("we can access the tr.planner.");
+
+        init_planner->planners.at(0)->de_map_Callback(mapmsg);
+
+        init_planner->planners.at(0)->setTarget();
+
+        if(!init_planner->planners.at(0)->plan.poses.empty())
+        {
+            nav_plan.publish(init_planner->planners.at(0)->plan);
+            init_planner->path = init_planner->planners.at(0)->plan;
+            ROS_INFO_STREAM("Got init_plan_segment.");
+        }
+
+
+
+        // test new leaf.
+        nav_msgs::Path nullpath;
+        tree<planner_group>::iterator planner = grow_tree(init_planner, nullpath);
+        nav_plan.publish(nullpath);
+
+        nav_msgs::Path nullpath2;
+        tree<planner_group>::iterator planner2 = grow_tree(planner, nullpath2);
+        nav_plan.publish(nullpath2);
+
+
+
+
 
 
         loop_count++;
