@@ -47,15 +47,6 @@ int main(int argc, char** argv)
     nav_plan = n.advertise<nav_msgs::Path>("astar_path", 1);
 
 
-    // path planning part.
-    AStartFindPath init_planner;
-    init_planner.isRootLoop = true;
-
-    ros::param::get("~x_0",init_planner.startpoint_x);
-    ros::param::get("~y_0",init_planner.startpoint_y);
-    ros::param::get("~x_1",init_planner.endpoint_x);
-    ros::param::get("~y_1",init_planner.endpoint_y);
-
     // wait for mapmsg.
     while (ros::ok)
     {
@@ -71,7 +62,7 @@ int main(int argc, char** argv)
 
 
     std::vector<AStartFindPath*> vec_planner;
-    vec_planner.push_back(&init_planner);
+
     ros::Rate r(1.0);
     int loop_count = 1;
     bool arrived = false;
@@ -80,113 +71,83 @@ int main(int argc, char** argv)
         ros::spinOnce();
         ROS_INFO_STREAM("spin passed.");
 
+        // path planning part.
+        auto init_planner = new AStartFindPath;
+
+
         if(loop_count == 1)
         {
-            ROS_INFO_STREAM("loop 1");
-            init_planner.de_map_Callback(mapmsg);
-
-            init_planner.setTarget();
-
-            if(!init_planner.plan.poses.empty())
-            {
-                nav_plan.publish(init_planner.plan);
-                ROS_INFO_STREAM("Got init_plan_segment.");
-            }
-
-            ROS_INFO_STREAM("0, 0: "<<init_planner.m_node[0][0].flag);
-
-            vlast_endpoint_x.push_back(init_planner.plan.poses.back().pose.position.x);
-            vlast_endpoint_y.push_back(init_planner.plan.poses.back().pose.position.y);
-
-            arrived = init_planner.arrived;
-
-            ROS_INFO_STREAM("next loop -----------------------");
-        }
-
-
-        if(loop_count >1 )
+            init_planner->isRootLoop = true;
+            ros::param::get("~x_1",init_planner->endpoint_x);
+            ros::param::get("~y_1",init_planner->endpoint_y);
+            ros::param::get("~x_0",init_planner->startpoint_x);
+            ros::param::get("~y_0",init_planner->startpoint_y);
+        } else
         {
-
-//            AStartFindPath* planner1;
-            auto planner = new AStartFindPath;
-            ROS_INFO_STREAM("loop: "<<loop_count);
-            planner->loop_count = loop_count;
-            planner->isRootLoop = false;
-            planner->startpoint_x = vec_planner.back()->startpoint_x;
-            planner->startpoint_y = vec_planner.back()->startpoint_y;
-            planner->endpoint_x = vec_planner.back()->endpoint_x;
-            planner->endpoint_y = vec_planner.back()->endpoint_y;
-            planner->last_endpoint_x = vlast_endpoint_x.back();
-            planner->last_endpoint_y = vlast_endpoint_y.back();
-
-            ROS_INFO_STREAM("m_width:"<<m_width);
-
-            deepCopyMnode(planner->m_node, m_height, m_width, vec_planner.back()->m_node, mapmsg, planner->openlist, vec_planner.back()->openlist, planner->closelist, vec_planner.back()->closelist);
-
-//            ROS_INFO_STREAM("planner's endpoint_x:");
-//            ROS_INFO_STREAM(planner->endpoint_x);
-//            ROS_INFO_STREAM("check m_node[][].flag:");
-//            ROS_INFO_STREAM(planner->m_node[8][5].flag);
-//            ROS_INFO_STREAM(planner->m_node[8][5].flag);
-
-
-            planner->setTarget();
-
-            if(!planner->plan.poses.empty())
-            {
-                nav_plan.publish(planner->plan);
-                vlast_endpoint_x.push_back(planner->plan.poses.back().pose.position.x);
-                vlast_endpoint_y.push_back(planner->plan.poses.back().pose.position.y);
-                ROS_INFO_STREAM("Got plan_segment.");
-            }
-
-            arrived = planner->arrived;
-
-            vec_planner.push_back(planner);
-
-            ROS_INFO_STREAM("next loop -----------------------");
+            ros::param::get("~x_1",init_planner->endpoint_x);
+            ros::param::get("~y_1",init_planner->endpoint_y);
+            init_planner->last_endpoint_x = vlast_endpoint_x.back();
+            init_planner->last_endpoint_y = vlast_endpoint_y.back();
         }
 
-//        if(loop_count ==3 )
+
+        ROS_INFO_STREAM("loop 1");
+        init_planner->de_map_Callback(mapmsg);
+
+        init_planner->setTarget();
+
+        if(!init_planner->plan.poses.empty())
+        {
+            nav_plan.publish(init_planner->plan);
+            ROS_INFO_STREAM("Got init_plan_segment.");
+        }
+
+        ROS_INFO_STREAM("0, 0: "<<init_planner->m_node[0][0].flag);
+
+        vlast_endpoint_x.push_back(init_planner->plan.poses.back().pose.position.x);
+        vlast_endpoint_y.push_back(init_planner->plan.poses.back().pose.position.y);
+
+        arrived = init_planner->arrived;
+
+        vec_planner.push_back(init_planner);
+
+        ROS_INFO_STREAM("next loop -----------------------");
+
+
+//        if(loop_count >1 )
 //        {
+//
+////            AStartFindPath* planner1;
+//            auto planner = new AStartFindPath;
 //            ROS_INFO_STREAM("loop: "<<loop_count);
-//            // new planner, wait to add
-//            ROS_INFO_STREAM("m_width:"<<m_width);
-//            AStartFindPath planner2;
-//
-//            planner2.loop_count = loop_count;
-//
-//            planner2.isRootLoop = false;
-//            planner2.startpoint_x = vec_planner.back()->startpoint_x;
-//            planner2.startpoint_y = vec_planner.back()->startpoint_y;
-//            planner2.endpoint_x = vec_planner.back()->endpoint_x;
-//            planner2.endpoint_y = vec_planner.back()->endpoint_y;
-//            planner2.last_endpoint_x = vlast_endpoint_x.back();
-//            planner2.last_endpoint_y = vlast_endpoint_y.back();
+//            planner->loop_count = loop_count;
+//            planner->isRootLoop = false;
+//            planner->startpoint_x = vec_planner.back()->startpoint_x;
+//            planner->startpoint_y = vec_planner.back()->startpoint_y;
+//            planner->endpoint_x = vec_planner.back()->endpoint_x;
+//            planner->endpoint_y = vec_planner.back()->endpoint_y;
+//            planner->last_endpoint_x = vlast_endpoint_x.back();
+//            planner->last_endpoint_y = vlast_endpoint_y.back();
 //
 //            ROS_INFO_STREAM("m_width:"<<m_width);
 //
-//            deepCopyMnode(planner2.m_node, m_height, m_width, vec_planner.back()->m_node, mapmsg, planner2.openlist, vec_planner.back()->openlist, planner2.closelist, vec_planner.back()->closelist);
+//            deepCopyMnode(planner->m_node, m_height, m_width, vec_planner.back()->m_node, mapmsg, planner->openlist, vec_planner.back()->openlist, planner->closelist, vec_planner.back()->closelist);
 //
 //
-//            ROS_INFO_STREAM("planner's endpoint_x:");
-//            ROS_INFO_STREAM(planner2.endpoint_x);
-//            ROS_INFO_STREAM("check m_node[][].flag:");
-//            ROS_INFO_STREAM(planner2.m_node[8][5].flag);
-//            ROS_INFO_STREAM(planner2.m_node[8][5].flag);
+//            planner->setTarget();
 //
-//
-//            planner2.setTarget();
-//
-//            if(!planner2.plan.poses.empty())
+//            if(!planner->plan.poses.empty())
 //            {
-//                nav_plan.publish(planner2.plan);
-//                vlast_endpoint_x.push_back(planner2.plan.poses.back().pose.position.x);
-//                vlast_endpoint_y.push_back(planner2.plan.poses.back().pose.position.y);
+//                nav_plan.publish(planner->plan);
+//                vlast_endpoint_x.push_back(planner->plan.poses.back().pose.position.x);
+//                vlast_endpoint_y.push_back(planner->plan.poses.back().pose.position.y);
 //                ROS_INFO_STREAM("Got plan_segment.");
 //            }
 //
-//            arrived = planner2.arrived;
+//            arrived = planner->arrived;
+//
+//            vec_planner.push_back(planner);
+//
 //            ROS_INFO_STREAM("next loop -----------------------");
 //        }
 
