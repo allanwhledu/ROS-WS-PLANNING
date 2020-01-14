@@ -16,6 +16,10 @@ public:
     nav_msgs::Path path;
     tree<planner_group>::iterator parent_loc;
 
+    int get_feedback(int idx){
+        return this->planners.at(idx).feedback;
+    }
+
    void set_planner_group(tree<planner_group> tr){
        for (int i = 0; i < 2; ++i) {
            AStartFindPath init_planner;
@@ -38,10 +42,10 @@ class multi_robot_astar_planner {
 public:
     tree<planner_group> tr;
     tree<planner_group>::iterator top;
-    planner_group pg;
 
     multi_robot_astar_planner(){
         top = tr.begin();
+        planner_group pg;
         ROS_INFO_STREAM("cut in");
         tree<planner_group>::iterator pg_loc = tr.append_child(top, pg);
         ROS_INFO_STREAM("after cut in");
@@ -55,9 +59,7 @@ public:
         //init a planer_group
         planner_group pg;
     }
-    int get_feedback(int idx){
-        return pg.planners.at(idx).feedback;
-    }
+
 };
 
 void perm(int arr[],vector<vector<int>> ret) {

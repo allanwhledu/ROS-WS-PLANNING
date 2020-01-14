@@ -80,45 +80,48 @@ int main(int argc, char** argv)
         ros::spinOnce();
         ROS_INFO_STREAM("spin passed.");
 
-        // path planning part.
-        auto init_planner = new AStartFindPath;
+        // test tree.
+        test.tr.begin_leaf()->planners.at(0).de_map_Callback(mapmsg);
 
-
-        if(loop_count == 1)
-        {
-            init_planner->isRootLoop = true;
-            ros::param::get("~x_1",init_planner->endpoint_x);
-            ros::param::get("~y_1",init_planner->endpoint_y);
-            ros::param::get("~x_0",init_planner->startpoint_x);
-            ros::param::get("~y_0",init_planner->startpoint_y);
-        } else
-        {
-            init_planner->isRootLoop = false;
-            ros::param::get("~x_1",init_planner->endpoint_x);
-            ros::param::get("~y_1",init_planner->endpoint_y);
-            init_planner->startpoint_x = vlast_endpoint_x.back();
-            init_planner->startpoint_y = vlast_endpoint_y.back();
-        }
-
-        init_planner->de_map_Callback(mapmsg);
-
-        init_planner->setTarget();
-
-        if(!init_planner->plan.poses.empty())
-        {
-            nav_plan.publish(init_planner->plan);
-            ROS_INFO_STREAM("Got init_plan_segment.");
-        }
-
-        // save the last end of path.
-        vlast_endpoint_x.push_back(init_planner->plan.poses.front().pose.position.x);
-        vlast_endpoint_y.push_back(init_planner->plan.poses.front().pose.position.y);
-
-        // state feed back.
-        arrived = init_planner->arrived;
-
-        // save the last planner class.
-        vec_planner.push_back(init_planner);
+//        // path planning part.
+//        auto init_planner = new AStartFindPath;
+//
+//
+//        if(loop_count == 1)
+//        {
+//            init_planner->isRootLoop = true;
+//            ros::param::get("~x_1",init_planner->endpoint_x);
+//            ros::param::get("~y_1",init_planner->endpoint_y);
+//            ros::param::get("~x_0",init_planner->startpoint_x);
+//            ros::param::get("~y_0",init_planner->startpoint_y);
+//        } else
+//        {
+//            init_planner->isRootLoop = false;
+//            ros::param::get("~x_1",init_planner->endpoint_x);
+//            ros::param::get("~y_1",init_planner->endpoint_y);
+//            init_planner->startpoint_x = vlast_endpoint_x.back();
+//            init_planner->startpoint_y = vlast_endpoint_y.back();
+//        }
+//
+//        init_planner->de_map_Callback(mapmsg);
+//
+//        init_planner->setTarget();
+//
+//        if(!init_planner->plan.poses.empty())
+//        {
+//            nav_plan.publish(init_planner->plan);
+//            ROS_INFO_STREAM("Got init_plan_segment.");
+//        }
+//
+//        // save the last end of path.
+//        vlast_endpoint_x.push_back(init_planner->plan.poses.front().pose.position.x);
+//        vlast_endpoint_y.push_back(init_planner->plan.poses.front().pose.position.y);
+//
+//        // state feed back.
+//        arrived = init_planner->arrived;
+//
+//        // save the last planner class.
+//        vec_planner.push_back(init_planner);
 
 
         loop_count++;
