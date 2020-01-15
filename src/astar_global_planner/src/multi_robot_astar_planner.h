@@ -30,7 +30,9 @@ public:
 
     int feedback;
     vector<Tpoint> tpath;
-    nav_msgs::Path path;
+
+    vector<nav_msgs::Path> pathes;
+
 
     tree<planner_group>* tree_ptr= nullptr;
     tree<planner_group>::iterator top_loc;
@@ -64,8 +66,8 @@ public:
 
            if (parent_loc!=top_loc){
                ROS_INFO_STREAM("getting last endpoint...");
-               init_planner->startpoint_x = (*parent_loc).path.poses.back().pose.position.x;
-               init_planner->startpoint_y = (*parent_loc).path.poses.back().pose.position.y;
+               init_planner->startpoint_x = (*parent_loc).pathes.at(i).poses.back().pose.position.x;
+               init_planner->startpoint_y = (*parent_loc).pathes.at(i).poses.back().pose.position.y;
                init_planner->endpoint_x = endpoint_x[i];
                init_planner->endpoint_y = endpoint_y[i];
                ROS_INFO_STREAM("got lastendpoint.");

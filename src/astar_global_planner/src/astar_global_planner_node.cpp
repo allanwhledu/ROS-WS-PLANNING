@@ -55,7 +55,22 @@ tree<planner_group>::iterator grow_tree(tree<planner_group>::iterator last_leaf,
     if(!newpg->planners.at(0)->plan.poses.empty())
     {
         null_path = newpg->planners.at(0)->plan;
-        newpg->path = newpg->planners.at(0)->plan;
+        newpg->pathes.push_back(newpg->planners.at(0)->plan);
+        ROS_INFO_STREAM("Got init_plan_segment.");
+    }
+
+    ROS_INFO_STREAM("second leaf!");
+    newpg->planners.at(1)->isRootLoop = true;
+    ROS_INFO_STREAM("we can access the tr.planner.");
+
+    newpg->planners.at(1)->de_map_Callback(mapmsg);
+
+    newpg->planners.at(1)->setTarget();
+
+    if(!newpg->planners.at(1)->plan.poses.empty())
+    {
+        null_path = newpg->planners.at(1)->plan;
+        newpg->pathes.push_back(newpg->planners.at(1)->plan);
         ROS_INFO_STREAM("Got init_plan_segment.");
     }
 
@@ -141,7 +156,7 @@ int main(int argc, char** argv)
         if(!init_planner->planners.at(0)->plan.poses.empty())
         {
             nav_plan.publish(init_planner->planners.at(0)->plan);
-            init_planner->path = init_planner->planners.at(0)->plan;
+            init_planner->pathes.push_back(init_planner->planners.at(0)->plan);
             init_planner->print_tpath();
             ROS_INFO_STREAM("Got init_plan_segment.");
         }
@@ -168,7 +183,7 @@ int main(int argc, char** argv)
         if(!init_planner->planners.at(1)->plan.poses.empty())
         {
             nav_plan.publish(init_planner->planners.at(1)->plan);
-            init_planner->path = init_planner->planners.at(1)->plan;
+            init_planner->pathes.push_back(init_planner->planners.at(1)->plan);
             init_planner->print_tpath();
             ROS_INFO_STREAM("Got init_plan_segment.");
         }
@@ -179,17 +194,17 @@ int main(int argc, char** argv)
 
 
         // test new leaf.
-//        nav_msgs::Path nullpath;
-//        tree<planner_group>::iterator planner = grow_tree(init_planner, nullpath);
-//        nav_plan.publish(nullpath);
+        nav_msgs::Path nullpath;
+        tree<planner_group>::iterator planner = grow_tree(init_planner, nullpath);
+        nav_plan.publish(nullpath);
 //        if(planner->planners.at(0)->arrived)
 //            return 0;
-//
-//        nav_msgs::Path nullpath2;
-//        tree<planner_group>::iterator planner2 = grow_tree(planner, nullpath2);
-//        nav_plan.publish(nullpath2);
-//        if(planner2->planners.at(0)->arrived)
-//            return 0;
+
+        nav_msgs::Path nullpath2;
+        tree<planner_group>::iterator planner2 = grow_tree(planner, nullpath2);
+        nav_plan.publish(nullpath2);
+        if(planner2->planners.at(0)->arrived)
+            return 0;
 
 
         loop_count++;
