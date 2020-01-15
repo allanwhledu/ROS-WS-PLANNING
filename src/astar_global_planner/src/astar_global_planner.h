@@ -147,10 +147,4 @@ public:
 void deepCopyMnode(Node *msg1[], int m_height, int m_width, Node *msg2[], const nav_msgs::OccupancyGrid::ConstPtr &msg,
                    std::list <ListNode> *open1, std::list <ListNode> *open2, std::list <ListNode> *close1,
                    std::list <ListNode> *close2);
-
-void passXY(int xsrc, int ysrc, int xdst, int ydst) {
-    xdst = xsrc;
-    ydst = ysrc;
-}
-
 #endif

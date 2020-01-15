@@ -94,7 +94,7 @@ bool AStartFindPath::IsAvailable(int x, int y, int time) {
 }
 
 bool AStartFindPath::IsInOpenList(int x, int y) {
-    return (m_node[y][x].flag == INOPEN)
+    return (m_node[y][x].flag == INOPEN);
 }
 
 bool AStartFindPath::IsInCloseList(int x, int y) {

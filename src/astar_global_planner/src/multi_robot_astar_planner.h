@@ -136,28 +136,29 @@ public:
         (*pg_loc).parent_loc = tr->parent(pg_loc);
     }
 
+    void perm(int arr[], int len, vector<vector<int>> &ret) {
+        if (len < 2) return;
+        int i, j, temp;
+        do {
+            auto *tmp = new vector<int>();
+            for (int k = 0; k < len; ++k) {
+                tmp->push_back(arr[k]);
+            }
+            ret.push_back(*tmp);
+            i = j = len - 1;
+            //向前查找第一个变小的元素
+            while (i > 0 && arr[i] < arr[i - 1]) --i;
+            temp = i;
+            if (i == 0) break;
+            //先后查找第一个比arr[i-1]大的元素
+            while (temp + 1 < len && arr[temp + 1] > arr[i - 1]) ++temp;
+            swap(arr[i - 1], arr[temp]);  //交换两个值
+            reverse(arr + i, arr + len);  //逆序
+        } while (true);
+    }
 };
 
-void perm(int arr[], int len, vector<vector<int>> &ret) {
-    if (len < 2) return;
-    int i, j, temp;
-    do {
-        auto *tmp = new vector<int>();
-        for (int k = 0; k < len; ++k) {
-            tmp->push_back(arr[k]);
-        }
-        ret.push_back(*tmp);
-        i = j = len - 1;
-        //向前查找第一个变小的元素
-        while (i > 0 && arr[i] < arr[i - 1]) --i;
-        temp = i;
-        if (i == 0) break;
-        //先后查找第一个比arr[i-1]大的元素
-        while (temp + 1 < len && arr[temp + 1] > arr[i - 1]) ++temp;
-        swap(arr[i - 1], arr[temp]);  //交换两个值
-        reverse(arr + i, arr + len);  //逆序
-    } while (true);
-}
+
 
 
 #endif //ROS_WS_PLANNING_MULTI_ROBOT_ASTAR_PLANNER_H
