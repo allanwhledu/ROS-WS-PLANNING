@@ -8,8 +8,8 @@ int m_resolution;
 
 int robots_start_end_points[][4] = {{1, 1, 7, 1},
                                     {7, 1, 1, 1},
-                                    {7, 7, 1, 2}};
-int num_robots = 3;
+                                    };
+int num_robots = 2;
 int layer_depth = 3;
 
 std::vector<int> vlast_endpoint_x;
@@ -68,6 +68,7 @@ tree<planner_group>::iterator grow_tree(tree<planner_group>::iterator last_leaf,
             (*newpg).add_feedback_from_path(new_path, i); //TODO: 是在这里吗？　还是应该在ｍａｉｎ函数里
 
             newpg->pathes.push_back(newpg->planners.at(i)->plan);
+            newpg->print_tpath();
             ROS_INFO_STREAM("Got init_plan_segment.");
         }
     }
@@ -79,7 +80,7 @@ tree<planner_group>::iterator grow_tree(tree<planner_group>::iterator last_leaf,
 int main(int argc, char **argv) {
     ros::init(argc, argv, "astar_planner");
     vector <vector<int>> permt;
-    int robots_idx_lst[] = {0, 1, 2};
+    int robots_idx_lst[] = {0, 1};
 
     multi_robot_astar_planner test;
     test.perm(robots_idx_lst, sizeof(robots_idx_lst) / sizeof(robots_idx_lst[0]), permt);
@@ -136,7 +137,7 @@ int main(int argc, char **argv) {
         init_planner->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
         init_planner->set_planner_group(num_robots);
         for (int j = 0; j < permt.size(); ++j) {
-//            ROS_WARN_STREAM("out of size?"<<permt[0].size());
+
             for (int idx = 0; idx < num_robots; ++idx) {
                 init_planner->planners.at(permt[j][idx])->de_map_Callback(mapmsg);
                 init_planner->planners.at(permt[j][idx])->setTarget();
@@ -150,12 +151,12 @@ int main(int argc, char **argv) {
                 }
             }
 
-            tree<planner_group>::iterator last_planner_group = init_planner;
+            tree<planner_group>::iterator last_planner_group;
             for (int idx = 0; idx < layer_depth; ++idx) {
                 // test new leaf.
                 vector <nav_msgs::Path> nullpaths;
                 for (int i = 0; i < permt.size(); ++i) {
-                    last_planner_group = grow_tree(last_planner_group, nullpaths);
+                    last_planner_group = grow_tree(init_planner, nullpaths);
                     test.tr->append_child(init_planner, last_planner_group);
                     for (int k = 0; k < num_robots; ++k) {
                         nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
@@ -174,11 +175,23 @@ int main(int argc, char **argv) {
             }
         }
 
-        loop_count++;
-
-        for (int i = 0; i < 3; i++) {
-            r.sleep();
-        }
+//        nav_msgs::Path fullpath;
+//        fullpath.header.frame_id = "odom";
+//        for(int i = 1; i < last_planner_group->pathes.size(); i++)
+//        {
+//            fullpath.poses.insert(fullpath.poses.end(),last_planner_group->pathes.at(0).poses.begin(),last_planner_group->pathes.at(0).poses.end());
+//        }
+//        ROS_INFO_STREAM("now we will pub full path...");
+//        for(auto & pose : fullpath.poses){
+//            ROS_INFO_STREAM("points in fullpath: "<< pose.pose.position.x<<" "<<pose.pose.position.y);
+//        }
+//        nav_plan.publish(fullpath);
+//
+//        loop_count++;
+//
+//        for (int i = 0; i < 3; i++) {
+//            r.sleep();
+//        }
 
         ROS_INFO_STREAM("next loop -----------------------");
     }
