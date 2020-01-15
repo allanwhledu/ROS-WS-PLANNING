@@ -99,9 +99,8 @@ bool AStartFindPath::IsAvailable(int x, int y, int time)
     if(m_node[y][x].flag == WALL || m_node[y][x].flag == STARTPOINT)
         flag = false;
 
-    vector<Tpoint>::iterator it;
-    for(it = group_ptr->tpath.begin();it!=group_ptr->tpath.end();++it){
-        if ((x==it->x-1 && y==it->y-1 && time==it->t) || (x==it->x-1 && y==it->y-1 && time==it->t-1)){
+    for(auto it = group_ptr->tpath.begin();it!=group_ptr->tpath.end();it++){
+        if (x==it->x && y==it->y && time==it->t){
             ROS_WARN_STREAM("conflict in "<<x<<","<<y<<","<<time<<".");
             flag = false;
         }
@@ -280,13 +279,21 @@ void AStartFindPath::FindDestinnation(std::list<ListNode>* open, std::list<ListN
     point.pose.position.y = forstepcount->location_y;
     plan.poses.push_back(point);
 
+    ROS_INFO_STREAM("debug1");
+    reverse(plan.poses.begin(),plan.poses.end());
+
+    ROS_INFO_STREAM("debug2");
+    int path_length = 4;
+    int path_length0 = plan.poses.size();
+    plan.poses.erase(plan.poses.end()-(path_length0-path_length), plan.poses.end());
+    ROS_INFO_STREAM("debug3");
     // return tpath.
     Tpoint tpoint;
     for(int i = 0; i<plan.poses.size(); i++)
     {
         tpoint.x = plan.poses.at(i).pose.position.x;
         tpoint.y = plan.poses.at(i).pose.position.y;
-        tpoint.t = plan.poses.at(i).pose.position.z;
+        tpoint.t = i*DISTANCE;
         group_ptr->tpath.push_back(tpoint);
     }
 

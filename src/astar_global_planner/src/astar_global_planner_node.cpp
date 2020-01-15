@@ -28,10 +28,10 @@ struct leaf
     std::vector<int> prior_mode;
 };
 
-int startpoint_x = 0;
-int startpoint_y = 0;
-int endpoint_x = 0;
-int endpoint_y = 0;
+vector<int> startpoint_x(2);
+vector<int> startpoint_y(2);
+vector<int> endpoint_x(2);
+vector<int> endpoint_y(2);
 
 tree<planner_group>::iterator grow_tree(tree<planner_group>::iterator last_leaf, nav_msgs::Path& null_path)
 {
@@ -68,10 +68,19 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv, "astar_planner");
 
-    ros::param::get("~x_0",startpoint_x);
-    ros::param::get("~y_0",startpoint_y);
-    ros::param::get("~x_1",endpoint_x);
-    ros::param::get("~y_1",endpoint_y);
+//    ros::param::get("~x_0",startpoint_x);
+//    ros::param::get("~y_0",startpoint_y);
+//    ros::param::get("~x_1",endpoint_x);
+//    ros::param::get("~y_1",endpoint_y);
+    startpoint_x[0] = 1;
+    startpoint_y[0] = 1;
+    endpoint_x[0] = 7;
+    endpoint_y[0] = 1;
+
+    startpoint_x[1] = 7;
+    startpoint_y[1] = 1;
+    endpoint_x[1] = 1;
+    endpoint_y[1] = 1;
 
     ros::NodeHandle n;
 
@@ -111,7 +120,7 @@ int main(int argc, char** argv)
     ros::Rate r(1.0);
     int loop_count = 1;
     bool arrived = false;
-        while (ros::ok() && arrived == false && loop_count<3)
+        while (ros::ok() && arrived == false && loop_count<2)
     {
         ros::spinOnce();
         ROS_INFO_STREAM("spin passed.");
@@ -123,9 +132,8 @@ int main(int argc, char** argv)
         if(init_planner->planners.empty())
             ROS_INFO_STREAM("planners init failed.");
 
-        ROS_INFO_STREAM("first leaf!");
+        ROS_INFO_STREAM("first robot!");
         ROS_INFO_STREAM("we can access the tr.planner.");
-
         init_planner->planners.at(0)->de_map_Callback(mapmsg);
 
         init_planner->planners.at(0)->setTarget();
@@ -137,23 +145,51 @@ int main(int argc, char** argv)
             init_planner->print_tpath();
             ROS_INFO_STREAM("Got init_plan_segment.");
         }
-        if(init_planner->planners.at(0)->arrived)
-            return 0;
+//        if(init_planner->planners.at(0)->arrived)
+//            return 0;
+
+        // test vertical leaf.
+        ROS_INFO_STREAM("debug1");
+        ROS_INFO_STREAM("debug2");
+        init_planner->set_planner_group();
+        ROS_INFO_STREAM("debug3");
+        if(init_planner->planners.empty())
+            ROS_INFO_STREAM("planners init failed.");
+
+        ROS_INFO_STREAM("second leaf!");
+        ROS_INFO_STREAM("we can access the tr.planner.");
+
+        init_planner->planners.at(1)->de_map_Callback(mapmsg);
+        ROS_INFO_STREAM("debug4");
+
+        init_planner->planners.at(1)->setTarget();
+        ROS_INFO_STREAM("debug5");
+
+        if(!init_planner->planners.at(1)->plan.poses.empty())
+        {
+            nav_plan.publish(init_planner->planners.at(1)->plan);
+            init_planner->path = init_planner->planners.at(1)->plan;
+            init_planner->print_tpath();
+            ROS_INFO_STREAM("Got init_plan_segment.");
+        }
+//        if(init_planner->planners.at(1)->arrived)
+//            return 0;
+
 
 
 
         // test new leaf.
-        nav_msgs::Path nullpath;
-        tree<planner_group>::iterator planner = grow_tree(init_planner, nullpath);
-        nav_plan.publish(nullpath);
-        if(planner->planners.at(0)->arrived)
-            return 0;
-
-        nav_msgs::Path nullpath2;
-        tree<planner_group>::iterator planner2 = grow_tree(planner, nullpath2);
-        nav_plan.publish(nullpath2);
-        if(planner2->planners.at(0)->arrived)
-            return 0;
+//        nav_msgs::Path nullpath;
+//        tree<planner_group>::iterator planner = grow_tree(init_planner, nullpath);
+//        nav_plan.publish(nullpath);
+//        if(planner->planners.at(0)->arrived)
+//            return 0;
+//
+//        nav_msgs::Path nullpath2;
+//        tree<planner_group>::iterator planner2 = grow_tree(planner, nullpath2);
+//        nav_plan.publish(nullpath2);
+//        if(planner2->planners.at(0)->arrived)
+//            return 0;
 
 
         loop_count++;

@@ -21,10 +21,10 @@ struct Tpoint
 
 class planner_group {
 public:
-    int startpoint_x = 0;
-    int startpoint_y = 0;
-    int endpoint_x = 0;
-    int endpoint_y = 0;
+    vector<int> startpoint_x;
+    vector<int> startpoint_y;
+    vector<int> endpoint_x;
+    vector<int> endpoint_y;
 
     vector<AStartFindPath*> planners;
 
@@ -42,11 +42,15 @@ public:
         return this->planners.at(idx)->feedback;
     }
 
-    void get_start_and_goal(int sx, int sy, int ex, int ey){
-        startpoint_x = sx;
-        startpoint_y = sy;
-        endpoint_x = ex;
-        endpoint_y = ey;
+    void get_start_and_goal(vector<int> sx, vector<int> sy, vector<int> ex, vector<int> ey){
+        for(int i = 0; i < sx.size() ; i++)
+        {
+            startpoint_x.push_back(sx[i]);
+            startpoint_y.push_back(sy[i]);
+            endpoint_x.push_back(ex[i]);
+            endpoint_y.push_back(ey[i]);
+        }
+
         ROS_INFO_STREAM("pg pointer in s and g: "<<this);
     }
 
@@ -60,17 +64,17 @@ public:
 
            if (parent_loc!=top_loc){
                ROS_INFO_STREAM("getting last endpoint...");
-               init_planner->startpoint_x = (*parent_loc).path.poses.front().pose.position.x;
-               init_planner->startpoint_y = (*parent_loc).path.poses.front().pose.position.y;
-               init_planner->endpoint_x = endpoint_x;
-               init_planner->endpoint_y = endpoint_y;
+               init_planner->startpoint_x = (*parent_loc).path.poses.back().pose.position.x;
+               init_planner->startpoint_y = (*parent_loc).path.poses.back().pose.position.y;
+               init_planner->endpoint_x = endpoint_x[i];
+               init_planner->endpoint_y = endpoint_y[i];
                ROS_INFO_STREAM("got lastendpoint.");
            } else
            {
-               init_planner->startpoint_x = startpoint_x;
-               init_planner->startpoint_y = startpoint_y;
-               init_planner->endpoint_x = endpoint_x;
-               init_planner->endpoint_y = endpoint_y;
+               init_planner->startpoint_x = startpoint_x[i];
+               init_planner->startpoint_y = startpoint_y[i];
+               init_planner->endpoint_x = endpoint_x[i];
+               init_planner->endpoint_y = endpoint_y[i];
            }
 
            init_planner->group_ptr = this;
@@ -98,7 +102,7 @@ public:
     {
         std::cout<<"tpath: ";
         for(auto & Tpoint : tpath)
-            std::cout<<Tpoint.x<<Tpoint.y<<Tpoint.t<<" ";
+            std::cout<<Tpoint.x<<Tpoint.y<<" "<<Tpoint.t<<" ,";
         std::cout<<endl;
     }
 
