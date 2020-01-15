@@ -94,7 +94,7 @@
       <option name="presentableId" value="Default" />
       <updated>1579067968308</updated>
       <workItem from="1579067971593" duration="4267000" />
-      <workItem from="1579081336308" duration="5819000" />
+      <workItem from="1579081336308" duration="8437000" />
     </task>
     <servers />
   </component>
@@ -106,6 +106,10 @@
       <screen x="65" y="24" width="2495" height="1416" />
     </state>
     <state x="777" y="377" key="#com.intellij.execution.impl.EditConfigurationsDialog/65.24.2495.1416@65.24.2495.1416" timestamp="1579082516924" />
+    <state x="976" y="336" key="run.anything.popup" timestamp="1579089006450">
+      <screen x="65" y="24" width="2495" height="1416" />
+    </state>
+    <state x="976" y="336" key="run.anything.popup/65.24.2495.1416@65.24.2495.1416" timestamp="1579089006450" />
     <state x="976" y="365" width="672" height="676" key="search.everywhere.popup" timestamp="1579083334116">
       <screen x="65" y="24" width="2495" height="1416" />
     </state>

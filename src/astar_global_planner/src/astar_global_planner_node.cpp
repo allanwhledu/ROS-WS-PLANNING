@@ -6,7 +6,9 @@ int m_height;
 int m_width;
 int m_resolution;
 
-
+int robots_start_end_points[][4] = {{1, 1, 7, 1},
+                                    {7, 1, 1, 1},
+                                    {7, 7, 1, 2}};
 int num_robots = 3;
 int layer_depth = 2;
 
@@ -33,7 +35,7 @@ vector<int> startpoint_y(num_robots);
 vector<int> endpoint_x(num_robots);
 vector<int> endpoint_y(num_robots);
 
-tree<planner_group>::iterator grow_tree(tree<planner_group>::iterator last_leaf, nav_msgs::Path &null_path) {
+tree<planner_group>::iterator grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null_path) {
     tree<planner_group>::iterator newpg;
     newpg = last_leaf->grow_new_leaf();
     ROS_INFO_STREAM("newpg got.");
@@ -43,38 +45,28 @@ tree<planner_group>::iterator grow_tree(tree<planner_group>::iterator last_leaf,
     if (newpg->planners.empty())
         ROS_INFO_STREAM("planners init failed.");
 
-    ROS_INFO_STREAM("first leaf!");
-    newpg->planners.at(0)->isRootLoop = true;
-    ROS_INFO_STREAM("we can access the tr.planner.");
 
-    newpg->planners.at(0)->de_map_Callback(mapmsg);
+    for (int i = 0; i < num_robots; ++i) {
+        ROS_INFO_STREAM("# " << num_robots << " leaf!");
+//        newpg->planners.at(i)->isRootLoop = true;
+        ROS_INFO_STREAM("we can access the tr.planner.");
 
-    newpg->planners.at(0)->setTarget();
+        newpg->planners.at(i)->de_map_Callback(mapmsg);
 
-    if (!newpg->planners.at(0)->plan.poses.empty()) {
-        null_path = newpg->planners.at(0)->plan;
-        newpg->pathes.push_back(newpg->planners.at(0)->plan);
-        ROS_INFO_STREAM("Got init_plan_segment.");
-    }
+        newpg->planners.at(i)->setTarget();
 
-    ROS_INFO_STREAM("second leaf!");
-    newpg->planners.at(1)->isRootLoop = true;
-    ROS_INFO_STREAM("we can access the tr.planner.");
+        if (!newpg->planners.at(i)->plan.poses.empty()) {
+            nav_msgs::Path new_path = newpg->planners.at(i)->plan;
+            null_path.push_back(new_path);
+            add_feedback_from_path(new_path);
 
-    newpg->planners.at(1)->de_map_Callback(mapmsg);
-
-    newpg->planners.at(1)->setTarget();
-
-    if (!newpg->planners.at(1)->plan.poses.empty()) {
-        null_path = newpg->planners.at(1)->plan;
-        newpg->pathes.push_back(newpg->planners.at(1)->plan);
-        ROS_INFO_STREAM("Got init_plan_segment.");
+            newpg->pathes.push_back(newpg->planners.at(i)->plan);
+            ROS_INFO_STREAM("Got init_plan_segment.");
+        }
     }
 
     return newpg;
 }
-
-int robots_start_end_points[][4] = {{1,1,7,1},{7,1,1,1},{7,7,1,2}};
 
 // 节点主函数
 int main(int argc, char **argv) {
@@ -101,7 +93,11 @@ int main(int argc, char **argv) {
 
     // Callback and Publish.
     ros::Subscriber map_sub;
-    ros::Publisher nav_plan;
+    vector<ros::Publisher> nav_plans;
+    for (int l = 0; l < num_robots; ++l) {
+        ros::Publisher nav_plan;
+        nav_plans.push_back(nav_plan);
+    }
 
     map_sub = n.subscribe<nav_msgs::OccupancyGrid>("/map", 1, &center_map_Callback);
     nav_plan = n.advertise<nav_msgs::Path>("astar_path", 1);
@@ -154,7 +150,9 @@ int main(int argc, char **argv) {
                 for (int i = 0; i < permt.size(); ++i) {
                     last_planner_group = grow_tree(init_planner, nullpath);
                     test.tr->append_child(init_planner, last_planner_group);
-                    nav_plan.publish(nullpath);
+                    for (int k = 0; k < num_robots; ++k) {
+                        nav_plan[k].publish(nullpath[-1]); //TODO: 应该输出对当前机器人最优的路径
+                    }
                     ROS_WARN_STREAM(
                             "tree size: " << test.tr->size() << ", tree depth: " << test.tr->depth(last_planner_group));
                 }
