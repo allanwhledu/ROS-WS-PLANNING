@@ -10,7 +10,7 @@ int robots_start_end_points[][4] = {{1, 1, 7, 1},
                                     {7, 1, 1, 1},
                                     {7, 7, 1, 2}};
 int num_robots = 3;
-int layer_depth = 2;
+int layer_depth = 3;
 
 std::vector<int> vlast_endpoint_x;
 std::vector<int> vlast_endpoint_y;
@@ -24,6 +24,13 @@ void center_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr &msg) {
     ROS_INFO_STREAM("get map.");
 }
 
+string intToString(int v) {
+    char buf[32] = {0};
+    snprintf(buf, sizeof(buf), "%u", v);
+
+    string str = buf;
+    return str;
+}
 
 struct leaf {
     nav_msgs::Path plan;
@@ -58,7 +65,7 @@ tree<planner_group>::iterator grow_tree(tree<planner_group>::iterator last_leaf,
         if (!newpg->planners.at(i)->plan.poses.empty()) {
             nav_msgs::Path new_path = newpg->planners.at(i)->plan;
             null_path.push_back(new_path);
-            add_feedback_from_path(new_path);
+            (*newpg).add_feedback_from_path(new_path, i); //TODO: 是在这里吗？　还是应该在ｍａｉｎ函数里
 
             newpg->pathes.push_back(newpg->planners.at(i)->plan);
             ROS_INFO_STREAM("Got init_plan_segment.");
@@ -93,14 +100,14 @@ int main(int argc, char **argv) {
 
     // Callback and Publish.
     ros::Subscriber map_sub;
-    vector<ros::Publisher> nav_plans;
+    vector <ros::Publisher> nav_plans;
     for (int l = 0; l < num_robots; ++l) {
         ros::Publisher nav_plan;
+        nav_plan = n.advertise<nav_msgs::Path>("astar_path_robot_" + intToString(l), 1);
         nav_plans.push_back(nav_plan);
     }
 
     map_sub = n.subscribe<nav_msgs::OccupancyGrid>("/map", 1, &center_map_Callback);
-    nav_plan = n.advertise<nav_msgs::Path>("astar_path", 1);
 
 
     // wait for mapmsg.
@@ -120,7 +127,7 @@ int main(int argc, char **argv) {
     ros::Rate r(1.0);
     int loop_count = 1;
     bool arrived = false;
-    while (ros::ok() && arrived == false && loop_count < layer_depth) {
+    while (ros::ok() && arrived == false && loop_count < 2) { //TODO
         ros::spinOnce();
         ROS_INFO_STREAM("spin passed.");
 
@@ -136,30 +143,34 @@ int main(int argc, char **argv) {
                 if (init_planner->planners.empty())
                     ROS_INFO_STREAM("planners init failed.");
                 if (!init_planner->planners.at(permt[j][idx])->plan.poses.empty()) {
-                    nav_plan.publish(init_planner->planners.at(permt[j][idx])->plan);
+                    nav_plans[idx].publish(init_planner->planners.at(permt[j][idx])->plan); //TODO check 下标
                     init_planner->pathes.push_back(init_planner->planners.at(permt[j][idx])->plan);
                     init_planner->print_tpath();
                     ROS_INFO_STREAM("Got init_plan_segment.");
                 }
             }
 
-            tree<planner_group>::iterator last_planner_group;
+            tree<planner_group>::iterator last_planner_group = init_planner;
             for (int idx = 0; idx < layer_depth; ++idx) {
                 // test new leaf.
-                nav_msgs::Path nullpath;
+                vector <nav_msgs::Path> nullpaths;
                 for (int i = 0; i < permt.size(); ++i) {
-                    last_planner_group = grow_tree(init_planner, nullpath);
+                    last_planner_group = grow_tree(last_planner_group, nullpaths);
                     test.tr->append_child(init_planner, last_planner_group);
                     for (int k = 0; k < num_robots; ++k) {
-                        nav_plan[k].publish(nullpath[-1]); //TODO: 应该输出对当前机器人最优的路径
+                        nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
                     }
                     ROS_WARN_STREAM(
                             "tree size: " << test.tr->size() << ", tree depth: " << test.tr->depth(last_planner_group));
+                    ROS_WARN_STREAM(
+                            "current node: inner " << i << "middle " << idx << "outer: " << j);
                 }
             }
             for (int idx = 0; idx < num_robots; ++idx) {
-                if (last_planner_group->planners.at(permt[j][idx])->arrived)
+                if (last_planner_group->planners.at(permt[j][idx])->arrived) {
+                    ROS_WARN_STREAM("ARRIVED AND EXIT");
                     return 0;
+                }
             }
         }
 

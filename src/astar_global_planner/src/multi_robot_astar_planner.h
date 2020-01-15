@@ -40,8 +40,10 @@ public:
     tree<planner_group>::iterator self_loc;
     tree<planner_group>::iterator child_loc;
 
-    void add_feedback_from_path(nav_msgs::Path path) {
-        feedback += AStartFindPath::DistanceManhattan(endpoint_x,endpoint_y,path.poses[-1].x,path.poses[-1].y);
+    void add_feedback_from_path(nav_msgs::Path path, int idx) {
+        feedback += planners[0]->DistanceManhattan(endpoint_x[idx], endpoint_y[idx],
+                                                      path.poses.back().pose.position.x,
+                                                      path.poses.back().pose.position.y);
     }
 
     int get_feedback(int idx) {
