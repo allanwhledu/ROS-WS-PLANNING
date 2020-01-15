@@ -58,8 +58,8 @@ public:
 
 
 
-    void set_planner_group(){
-       for (int i = 0; i < 2; ++i) {
+    void set_planner_group(int num_robots){
+       for (int i = 0; i < num_robots; ++i) {
            AStartFindPath *init_planner;
            init_planner = new AStartFindPath;
            ROS_INFO_STREAM("init planner completed.");
