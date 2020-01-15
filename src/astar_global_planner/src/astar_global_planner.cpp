@@ -6,7 +6,7 @@ bool testhfile(int x) {
 
 
 extern bool Comp(ListNode first, ListNode second) {
-    if (first.PtrToNode->value_f >= second.PtrToNode->value_f) //由大到小排序 //如果想要由小到大，改为大于即可
+    if (first.PtrToNode->value_f >= second.PtrToNode->value_f) //TODO 这里是什么原因，会使得这里没有flag，flag是空的？
     {
         return (first.PtrToNode->value_h < second.PtrToNode->value_h);
     } else {
@@ -119,22 +119,29 @@ void AStartFindPath::AddNode2Close(std::list <ListNode> *close, std::list <ListN
         ROS_INFO_STREAM("no data in openlist!");
         return;
     }
+
     if (open->front().PtrToNode->flag != STARTPOINT)
         open->front().PtrToNode->flag = INCLOSE;
+
 
     ListNode closenode;
     closenode.PtrToNode = open->front().PtrToNode;
 
     if (closenode.PtrToNode->flag != STARTPOINT)
         close->push_back(closenode);
+    if(!close->empty())
+    {
+        close->sort(Comp);
+    }
 
-    close->sort(Comp);
     open->pop_front();
 }
 
 // 不断将未探索点加入探索列表，最终得到路径
 bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::list <ListNode> *close) {
     // 遍历openlist，并输出其中的所有点坐标
+
+
     int center_x = open->front().PtrToNode->location_x;
     int center_y = open->front().PtrToNode->location_y;
 
@@ -150,6 +157,7 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::
 
     // 利用传入的center xy信息开始check
     AddNode2Close(close, open);
+
     ROS_INFO_STREAM(
             "checking point " << m_node[center_y][center_x].location_x << "," << m_node[center_y][center_x].location_y
                               << "," << ", g:" << m_node[center_y][center_x].value_g << ", f:"
@@ -254,9 +262,18 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
         point.pose.position.x = forstepcount->location_x;
         point.pose.position.y = forstepcount->location_y;
 
-        plan.poses.push_back(point);
+        ROS_INFO_STREAM("debug imformation1.");
+        if(forstepcount->parent ==NULL)
+        {
+            ROS_INFO_STREAM("debug imformation2.");
+            break;
+        } else
+        {
+            ROS_INFO_STREAM("debug imformation3.");
+            plan.poses.push_back(point);
+            forstepcount = forstepcount->parent;
+        }
 
-        forstepcount = forstepcount->parent;
 
         if (forstepcount->flag == STARTPOINT)
             ROS_INFO_STREAM("reaching start.");
@@ -264,6 +281,7 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
     // here is the startpoint.
     ROS_INFO_STREAM("point:" << " " << forstepcount->location_x << " " << forstepcount->location_y << " flag: "
                              << forstepcount->flag);
+
     geometry_msgs::PoseStamped point;
     point.pose.position.x = forstepcount->location_x;
     point.pose.position.y = forstepcount->location_y;
@@ -273,7 +291,10 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
 
     int path_length = 4;
     int path_length0 = plan.poses.size();
-    plan.poses.erase(plan.poses.end() - (path_length0 - path_length), plan.poses.end());
+    if(path_length0>path_length)
+    {
+        plan.poses.erase(plan.poses.end() - (path_length0 - path_length), plan.poses.end());
+    }
 
     // return tpath.
     Tpoint tpoint;

@@ -155,17 +155,35 @@ int main(int argc, char **argv) {
             for (int idx = 0; idx < layer_depth; ++idx) {
                 // test new leaf.
                 vector <nav_msgs::Path> nullpaths;
-                for (int i = 0; i < permt.size(); ++i) {
-                    last_planner_group = grow_tree(init_planner, nullpaths);
-                    test.tr->append_child(init_planner, last_planner_group);
-                    for (int k = 0; k < num_robots; ++k) {
-                        nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
+                if(idx ==0 )
+                {
+                    for (int i = 0; i < permt.size(); ++i) { //TODO 这里一直在给init_planner插入子节点，所以导致一直在重复搜索
+                        last_planner_group = grow_tree(init_planner, nullpaths);
+                        test.tr->append_child(init_planner, last_planner_group);
+                        for (int k = 0; k < num_robots; ++k) {
+                            nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
+                        }
+                        ROS_WARN_STREAM(
+                                "tree size: " << test.tr->size() << ", tree depth: " << test.tr->depth(last_planner_group));
+                        ROS_WARN_STREAM(
+                                "current node: inner " << i << "middle " << idx << "outer: " << j);
                     }
-                    ROS_WARN_STREAM(
-                            "tree size: " << test.tr->size() << ", tree depth: " << test.tr->depth(last_planner_group));
-                    ROS_WARN_STREAM(
-                            "current node: inner " << i << "middle " << idx << "outer: " << j);
+                } else
+                {
+                    for (int i = 0; i < permt.size(); ++i) { //TODO 这里一直在给init_planner插入子节点，所以导致一直在重复搜索
+                        tree<planner_group>::iterator _last_planner_group = last_planner_group;
+                        last_planner_group = grow_tree(last_planner_group, nullpaths);
+                        test.tr->append_child(_last_planner_group, last_planner_group);
+                        for (int k = 0; k < num_robots; ++k) {
+                            nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
+                        }
+                        ROS_WARN_STREAM(
+                                "tree size: " << test.tr->size() << ", tree depth: " << test.tr->depth(last_planner_group));
+                        ROS_WARN_STREAM(
+                                "current node: inner " << i << "middle " << idx << "outer: " << j);
+                    }
                 }
+
             }
             for (int idx = 0; idx < num_robots; ++idx) {
                 if (last_planner_group->planners.at(permt[j][idx])->arrived) {
