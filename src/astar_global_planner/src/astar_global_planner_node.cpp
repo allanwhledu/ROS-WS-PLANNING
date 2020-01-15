@@ -68,9 +68,6 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv, "astar_planner");
 
-    if(testhfile(1))
-        ROS_INFO_STREAM("testhfile success!");
-
     ros::param::get("~x_0",startpoint_x);
     ros::param::get("~y_0",startpoint_y);
     ros::param::get("~x_1",endpoint_x);
@@ -127,7 +124,6 @@ int main(int argc, char** argv)
             ROS_INFO_STREAM("planners init failed.");
 
         ROS_INFO_STREAM("first leaf!");
-        init_planner->planners.at(0)->isRootLoop = true;
         ROS_INFO_STREAM("we can access the tr.planner.");
 
         init_planner->planners.at(0)->de_map_Callback(mapmsg);
@@ -138,8 +134,11 @@ int main(int argc, char** argv)
         {
             nav_plan.publish(init_planner->planners.at(0)->plan);
             init_planner->path = init_planner->planners.at(0)->plan;
+            init_planner->print_tpath();
             ROS_INFO_STREAM("Got init_plan_segment.");
         }
+        if(init_planner->planners.at(0)->arrived)
+            return 0;
 
 
 
@@ -147,14 +146,14 @@ int main(int argc, char** argv)
         nav_msgs::Path nullpath;
         tree<planner_group>::iterator planner = grow_tree(init_planner, nullpath);
         nav_plan.publish(nullpath);
+        if(planner->planners.at(0)->arrived)
+            return 0;
 
         nav_msgs::Path nullpath2;
         tree<planner_group>::iterator planner2 = grow_tree(planner, nullpath2);
         nav_plan.publish(nullpath2);
-
-
-
-
+        if(planner2->planners.at(0)->arrived)
+            return 0;
 
 
         loop_count++;

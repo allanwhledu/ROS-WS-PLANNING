@@ -2,12 +2,22 @@
 // Created by 李云帆 on 2020-01-14.
 //
 
+
+
 #ifndef ROS_WS_PLANNING_MULTI_ROBOT_ASTAR_PLANNER_H
 #define ROS_WS_PLANNING_MULTI_ROBOT_ASTAR_PLANNER_H
 
 #include "astar_global_planner.h"
-#include "tree.hh"
+using namespace std;
+
 #define ARR_LEN(array, length){ length =  sizeof(array) / sizeof(array[0]); }
+
+struct Tpoint
+{
+    int x;
+    int y;
+    int t;
+};
 
 class planner_group {
 public:
@@ -19,6 +29,7 @@ public:
     vector<AStartFindPath*> planners;
 
     int feedback;
+    vector<Tpoint> tpath;
     nav_msgs::Path path;
 
     tree<planner_group>* tree_ptr= nullptr;
@@ -62,6 +73,8 @@ public:
                init_planner->endpoint_y = endpoint_y;
            }
 
+           init_planner->group_ptr = this;
+
            this->planners.push_back(init_planner);
        }
    }
@@ -79,6 +92,17 @@ public:
 
         return child_loc;
     }
+
+
+    void print_tpath()
+    {
+        std::cout<<"tpath: ";
+        for(auto & Tpoint : tpath)
+            std::cout<<Tpoint.x<<Tpoint.y<<Tpoint.t<<" ";
+        std::cout<<endl;
+    }
+
+
 };
 
 class multi_robot_astar_planner {

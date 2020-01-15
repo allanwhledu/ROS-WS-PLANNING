@@ -1,3 +1,6 @@
+#ifndef ASTAR_GLOBAL_PLANNER_H
+#define ASTAR_GLOBAL_PLANNER_H
+
 #include<iostream>
 #include<fstream>
 #include <unistd.h>
@@ -16,6 +19,10 @@
 #include <tf/LinearMath/Quaternion.h>
 #include <tf/LinearMath/Transform.h>
 #include <tf/LinearMath/Vector3.h>
+#include "tree.hh"
+
+#include "multi_robot_astar_planner.h"
+
 using namespace std;
 
 
@@ -26,6 +33,8 @@ enum{VIABLE, WALL, INOPEN, INCLOSE, STARTPOINT, DESTINATION};
 extern int m_height;
 extern int m_width;
 extern int m_resolution;
+
+//extern class planner_group;
 
 
 struct Node
@@ -54,12 +63,15 @@ struct ListNode
 
 extern bool Comp(ListNode first, ListNode second);
 
+class planner_group;
 
 class AStartFindPath
 {
 public:
     nav_msgs::Path plan;
     nav_msgs::Path Null_plan;
+
+    planner_group* group_ptr;
 
     Node** m_node;
     AStartFindPath();
@@ -70,7 +82,7 @@ public:
     bool IsInOpenList(int x, int y);
     bool IsInCloseList(int x, int y);
     void IsChangeParent(std::list<ListNode>* open, int x, int y);
-    bool IsAvailable(int x, int y);
+    bool IsAvailable(int x, int y, int time);
     unsigned int DistanceManhattan(int d_x, int d_y, int x, int y);
     void AddNode2Open(std::list<ListNode>* openlist, Node* node);
     void AddNode2Close(std::list<ListNode>* close, std::list<ListNode>* open);
@@ -115,17 +127,6 @@ public:
 
 
 
-
-
-bool testhfile(int x);
-
-class TESTCOPY
-{
-public:
-    int obj1 = 1;
-    int *obj2 = NULL;
-};
-
-
-
 void deepCopyMnode(Node* msg1[], int m_height, int m_width, Node* msg2[], const nav_msgs::OccupancyGrid::ConstPtr& msg, std::list<ListNode>* open1, std::list<ListNode>* open2, std::list<ListNode>* close1, std::list<ListNode>* close2);
+
+#endif

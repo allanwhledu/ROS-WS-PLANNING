@@ -1,4 +1,4 @@
-#include "astar_global_planner.h"
+#include "multi_robot_astar_planner.h"
 
 bool testhfile(int x){
     if(x==1)
@@ -88,7 +88,7 @@ void AStartFindPath::IsChangeParent(std::list<ListNode>* open, int center_x, int
     }
 
 }
-bool AStartFindPath::IsAvailable(int x, int y)
+bool AStartFindPath::IsAvailable(int x, int y, int time)
 {
     bool flag=true;
 
@@ -98,6 +98,14 @@ bool AStartFindPath::IsAvailable(int x, int y)
         flag = false;
     if(m_node[y][x].flag == WALL || m_node[y][x].flag == STARTPOINT)
         flag = false;
+
+    vector<Tpoint>::iterator it;
+    for(it = group_ptr->tpath.begin();it!=group_ptr->tpath.end();++it){
+        if ((x==it->x-1 && y==it->y-1 && time==it->t) || (x==it->x-1 && y==it->y-1 && time==it->t-1)){
+            ROS_WARN_STREAM("conflict in "<<x<<","<<y<<","<<time<<".");
+            flag = false;
+        }
+    }
 
     return flag;
 }
@@ -172,7 +180,7 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list<ListNode>* open, std::l
         int new_x=center_x + direction[i][0];
         int new_y=center_y+ direction[i][1];
 
-        if(new_x>=0 && new_y>=0 && new_y<m_height && new_x<m_width && IsAvailable(new_x, new_y))
+        if(new_x>=0 && new_y>=0 && new_y<m_height && new_x<m_width && IsAvailable(new_x, new_y, m_node[center_y][center_x].value_g+10))
         {
 
             if(	m_node[new_y][new_x].flag==DESTINATION)
@@ -261,7 +269,7 @@ void AStartFindPath::FindDestinnation(std::list<ListNode>* open, std::list<ListN
         plan.poses.push_back(point);
 
         forstepcount=forstepcount->parent;
-        
+
         if(forstepcount->flag==STARTPOINT)
             ROS_INFO_STREAM("reaching start.");
     }
@@ -271,6 +279,17 @@ void AStartFindPath::FindDestinnation(std::list<ListNode>* open, std::list<ListN
     point.pose.position.x = forstepcount->location_x;
     point.pose.position.y = forstepcount->location_y;
     plan.poses.push_back(point);
+
+    // return tpath.
+    Tpoint tpoint;
+    for(int i = 0; i<plan.poses.size(); i++)
+    {
+        tpoint.x = plan.poses.at(i).pose.position.x;
+        tpoint.y = plan.poses.at(i).pose.position.y;
+        tpoint.t = plan.poses.at(i).pose.position.z;
+        group_ptr->tpath.push_back(tpoint);
+    }
+
 
 
 
