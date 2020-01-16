@@ -4,10 +4,12 @@ nav_msgs::OccupancyGrid::ConstPtr mapmsg;
 bool isCenterMapGet = false;
 int m_height, m_width, m_resolution;
 
-int robots_start_end_points[][4] = {{1, 1, 7, 1},
-                                    {7, 1, 1, 1},
+int robots_start_end_points[][4] = {
+        {1, 1, 7, 1},
+//        {7, 1, 1, 3},
+        {7, 4, 1, 4},
 };
-int num_robots = 2;
+int num_robots = 3;
 int layer_depth = 3;
 
 std::vector<int> vlast_endpoint_x, vlast_endpoint_y;
@@ -26,43 +28,72 @@ struct leaf {
     std::vector<int> prior_mode;
 };
 
-vector<int> startpoint_x(num_robots);
-vector<int> startpoint_y(num_robots);
-vector<int> endpoint_x(num_robots);
-vector<int> endpoint_y(num_robots);
+vector<int> startpoint_x(num_robots), startpoint_y(num_robots), endpoint_x(num_robots), endpoint_y(num_robots);
 
-tree<planner_group>::iterator grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null_path) {
+tree<planner_group>::iterator
+grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null_path, vector<int> &permti) {
     tree<planner_group>::iterator newpg;
     newpg = last_leaf->grow_new_leaf();
     ROS_INFO_STREAM("newpg got.");
 
-    newpg->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
-    newpg->set_planner_group(num_robots);
-    if (newpg->planners.empty())
+    newpg->
+            get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y
+    );
+    newpg->
+            set_planner_group(num_robots);
+    if (newpg->planners.
+
+            empty()
+
+            )
         ROS_INFO_STREAM("planners init failed.");
 
 
-    for (int i = 0; i < num_robots; ++i) {
+    for (
+            int i = 0;
+            i < num_robots;
+            ++i) {
         ROS_INFO_STREAM("# " << num_robots << " leaf!");
-//        newpg->planners.at(i)->isRootLoop = true;
         ROS_INFO_STREAM("we can access the tr.planner.");
+        newpg->planners.
+                        at(permti[i])
+                ->
+                        de_map_Callback(mapmsg);
 
-        newpg->planners.at(i)->de_map_Callback(mapmsg);
+        newpg->planners.
+                        at(permti[i])
+                ->
 
-        newpg->planners.at(i)->setTarget();
+                        setTarget();
 
-        if (!newpg->planners.at(i)->plan.poses.empty()) {
-            nav_msgs::Path new_path = newpg->planners.at(i)->plan;
-            null_path.push_back(new_path);
-            (*newpg).add_feedback_from_path(new_path, i); //TODO: 是在这里吗？　还是应该在ｍａｉｎ函数里
+        if (!newpg->planners.
+                        at(permti[i])
+                ->plan.poses.
 
-            newpg->pathes.push_back(newpg->planners.at(i)->plan);
-            newpg->print_tpath();
+                        empty()
+
+                ) {
+            nav_msgs::Path new_path = newpg->planners.at(permti[i])->plan;
+            null_path.
+                    push_back(new_path);
+            (*newpg).
+                    add_feedback_from_path(new_path, permti[i]
+            ); //TODO: 是在这里吗？　还是应该在main函数里
+
+            newpg->pathes.
+                    push_back(newpg
+                                      ->planners.
+                            at(permti[i])
+                                      ->plan);
+            newpg->
+
+                    print_tpath();
+
             ROS_INFO_STREAM("Got init_plan_segment.");
         }
     }
-
-    return newpg;
+    return
+            newpg;
 }
 
 void print_open_planner_group_vec(vector <tree<planner_group>::iterator> &open_planner_group_vec) {
@@ -81,9 +112,14 @@ void sort_open_planner_group_vec(vector <tree<planner_group>::iterator> &open_pl
 
 // 节点主函数
 int main(int argc, char **argv) {
+    ARR_LEN(robots_start_end_points, num_robots);
+
     ros::init(argc, argv, "astar_planner");
     vector <vector<int>> permt;
-    int robots_idx_lst[] = {0, 1};
+    int robots_idx_lst[num_robots];
+    for (int m = 0; m < num_robots; ++m) {
+        robots_idx_lst[m] = m;
+    }
 
     multi_robot_astar_planner test;
     perm(robots_idx_lst, sizeof(robots_idx_lst) / sizeof(robots_idx_lst[0]), permt);
@@ -117,9 +153,9 @@ int main(int argc, char **argv) {
     // wait for mapmsg.
     while (ros::ok) {
         ros::spinOnce();
-        ROS_INFO_STREAM("outloop spin passed.");
+//        ROS_INFO_STREAM("outloop spin passed.");
         if (isCenterMapGet) {
-            ROS_INFO_STREAM("center_map got.");
+//            ROS_INFO_STREAM("center_map got.");
             break;
         }
     }
@@ -129,9 +165,9 @@ int main(int argc, char **argv) {
     std::vector < AStartFindPath * > vec_planner;
 
     ros::Rate r(1.0);
-    int loop_count = 1;
+    int loop_count = 0;
     bool arrived = false;
-    while (ros::ok() && arrived == false && loop_count < 2) { //TODO
+    while (ros::ok() && arrived == false && loop_count < 1) { //TODO
         ros::spinOnce();
         ROS_INFO_STREAM("spin passed.");
 
@@ -143,8 +179,8 @@ int main(int argc, char **argv) {
             for (int idx = 0; idx < num_robots; ++idx) {
                 init_planner->planners.at(permt[j][idx])->de_map_Callback(mapmsg);
                 init_planner->planners.at(permt[j][idx])->setTarget();
-                if (init_planner->planners.empty())
-                    ROS_INFO_STREAM("planners init failed.");
+//                if (init_planner->planners.empty())
+//                    ROS_INFO_STREAM("planners init failed.");
                 if (!init_planner->planners.at(permt[j][idx])->plan.poses.empty()) {
                     nav_plans[idx].publish(init_planner->planners.at(permt[j][idx])->plan); //TODO check 下标
                     init_planner->pathes.push_back(init_planner->planners.at(permt[j][idx])->plan);
@@ -159,39 +195,50 @@ int main(int argc, char **argv) {
             for (int idx = 0; idx < layer_depth; ++idx) {
                 //TODO: sort open_planner_group_vec by feedback
                 sort_open_planner_group_vec(open_planner_group_vec);
-                last_planner_group = open_planner_group_vec.back(); //last_planner_group is already sorted
+                last_planner_group = open_planner_group_vec.at(0); //last_planner_group is already sorted
 
                 // test new leaf.
                 vector <nav_msgs::Path> nullpaths;
                 for (int i = 0; i < permt.size(); ++i) {
-                    open_planner_group_vec.push_back(grow_tree(last_planner_group, nullpaths));
+                    open_planner_group_vec.push_back(grow_tree(last_planner_group, nullpaths, permt[i]));
                     ROS_WARN_STREAM("grow_tree complete.");
 
                     test.tr->append_child(last_planner_group, open_planner_group_vec.back());//TODO: ?
                     for (int k = 0; k < num_robots; ++k) {
                         nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
                     }
-                    ROS_WARN_STREAM(
-                            "tree size: " << test.tr->size() << ", tree depth: " << test.tr->depth(last_planner_group));
-                    ROS_WARN_STREAM(
-                            "current node: inner " << i << "middle " << idx << "outer: " << j);
                 }
+                ROS_WARN_STREAM(
+                        "tree size: " << test.tr->size() << ", tree depth: " << test.tr->depth(last_planner_group));
+                ROS_WARN_STREAM(
+                        "current node: middle " << idx << "outer: " << j);
+
+
             }
 
+            sort_open_planner_group_vec(open_planner_group_vec);
+            last_planner_group = open_planner_group_vec.at(0); //last_planner_group is already sorted
 
+            bool all_arrived = true;
+            bool single_arrived = false;
             for (int idx = 0; idx < num_robots; ++idx) {
-                if (last_planner_group->planners.at(permt[j][idx])->arrived) {
-                    ROS_WARN_STREAM("ARRIVED AND EXIT");
-
-                    nav_msgs::Path fullpath; //TODO: init?
-                    (*last_planner_group).publish_path(fullpath, last_planner_group, nav_plans);
-                    return 0;
-                }
+                all_arrived &= last_planner_group->planners.at(permt[j][idx])->arrived;
+//                if (last_planner_group->planners.at(permt[j][idx])->arrived)
+//                    break;
+                single_arrived |= last_planner_group->planners.at(permt[j][idx])->arrived;
             }
-
+            if (all_arrived) {
+                ROS_WARN_STREAM("ARRIVED AND EXIT");
+                vector <nav_msgs::Path> fullpaths(num_robots); //TODO: init?
+                (*last_planner_group).publish_path(fullpaths, last_planner_group, nav_plans);
+            }
+            if (single_arrived) {
+                ROS_WARN_STREAM("SINGLE ARRIVED AND EXIT");
+//                return 0;
+            }
         }
-//
-//        loop_count++;
+
+        loop_count++;
 //
 //        for (int i = 0; i < 3; i++) {
 //            r.sleep();

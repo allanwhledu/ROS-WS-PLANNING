@@ -48,9 +48,9 @@ struct Node {
     char gray_val;
     unsigned int location_x;
     unsigned int location_y;
-    unsigned int value_h;
-    unsigned int value_g;
-    unsigned int value_f;
+    unsigned int value_h=999;
+    unsigned int value_g=999;
+    unsigned int value_f=999;
     Node *parent;
 
     Node();

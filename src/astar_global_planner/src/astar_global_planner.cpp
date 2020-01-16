@@ -6,6 +6,10 @@ bool testhfile(int x) {
 
 
 extern bool Comp(ListNode first, ListNode second) {
+    if (!first.PtrToNode || !second.PtrToNode) {
+        ROS_WARN_STREAM("There is a NULL pointer");
+        return false;
+    }
     if (first.PtrToNode->value_f >= second.PtrToNode->value_f) //TODO 这里是什么原因，会使得这里没有flag，flag是空的？
     {
         return (first.PtrToNode->value_h < second.PtrToNode->value_h);
@@ -44,7 +48,7 @@ AStartFindPath::AStartFindPath() {
 
     arrived = false;
     feedback = 0;
-
+    ROS_WARN_STREAM("this is a new planner");
 }
 
 // 获得目的坐标参数的子函数
@@ -115,7 +119,7 @@ void AStartFindPath::AddNode2Open(std::list <ListNode> *openlist, Node *node) {
 }
 
 void AStartFindPath::AddNode2Close(std::list <ListNode> *close, std::list <ListNode> *open) {
-    if (open == NULL) {
+    if (!open->size() || !open->front().PtrToNode) {
         ROS_INFO_STREAM("no data in openlist!");
         return;
     }
@@ -129,31 +133,54 @@ void AStartFindPath::AddNode2Close(std::list <ListNode> *close, std::list <ListN
 
     if (closenode.PtrToNode->flag != STARTPOINT)
         close->push_back(closenode);
-    if(!close->empty())
-    {
-        close->sort(Comp);
-    }
+    if (!close->empty()) {
+        bool sort_flag = true;
+        auto it = ++close->begin();
+        while (it != close->end()) {
+            if (!it->PtrToNode) {
+                ROS_WARN_STREAM("NULL PIONTER");
+                sort_flag = false;
+                open->pop_front();
+            }
+            ++it;
+        }
+        ROS_INFO_STREAM("Reached here!");
+        if (sort_flag) {
+            close->sort(Comp); //TODO: bug
+//            sort(close->begin(), close->end(), Comp);
+            ROS_INFO_STREAM("end sort");
+        }
+        ROS_WARN_STREAM("Starting output close list");
+        it = ++close->begin();
+        while (it != close->end()) {
+            if (it->PtrToNode) {
+                ROS_WARN_STREAM((it->PtrToNode->location_x) << (it->PtrToNode->location_y) <<
+                                                            (it->PtrToNode->flag));
+            } else {
+                ROS_WARN_STREAM("NULL PIONTER");
+            }
+            ++it;
+        }
 
-    open->pop_front();
+    } else
+        open->pop_front();
 }
 
 // 不断将未探索点加入探索列表，最终得到路径
 bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::list <ListNode> *close) {
     // 遍历openlist，并输出其中的所有点坐标
-
-
     int center_x = open->front().PtrToNode->location_x;
     int center_y = open->front().PtrToNode->location_y;
 
-//    ROS_INFO_STREAM("now points in open: " << open->size());
-//    for (list<ListNode>::iterator it = open->begin(); it != open->end(); ++it)
-//        if (it->PtrToNode->parent != NULL)
-//            ROS_INFO_STREAM(
-//                    it->PtrToNode->location_x << " " << it->PtrToNode->location_y << " flag" << it->PtrToNode->flag
-//                                              << " h" << it->PtrToNode->value_h << " g" << it->PtrToNode->value_g
-//                                              << " f" << it->PtrToNode->value_f << " parent-> "
-//                                              << it->PtrToNode->parent->location_x << " "
-//                                              << it->PtrToNode->parent->location_y);
+    ROS_INFO_STREAM("now points in open: " << open->size());
+    for (list<ListNode>::iterator it = open->begin(); it != open->end(); ++it)
+        if (it->PtrToNode->parent != NULL)
+            ROS_INFO_STREAM(
+                    it->PtrToNode->location_x << " " << it->PtrToNode->location_y << " flag" << it->PtrToNode->flag
+                                              << " h" << it->PtrToNode->value_h << " g" << it->PtrToNode->value_g
+                                              << " f" << it->PtrToNode->value_f << " parent-> "
+                                              << it->PtrToNode->parent->location_x << " "
+                                              << it->PtrToNode->parent->location_y);
 
     // 利用传入的center xy信息开始check
     AddNode2Close(close, open);
@@ -162,8 +189,7 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::
             "checking point " << m_node[center_y][center_x].location_x << "," << m_node[center_y][center_x].location_y
                               << "," << ", g:" << m_node[center_y][center_x].value_g << ", f:"
                               << m_node[center_y][center_x].value_f << ", flag:" << m_node[center_y][center_x].flag);
-    for (int i = 0; i < 4; i++)
-    {
+    for (int i = 0; i < 4; i++) {
         int new_x = center_x + direction[i][0];
         int new_y = center_y + direction[i][1];
 
@@ -214,10 +240,9 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
 
     // circulate check...
     while (!Check_and_Put_to_Openlist(open, close)) {
-        i++;
         int length = 8;
 
-        if (open == NULL || i > length) {
+        if (open == NULL || ++i > length) {
             ROS_INFO_STREAM("completed segment path.");
             ROS_INFO_STREAM(i);
             break;
@@ -263,12 +288,10 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
         point.pose.position.y = forstepcount->location_y;
 
         ROS_INFO_STREAM("debug imformation1.");
-        if(forstepcount->parent ==NULL)
-        {
+        if (forstepcount->parent == NULL) {
             ROS_INFO_STREAM("debug imformation2.");
             break;
-        } else
-        {
+        } else {
             ROS_INFO_STREAM("debug imformation3.");
             plan.poses.push_back(point);
             forstepcount = forstepcount->parent;
@@ -291,8 +314,7 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
 
     int path_length = 4;
     int path_length0 = plan.poses.size();
-    if(path_length0>path_length)
-    {
+    if (path_length0 > path_length) {
         plan.poses.erase(plan.poses.end() - (path_length0 - path_length), plan.poses.end());
     }
 
@@ -419,7 +441,8 @@ void AStartFindPath::setTarget() {
     des_x = endpoint_x;
     des_y = endpoint_y;
     ROS_INFO_STREAM(
-            "goal and it's flag " << m_node[des_y][des_x].location_x << " " << m_node[des_y][des_x].location_y << " "
+            "goal and it's flag " << m_node[des_y][des_x].location_x << " " << m_node[des_y][des_x].location_y
+                                  << " "
                                   << m_node[des_y][des_x].flag);
     // check target.
     if (m_node[des_y][des_x].flag == WALL) {
@@ -435,6 +458,9 @@ void AStartFindPath::setTarget() {
 
     // load map in rootloop.
 
+    if (openlist->size()) {
+        openlist->clear();
+    }
     closelist->front().PtrToNode = NULL;
 
 
@@ -444,6 +470,11 @@ void AStartFindPath::setTarget() {
 
     ListNode newopen;
     newopen.PtrToNode = &m_node[y][x];
+
+    newopen.PtrToNode->value_g = 0;
+    newopen.PtrToNode->value_h = DistManhattan(x, y, des_x, des_y);
+    newopen.PtrToNode->value_f = newopen.PtrToNode->value_g + newopen.PtrToNode->value_h;
+
     openlist->push_back(newopen);
     startpoint_x = x;
     startpoint_y = y;
@@ -465,9 +496,10 @@ void AStartFindPath::clear_tmpplan() {
     plan = Null_plan;
 }
 
-void deepCopyMnode(Node *msg1[], int m_height, int m_width, Node *msg2[], const nav_msgs::OccupancyGrid::ConstPtr &msg,
-                   std::list <ListNode> *open1, std::list <ListNode> *open2, std::list <ListNode> *close1,
-                   std::list <ListNode> *close2) {
+void
+deepCopyMnode(Node *msg1[], int m_height, int m_width, Node *msg2[], const nav_msgs::OccupancyGrid::ConstPtr &msg,
+              std::list <ListNode> *open1, std::list <ListNode> *open2, std::list <ListNode> *close1,
+              std::list <ListNode> *close2) {
     for (int i = 0; i < m_height; i++) {
 
         for (int j = 0; j < m_width; j++) {
@@ -539,7 +571,8 @@ void deepCopyMnode(Node *msg1[], int m_height, int m_width, Node *msg2[], const 
         new_close.PtrToNode = &msg1[it->PtrToNode->location_y][it->PtrToNode->location_x];
         close1->push_back(new_close);
         ROS_INFO_STREAM(
-                "get a closenode. " << new_close.PtrToNode->location_x << " " << new_close.PtrToNode->location_y << " "
+                "get a closenode. " << new_close.PtrToNode->location_x << " " << new_close.PtrToNode->location_y
+                                    << " "
                                     << new_close.PtrToNode->flag);
     }
 

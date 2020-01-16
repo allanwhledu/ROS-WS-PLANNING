@@ -15,9 +15,9 @@ using namespace std;
 #define ARR_LEN(array, length){ length =  sizeof(array) / sizeof(array[0]); }
 
 struct Tpoint {
-    int x;
-    int y;
-    int t;
+    int x = 0;
+    int y = 0;
+    int t = 0;
 };
 
 class planner_group {
@@ -29,7 +29,7 @@ public:
 
     vector<AStartFindPath *> planners;
 
-    int feedback;
+    int feedback = 9999;
     vector <Tpoint> tpath;
 
     vector <nav_msgs::Path> pathes;
@@ -42,9 +42,10 @@ public:
     tree<planner_group>::iterator child_loc;
 
     void add_feedback_from_path(nav_msgs::Path path, int idx) {
-        feedback += planners[0]->DistanceManhattan(endpoint_x[idx], endpoint_y[idx],
-                                                   path.poses.back().pose.position.x,
-                                                   path.poses.back().pose.position.y);
+        if (feedback == 9999) { feedback = 0; }
+        feedback += DistManhattan(endpoint_x.at(idx), endpoint_y.at(idx),
+                                  path.poses.back().pose.position.x,
+                                  path.poses.back().pose.position.y);
     }
 
     int get_feedback(int idx) {
@@ -90,32 +91,35 @@ public:
 
     }
 
-    void publish_path(nav_msgs::Path &fullpath, tree<planner_group>::iterator &last_planner_group,
+    void publish_path(vector <nav_msgs::Path> &fullpaths, tree<planner_group>::iterator &last_planner_group,
                       vector <ros::Publisher> &nav_plans) {
-        fullpath.header.frame_id = "odom";
-        int dep = 0;
-        while (last_planner_group->parent_loc != last_planner_group->top_loc) {
-            reverse(last_planner_group->pathes.at(0).poses.begin(), last_planner_group->pathes.at(0).poses.end());
-            fullpath.poses.insert(fullpath.poses.end(), last_planner_group->pathes.at(0).poses.begin(),
-                                  last_planner_group->pathes.at(0).poses.end());
-            last_planner_group = last_planner_group->parent_loc;
-            dep++;
-        }
-        reverse(last_planner_group->pathes.at(0).poses.begin(), last_planner_group->pathes.at(0).poses.end());
-        fullpath.poses.insert(fullpath.poses.end(), last_planner_group->pathes.at(0).poses.begin(),
-                              last_planner_group->pathes.at(0).poses.end());
-//                for(int i = 1; i < last_planner_group->pathes.size(); i++)
-//                {
-//                    fullpath.poses.insert(fullpath.poses.end(),last_planner_group->pathes.at(0).poses.begin(),last_planner_group->pathes.at(0).poses.end());
-//                }
+        for (int i = 0; i < (*last_planner_group).planners.size(); ++i) {
+            nav_msgs::Path fullpath = fullpaths.at(i);
+            fullpath.header.frame_id = "odom";
+            int dep = 0;
+            while (last_planner_group->parent_loc != last_planner_group->top_loc) {
+                reverse(last_planner_group->pathes.at(i).poses.begin(), last_planner_group->pathes.at(i).poses.end());
+                fullpath.poses.insert(fullpath.poses.end(), last_planner_group->pathes.at(i).poses.begin(),
+                                      last_planner_group->pathes.at(i).poses.end());
+                last_planner_group = last_planner_group->parent_loc;
+                dep++;
+            }
+            reverse(last_planner_group->pathes.at(i).poses.begin(), last_planner_group->pathes.at(i).poses.end());
+            fullpath.poses.insert(fullpath.poses.end(), last_planner_group->pathes.at(i).poses.begin(),
+                                  last_planner_group->pathes.at(i).poses.end());
+            //                for(int i = 1; i < last_planner_group->pathes.size(); i++)
+            //                {
+            //                    fullpath.poses.insert(fullpath.poses.end(),last_planner_group->pathes.at(i).poses.begin(),last_planner_group->pathes.at(i).poses.end());
+            //                }
 
-        ROS_INFO_STREAM("dep: " << dep);
-        ROS_INFO_STREAM("now we will pub full path...");
+            ROS_INFO_STREAM("dep: " << dep);
+            ROS_INFO_STREAM("now we will pub full path...");
 
-        for (auto &pose : fullpath.poses) {
-            ROS_INFO_STREAM("points in fullpath: " << pose.pose.position.x << " " << pose.pose.position.y);
+            for (auto &pose : fullpath.poses) {
+                ROS_INFO_STREAM("points in fullpath: " << pose.pose.position.x << " " << pose.pose.position.y);
+            }
+            nav_plans[i].publish(fullpath);
         }
-        nav_plans[0].publish(fullpath);
     }
 
     tree<planner_group>::iterator grow_new_leaf() {
@@ -171,11 +175,12 @@ public:
 };
 
 
-inline void sort_vector_ascend(vector <tree<planner_group>::iterator> open_planner_group_vec){
+inline void sort_vector_ascend(vector <tree<planner_group>::iterator> open_planner_group_vec) {
 
 }
 
-inline bool feedback_smaller_than(tree<planner_group>::iterator &pg,tree<planner_group>::iterator &pg_other) {
+inline bool feedback_smaller_than(tree<planner_group>::iterator &pg, tree<planner_group>::iterator &pg_other) {
     return pg->feedback < pg_other->feedback;
 }
+
 #endif //ROS_WS_PLANNING_MULTI_ROBOT_ASTAR_PLANNER_H

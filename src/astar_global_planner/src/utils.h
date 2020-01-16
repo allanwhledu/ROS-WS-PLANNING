@@ -4,7 +4,7 @@
 
 #ifndef ASTAR_GLOBAL_PLANNER_UTILS_H
 #define ASTAR_GLOBAL_PLANNER_UTILS_H
-
+using namespace std;
 
 inline string intToString(int v) {
     char buf[32] = {0};
@@ -33,6 +33,11 @@ inline void perm(int arr[], int len, vector <vector<int>> &ret) {
         swap(arr[i - 1], arr[temp]);  //交换两个值
         reverse(arr + i, arr + len);  //逆序
     } while (true);
+}
+
+
+inline unsigned int DistManhattan(int d_x, int d_y, int x, int y) {
+    return (std::abs(d_x - x) + std::abs(d_y - y)) * DISTANCE;
 }
 
 #endif //ASTAR_GLOBAL_PLANNER_UTILS_H
