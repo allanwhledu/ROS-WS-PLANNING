@@ -122,7 +122,7 @@ int main(int argc, char **argv) {
     }
 
     multi_robot_astar_planner test;
-    vector<tree<planner_group>::iterator> init_pg_locs = test.init_set_multi_robot_astar_planner(
+    vector <tree<planner_group>::iterator> init_pg_locs = test.init_set_multi_robot_astar_planner(
             num_robots);
     bool init_already = false;
     perm(robots_idx_lst, sizeof(robots_idx_lst) / sizeof(robots_idx_lst[0]), permt);
@@ -195,14 +195,16 @@ int main(int argc, char **argv) {
                         ROS_INFO_STREAM("Got init_plan_segment in main.");
                     }
                 }
-                init_already = true;
             }
+            init_already = true;
         }
 
         for (int j = 0; j < permt.size(); ++j) {
             vector <tree<planner_group>::iterator> open_planner_group_vec;
             tree<planner_group>::iterator last_planner_group;
-            open_planner_group_vec.push_back(init_planner_group);
+            open_planner_group_vec.push_back(init_pg_locs.at(j));
+            ROS_WARN_STREAM("find the right init_planner_group.");
+
             for (int idx = 0; idx < layer_depth; ++idx) {
                 //TODO: sort open_planner_group_vec by feedback
                 sort_open_planner_group_vec(open_planner_group_vec);
