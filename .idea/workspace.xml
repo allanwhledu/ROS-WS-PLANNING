@@ -67,8 +67,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="440">
-                  <caret line="139" column="45" selection-start-line="139" selection-start-column="45" selection-end-line="139" selection-end-column="45" />
+                <state relative-caret-position="156">
+                  <caret line="12" column="19" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="19" />
                 </state>
               </provider>
             </entry>
@@ -80,8 +80,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="896">
-                  <caret line="88" column="51" lean-forward="true" selection-start-line="88" selection-start-column="51" selection-end-line="88" selection-end-column="51" />
+                <state relative-caret-position="177">
+                  <caret line="93" column="21" selection-start-line="93" selection-start-column="9" selection-end-line="93" selection-end-column="21" />
                 </state>
               </provider>
             </entry>
@@ -104,6 +104,7 @@
       <find>set_planner_group</find>
       <find>grow_tree</find>
       <find>feedback</find>
+      <find>publish</find>
     </findStrings>
     <replaceStrings>
       <replace>init_planner_group</replace>
@@ -231,7 +232,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4584000" />
+    <option name="totallyTimeSpent" value="5132000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="57" y="23" width="1223" height="777" extended-state="6" />
@@ -304,15 +305,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="896">
-          <caret line="88" column="51" lean-forward="true" selection-start-line="88" selection-start-column="51" selection-end-line="88" selection-end-column="51" />
+        <state relative-caret-position="177">
+          <caret line="93" column="21" selection-start-line="93" selection-start-column="9" selection-end-line="93" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="139" column="45" selection-start-line="139" selection-start-column="45" selection-end-line="139" selection-end-column="45" />
+        <state relative-caret-position="156">
+          <caret line="12" column="19" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="19" />
         </state>
       </provider>
     </entry>

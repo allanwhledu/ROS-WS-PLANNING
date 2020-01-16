@@ -9,8 +9,8 @@ int robots_start_end_points[][4] = {
 //        {7, 1, 1, 3},
         {7, 4, 1, 4},
 };
-int num_robots = 3;
-int layer_depth = 3;
+int num_robots = 2;
+int layer_depth = 2;
 
 std::vector<int> vlast_endpoint_x, vlast_endpoint_y;
 
