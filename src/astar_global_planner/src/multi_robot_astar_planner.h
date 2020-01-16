@@ -159,8 +159,8 @@ public:
         ROS_INFO_STREAM("top is the begin.");
     }
 
-    vector <vector<tree<planner_group>::iterator>> init_set_multi_robot_astar_planner(int num_robots) {
-        vector <vector<tree<planner_group>::iterator>> init_pg_locs;
+    vector<tree<planner_group>::iterator> init_set_multi_robot_astar_planner(int num_robots) {
+        vector<tree<planner_group>::iterator> init_pg_locs;
         for (int i = 0; i < num_robots; ++i) {
             planner_group pg;
             ROS_INFO_STREAM("treeeeee: " << tr);
