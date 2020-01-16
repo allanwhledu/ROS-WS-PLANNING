@@ -137,7 +137,7 @@ int main(int argc, char **argv) {
     ros::Rate r(1.0);
     int loop_count = 0;
     bool arrived = false;
-    while ((ros::ok() && arrived == false) || loop_count < 1) { //TODO
+    while ((ros::ok() && arrived == false) && loop_count < 1) { //TODO
         ros::spinOnce();
         ROS_INFO_STREAM("spin passed.");
 
