@@ -36,64 +36,31 @@ grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null
     newpg = last_leaf->grow_new_leaf();
     ROS_INFO_STREAM("newpg got.");
 
-    newpg->
-            get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y
-    );
-    newpg->
-            set_planner_group(num_robots);
-    if (newpg->planners.
-
-            empty()
-
-            )
+    newpg->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
+    newpg->set_planner_group(num_robots); //TODO 这地方卡住了
+    if (newpg->planners.empty())
         ROS_INFO_STREAM("planners init failed.");
 
-
-    for (
-            int i = 0;
-            i < num_robots;
-            ++i) {
+    for (int i = 0; i < num_robots; ++i) {
         ROS_INFO_STREAM("# " << num_robots << " leaf!");
         ROS_INFO_STREAM("we can access the tr.planner.");
-        newpg->planners.
-                        at(permti[i])
-                ->
-                        de_map_Callback(mapmsg);
+        newpg->planners.at(permti[i])->de_map_Callback(mapmsg);
 
-        newpg->planners.
-                        at(permti[i])
-                ->
+        newpg->planners.at(permti[i])->setTarget();
 
-                        setTarget();
-
-        if (!newpg->planners.
-                        at(permti[i])
-                ->plan.poses.
-
-                        empty()
-
-                ) {
+        if (!newpg->planners.at(permti[i])->plan.poses.empty()) {
             nav_msgs::Path new_path = newpg->planners.at(permti[i])->plan;
-            null_path.
-                    push_back(new_path);
-            (*newpg).
-                    add_feedback_from_path(new_path, permti[i]
+            null_path.push_back(new_path);
+            (*newpg).add_feedback_from_path(new_path, permti[i]
             ); //TODO: 是在这里吗？　还是应该在main函数里
 
-            newpg->pathes.
-                    push_back(newpg
-                                      ->planners.
-                            at(permti[i])
-                                      ->plan);
-            newpg->
-
-                    print_tpath();
+            newpg->pathes.push_back(newpg->planners.at(permti[i])->plan);
+            newpg->print_tpath();
 
             ROS_INFO_STREAM("Got init_plan_segment.");
         }
     }
-    return
-            newpg;
+    return newpg;
 }
 
 void print_open_planner_group_vec(vector <tree<planner_group>::iterator> &open_planner_group_vec) {
@@ -199,11 +166,13 @@ int main(int argc, char **argv) {
             }
             init_already = true;
         }
+        ROS_INFO_STREAM("INIT DONE");
+
 
         for (int j = 0; j < permt.size(); ++j) {
             vector <tree<planner_group>::iterator> open_planner_group_vec;
-            tree<planner_group>::iterator last_planner_group;
-            open_planner_group_vec.push_back(init_pg_locs.at(j));
+            tree<planner_group>::iterator last_planner_group = init_pg_locs.at(j);
+            open_planner_group_vec.push_back(last_planner_group);
             ROS_WARN_STREAM("find the right init_planner_group.");
 
             for (int idx = 0; idx < layer_depth; ++idx) {
@@ -226,9 +195,8 @@ int main(int argc, char **argv) {
                         "tree size: " << test.tr->size() << ", tree depth: " << test.tr->depth(last_planner_group));
                 ROS_WARN_STREAM(
                         "current node: middle " << idx << "outer: " << j);
-
-
             }
+
 
             sort_open_planner_group_vec(open_planner_group_vec);
             last_planner_group = open_planner_group_vec.at(0); //last_planner_group is already sorted

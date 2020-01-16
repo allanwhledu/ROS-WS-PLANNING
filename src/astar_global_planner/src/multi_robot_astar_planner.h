@@ -76,7 +76,7 @@ public:
                 init_planner->startpoint_y = (*parent_loc).pathes.at(i).poses.back().pose.position.y;
                 init_planner->endpoint_x = endpoint_x[i];
                 init_planner->endpoint_y = endpoint_y[i];
-                ROS_INFO_STREAM("got lastendpoint.");
+                ROS_INFO_STREAM("got last endpoint.");
             } else {
                 init_planner->startpoint_x = startpoint_x[i];
                 init_planner->startpoint_y = startpoint_y[i];
