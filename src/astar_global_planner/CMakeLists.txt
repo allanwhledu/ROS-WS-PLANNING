@@ -138,7 +138,7 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/astar_global_planner_node.cpp)
- add_executable(${PROJECT_NAME}_node src/astar_global_planner_node.cpp src/astar_global_planner.cpp)
+ add_executable(${PROJECT_NAME}_node src/astar_global_planner_node.cpp src/astar_global_planner.cpp src/utils.h)
  add_executable(${PROJECT_NAME}_test_c_tree src/test_c_tree.cpp)
 
 ## Rename C++ executable without prefix

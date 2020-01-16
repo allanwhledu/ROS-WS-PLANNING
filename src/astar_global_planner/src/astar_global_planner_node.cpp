@@ -2,9 +2,7 @@
 
 nav_msgs::OccupancyGrid::ConstPtr mapmsg;
 bool isCenterMapGet = false;
-int m_height;
-int m_width;
-int m_resolution;
+int m_height, m_width, m_resolution;
 
 int robots_start_end_points[][4] = {{1, 1, 7, 1},
                                     {7, 1, 1, 1},
@@ -12,8 +10,7 @@ int robots_start_end_points[][4] = {{1, 1, 7, 1},
 int num_robots = 2;
 int layer_depth = 3;
 
-std::vector<int> vlast_endpoint_x;
-std::vector<int> vlast_endpoint_y;
+std::vector<int> vlast_endpoint_x, vlast_endpoint_y;
 
 void center_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr &msg) {
     mapmsg = msg;
@@ -22,14 +19,6 @@ void center_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr &msg) {
     m_resolution = msg->info.resolution;
     isCenterMapGet = true;
     ROS_INFO_STREAM("get map.");
-}
-
-string intToString(int v) {
-    char buf[32] = {0};
-    snprintf(buf, sizeof(buf), "%u", v);
-
-    string str = buf;
-    return str;
 }
 
 struct leaf {
@@ -76,6 +65,20 @@ tree<planner_group>::iterator grow_tree(tree<planner_group>::iterator last_leaf,
     return newpg;
 }
 
+void print_open_planner_group_vec(vector <tree<planner_group>::iterator> &open_planner_group_vec) {
+    for (int i = 0; i < open_planner_group_vec.size(); ++i) {
+        ROS_WARN_STREAM("feedback: " << open_planner_group_vec.at(i)->feedback);
+    }
+}
+
+void sort_open_planner_group_vec(vector <tree<planner_group>::iterator> &open_planner_group_vec) {
+    sort(open_planner_group_vec.begin(), open_planner_group_vec.end(), feedback_smaller_than);
+
+//    open_planner_group_vec.sort(open_planner_group_vec.begin().feedback_smaller_than);
+    print_open_planner_group_vec(open_planner_group_vec);
+}
+
+
 // 节点主函数
 int main(int argc, char **argv) {
     ros::init(argc, argv, "astar_planner");
@@ -83,7 +86,7 @@ int main(int argc, char **argv) {
     int robots_idx_lst[] = {0, 1};
 
     multi_robot_astar_planner test;
-    test.perm(robots_idx_lst, sizeof(robots_idx_lst) / sizeof(robots_idx_lst[0]), permt);
+    perm(robots_idx_lst, sizeof(robots_idx_lst) / sizeof(robots_idx_lst[0]), permt);
 
 //    ros::param::get("~x_0",startpoint_x);
 //    ros::param::get("~y_0",startpoint_y);
@@ -155,7 +158,7 @@ int main(int argc, char **argv) {
             open_planner_group_vec.push_back(init_planner);
             for (int idx = 0; idx < layer_depth; ++idx) {
                 //TODO: sort open_planner_group_vec by feedback
-                //???
+                sort_open_planner_group_vec(open_planner_group_vec);
                 last_planner_group = open_planner_group_vec.back(); //last_planner_group is already sorted
 
                 // test new leaf.

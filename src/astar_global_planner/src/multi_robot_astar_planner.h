@@ -8,6 +8,7 @@
 #define ROS_WS_PLANNING_MULTI_ROBOT_ASTAR_PLANNER_H
 
 #include "astar_global_planner.h"
+#include "utils.h"
 
 using namespace std;
 
@@ -89,7 +90,8 @@ public:
 
     }
 
-    void publish_path(nav_msgs::Path &fullpath, tree<planner_group>::iterator &last_planner_group, vector <ros::Publisher> &nav_plans) {
+    void publish_path(nav_msgs::Path &fullpath, tree<planner_group>::iterator &last_planner_group,
+                      vector <ros::Publisher> &nav_plans) {
         fullpath.header.frame_id = "odom";
         int dep = 0;
         while (last_planner_group->parent_loc != last_planner_group->top_loc) {
@@ -166,27 +168,14 @@ public:
         (*pg_loc).parent_loc = tr->parent(pg_loc);
     }
 
-    void perm(int arr[], int len, vector <vector<int>> &ret) {
-        if (len < 2) return;
-        int i, j, temp;
-        do {
-            auto *tmp = new vector<int>();
-            for (int k = 0; k < len; ++k) {
-                tmp->push_back(arr[k]);
-            }
-            ret.push_back(*tmp);
-            i = j = len - 1;
-            //向前查找第一个变小的元素
-            while (i > 0 && arr[i] < arr[i - 1]) --i;
-            temp = i;
-            if (i == 0) break;
-            //先后查找第一个比arr[i-1]大的元素
-            while (temp + 1 < len && arr[temp + 1] > arr[i - 1]) ++temp;
-            swap(arr[i - 1], arr[temp]);  //交换两个值
-            reverse(arr + i, arr + len);  //逆序
-        } while (true);
-    }
 };
 
 
+inline void sort_vector_ascend(vector <tree<planner_group>::iterator> open_planner_group_vec){
+
+}
+
+inline bool feedback_smaller_than(tree<planner_group>::iterator &pg,tree<planner_group>::iterator &pg_other) {
+    return pg->feedback < pg_other->feedback;
+}
 #endif //ROS_WS_PLANNING_MULTI_ROBOT_ASTAR_PLANNER_H
