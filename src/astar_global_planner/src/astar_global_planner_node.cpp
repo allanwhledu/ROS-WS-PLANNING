@@ -170,19 +170,20 @@ int main(int argc, char **argv) {
     ros::Rate r(1.0);
     int loop_count = 0;
     bool arrived = false;
-    while (ros::ok() && arrived == false && loop_count < 1) { //TODO
+    while ((ros::ok() && arrived == false) || loop_count < 1) { //TODO
         ros::spinOnce();
         ROS_INFO_STREAM("spin passed.");
 
         //test tree.
-        tree<planner_group>::iterator init_planner_group = test.tr->child(test.top, 0);
-        init_planner_group->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
-        init_planner_group->set_planner_group(num_robots);
 
         // only init once
         if (!init_already) {
             for (int j = 0; j < permt.size(); ++j) {
-                init_planner_group = init_pg_locs.at(j);
+                tree<planner_group>::iterator init_planner_group = test.tr->child(test.top, 0);
+                init_planner_group->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
+                init_planner_group->set_planner_group(num_robots);
+
+                init_pg_locs.push_back(init_planner_group);
                 for (int idx = 0; idx < num_robots; ++idx) {
                     init_planner_group->planners.at(permt[j][idx])->de_map_Callback(mapmsg);
                     init_planner_group->planners.at(permt[j][idx])->setTarget();
