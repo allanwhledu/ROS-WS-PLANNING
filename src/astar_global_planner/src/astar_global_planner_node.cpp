@@ -122,7 +122,7 @@ int main(int argc, char **argv) {
     }
 
     multi_robot_astar_planner test;
-    vector<tree<planner_group>::iterator> init_pg_locs = multi_robot_astar_planner.init_set_multi_robot_astar_planner(
+    vector<tree<planner_group>::iterator> init_pg_locs = test.init_set_multi_robot_astar_planner(
             num_robots);
     bool init_already = false;
     perm(robots_idx_lst, sizeof(robots_idx_lst) / sizeof(robots_idx_lst[0]), permt);
