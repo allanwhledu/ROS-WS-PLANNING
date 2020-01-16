@@ -8,7 +8,7 @@ int m_resolution;
 
 int robots_start_end_points[][4] = {{1, 1, 7, 1},
                                     {7, 1, 1, 1},
-                                    };
+};
 int num_robots = 2;
 int layer_depth = 3;
 
@@ -137,7 +137,6 @@ int main(int argc, char **argv) {
         init_planner->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
         init_planner->set_planner_group(num_robots);
         for (int j = 0; j < permt.size(); ++j) {
-
             for (int idx = 0; idx < num_robots; ++idx) {
                 init_planner->planners.at(permt[j][idx])->de_map_Callback(mapmsg);
                 init_planner->planners.at(permt[j][idx])->setTarget();
@@ -151,66 +150,26 @@ int main(int argc, char **argv) {
                 }
             }
 
+            vector <tree<planner_group>::iterator> open_planner_group;
             tree<planner_group>::iterator last_planner_group;
-            for (int idx = 0; idx < 1; ++idx) {
+            open_planner_group.push_back(init_planner);
+            for (int idx = 0; idx < layer_depth; ++idx) {
+                //TODO: sort open_planner_group by feedback
+                //???
+                last_planner_group = open_planner_group[0]; //last_planner_group is already sorted
                 // test new leaf.
                 vector <nav_msgs::Path> nullpaths;
-                if(1)
-                {
-                    for (int i = 0; i < permt.size(); ++i) { //TODO 这里一直在给init_planner插入子节点，所以导致一直在重复搜索
-                        last_planner_group = grow_tree(init_planner, nullpaths);
-                        test.tr->append_child(init_planner, last_planner_group);
-                        for (int k = 0; k < num_robots; ++k) {
-                            nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
-                        }
-                        ROS_WARN_STREAM(
-                                "tree size: " << test.tr->size() << ", tree depth: " << test.tr->depth(last_planner_group));
-                        ROS_WARN_STREAM(
-                                "current node: inner " << i << "middle " << idx << "outer: " << j);
+                for (int i = 0; i < permt.size(); ++i) {
+                    open_planner_group.push_back(grow_tree(last_planner_group, nullpaths));
+                    test.tr->append_child(init_planner, last_planner_group);
+                    for (int k = 0; k < num_robots; ++k) {
+                        nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
                     }
-                } else
-                {
-                    last_planner_group = init_planner;
-                    for (int i = 0; i < layer_depth; ++i) { //TODO 这里一直在给init_planner插入子节点，所以导致一直在重复搜索
-                        tree<planner_group>::iterator _last_planner_group = last_planner_group;
-                        last_planner_group = grow_tree(last_planner_group, nullpaths);
-                        test.tr->append_child(_last_planner_group, last_planner_group);
-
-                        for (int k = 0; k < num_robots; ++k) {
-                            nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
-                        }
-                        ROS_WARN_STREAM(
-                                "tree size: " << test.tr->size() << ", tree depth: " << test.tr->depth(last_planner_group));
-                        ROS_WARN_STREAM(
-                                "current node: inner " << i << "middle " << idx << "outer: " << j);
-                    }
+                    ROS_WARN_STREAM(
+                            "tree size: " << test.tr->size() << ", tree depth: " << test.tr->depth(last_planner_group));
+                    ROS_WARN_STREAM(
+                            "current node: inner " << i << "middle " << idx << "outer: " << j);
                 }
-
-                nav_msgs::Path fullpath;
-                fullpath.header.frame_id = "odom";
-                int dep = 0;
-                while(last_planner_group->parent_loc!=last_planner_group->top_loc)
-                {
-                    reverse(last_planner_group->pathes.at(0).poses.begin(),last_planner_group->pathes.at(0).poses.end());
-                    fullpath.poses.insert(fullpath.poses.end(),last_planner_group->pathes.at(0).poses.begin(),last_planner_group->pathes.at(0).poses.end());
-                    last_planner_group = last_planner_group->parent_loc;
-                    dep++;
-                }
-                reverse(last_planner_group->pathes.at(0).poses.begin(),last_planner_group->pathes.at(0).poses.end());
-                fullpath.poses.insert(fullpath.poses.end(),last_planner_group->pathes.at(0).poses.begin(),last_planner_group->pathes.at(0).poses.end());
-//                for(int i = 1; i < last_planner_group->pathes.size(); i++)
-//                {
-//                    fullpath.poses.insert(fullpath.poses.end(),last_planner_group->pathes.at(0).poses.begin(),last_planner_group->pathes.at(0).poses.end());
-//                }
-
-                ROS_INFO_STREAM("dep: "<<dep);
-                ROS_INFO_STREAM("now we will pub full path...");
-
-                for(auto & pose : fullpath.poses){
-                    ROS_INFO_STREAM("points in fullpath: "<< pose.pose.position.x<<" "<<pose.pose.position.y);
-                }
-                nav_plans[0].publish(fullpath);
-
             }
             for (int idx = 0; idx < num_robots; ++idx) {
                 if (last_planner_group->planners.at(permt[j][idx])->arrived) {
@@ -218,9 +177,37 @@ int main(int argc, char **argv) {
                     return 0;
                 }
             }
+
+            nav_msgs::Path fullpath; //TODO: init?
+//            (* last_planner_group).publish_path(fullpath, last_planner_group, nav_plans);
+//            /*
+            fullpath.header.frame_id = "odom";
+            int dep = 0;
+            while (last_planner_group->parent_loc != last_planner_group->top_loc) {
+                reverse(last_planner_group->pathes.at(0).poses.begin(), last_planner_group->pathes.at(0).poses.end());
+                fullpath.poses.insert(fullpath.poses.end(), last_planner_group->pathes.at(0).poses.begin(),
+                                      last_planner_group->pathes.at(0).poses.end());
+                last_planner_group = last_planner_group->parent_loc;
+                dep++;
+            }
+            reverse(last_planner_group->pathes.at(0).poses.begin(), last_planner_group->pathes.at(0).poses.end());
+            fullpath.poses.insert(fullpath.poses.end(), last_planner_group->pathes.at(0).poses.begin(),
+                                  last_planner_group->pathes.at(0).poses.end());
+//                for(int i = 1; i < last_planner_group->pathes.size(); i++)
+//                {
+//                    fullpath.poses.insert(fullpath.poses.end(),last_planner_group->pathes.at(0).poses.begin(),last_planner_group->pathes.at(0).poses.end());
+//                }
+
+            ROS_INFO_STREAM("dep: " << dep);
+            ROS_INFO_STREAM("now we will pub full path...");
+
+            for (auto &pose : fullpath.poses) {
+                ROS_INFO_STREAM("points in fullpath: " << pose.pose.position.x << " " << pose.pose.position.y);
+            }
+            nav_plans[0].publish(fullpath);
+
+//             **/
         }
-
-
 //
 //        loop_count++;
 //

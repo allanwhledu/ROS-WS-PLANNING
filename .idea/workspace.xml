@@ -32,7 +32,6 @@
   <component name="ChangeListManager">
     <list default="true" id="4da7b6d7-a2fa-4e81-aee4-3facd065b870" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h" afterDir="false" />
     </list>
@@ -96,6 +95,8 @@
       <updated>1579067968308</updated>
       <workItem from="1579067971593" duration="4267000" />
       <workItem from="1579081336308" duration="11906000" />
+      <workItem from="1579142119435" duration="4875000" />
+      <workItem from="1579147469466" duration="59000" />
     </task>
     <servers />
   </component>
@@ -107,6 +108,14 @@
       <screen x="65" y="24" width="2495" height="1416" />
     </state>
     <state x="777" y="377" key="#com.intellij.execution.impl.EditConfigurationsDialog/65.24.2495.1416@65.24.2495.1416" timestamp="1579082516924" />
+    <state x="164" y="68" width="2297" height="1273" maximized="true" key="DiffContextDialog" timestamp="1579146498074">
+      <screen x="65" y="24" width="2495" height="1416" />
+    </state>
+    <state x="164" y="68" width="2297" height="1273" maximized="true" key="DiffContextDialog/65.24.2495.1416@65.24.2495.1416" timestamp="1579146498074" />
+    <state x="973" y="547" key="com.intellij.ide.util.TipDialog" timestamp="1579142128431">
+      <screen x="65" y="24" width="2495" height="1416" />
+    </state>
+    <state x="973" y="547" key="com.intellij.ide.util.TipDialog/65.24.2495.1416@65.24.2495.1416" timestamp="1579142128431" />
     <state x="976" y="336" key="run.anything.popup" timestamp="1579089006450">
       <screen x="65" y="24" width="2495" height="1416" />
     </state>
