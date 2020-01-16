@@ -171,8 +171,10 @@ int main(int argc, char **argv) {
 
         for (int j = 0; j < permt.size(); ++j) {
             vector <tree<planner_group>::iterator> open_planner_group_vec;
+            for (int k = 0; k < permt.size(); ++k) {
+                open_planner_group_vec.push_back(init_pg_locs.at(k));
+            }
             tree<planner_group>::iterator last_planner_group = init_pg_locs.at(j);
-            open_planner_group_vec.push_back(last_planner_group);
             ROS_WARN_STREAM("find the right init_planner_group.");
 
             for (int idx = 0; idx < layer_depth; ++idx) {
