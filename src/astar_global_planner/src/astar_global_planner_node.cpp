@@ -173,25 +173,30 @@ int main(int argc, char **argv) {
 
         //test tree.
         tree<planner_group>::iterator init_planner = test.tr->child(test.top, 0);
-        init_planner->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
+        init_planner->get_start_and_goal(startpoint_x, startpoint_y, startpoint_x, startpoint_y);
         init_planner->set_planner_group(num_robots);
-        for (int j = 0; j < permt.size(); ++j) {
-            for (int idx = 0; idx < num_robots; ++idx) {
-                init_planner->planners.at(permt[j][idx])->de_map_Callback(mapmsg);
-                init_planner->planners.at(permt[j][idx])->setTarget();
+
+
+        for (int idx = 0; idx < num_robots; ++idx) {
+            init_planner->planners.at(permt[0][idx])->de_map_Callback(mapmsg);
 //                if (init_planner->planners.empty())
 //                    ROS_INFO_STREAM("planners init failed.");
-                if (!init_planner->planners.at(permt[j][idx])->plan.poses.empty()) {
-                    nav_plans[idx].publish(init_planner->planners.at(permt[j][idx])->plan); //TODO check 下标
-                    init_planner->pathes.push_back(init_planner->planners.at(permt[j][idx])->plan);
-                    init_planner->print_tpath();
-                    ROS_INFO_STREAM("Got init_plan_segment in main.");
-                }
+            if (!init_planner->planners.at(permt[0][idx])->plan.poses.empty()) {
+                nav_plans[idx].publish(init_planner->planners.at(permt[0][idx])->plan); //TODO check 下标
+                init_planner->pathes.push_back(init_planner->planners.at(permt[0][idx])->plan);
+                init_planner->print_tpath();
+                ROS_INFO_STREAM("Got init_plan_segment in main.");
             }
+        }
+        ROS_WARN_STREAM("tree init complete!!!");
 
-            vector <tree<planner_group>::iterator> open_planner_group_vec;
-            tree<planner_group>::iterator last_planner_group;
-            open_planner_group_vec.push_back(init_planner);
+        vector <tree<planner_group>::iterator> open_planner_group_vec;
+        open_planner_group_vec.push_back(init_planner);
+
+        tree<planner_group>::iterator last_planner_group;
+
+
+        for (int j = 0; j < permt.size(); ++j) {
             for (int idx = 0; idx < layer_depth; ++idx) {
                 //TODO: sort open_planner_group_vec by feedback
                 sort_open_planner_group_vec(open_planner_group_vec);
