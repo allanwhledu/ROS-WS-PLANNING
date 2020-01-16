@@ -157,19 +157,24 @@ public:
         ROS_INFO_STREAM("solidding the tree.");
         top = tr->begin();
         ROS_INFO_STREAM("top is the begin.");
+    }
 
-        planner_group pg;
+    vector <vector<tree<planner_group>::iterator>> init_set_multi_robot_astar_planner(int num_robots) {
+        vector <vector<tree<planner_group>::iterator>> init_pg_locs;
+        for (int i = 0; i < num_robots; ++i) {
+            planner_group pg;
+            ROS_INFO_STREAM("treeeeee: " << tr);
+            tree<planner_group>::iterator pg_loc = tr->append_child(top, pg);
+            // so the appen_child is a deep copy!
+            // and will not print out the solid process's msg.
 
-        ROS_INFO_STREAM("treeeeee: " << tr);
-
-        tree<planner_group>::iterator pg_loc = tr->append_child(top, pg);
-        // so the appen_child is a deep copy!
-        // and will not print out the solid process's msg.
-
-        (*pg_loc).tree_ptr = tr;
-        (*pg_loc).top_loc = top;
-        (*pg_loc).self_loc = pg_loc;
-        (*pg_loc).parent_loc = tr->parent(pg_loc);
+            (*pg_loc).tree_ptr = tr;
+            (*pg_loc).top_loc = top;
+            (*pg_loc).self_loc = pg_loc;
+            (*pg_loc).parent_loc = tr->parent(pg_loc);
+            init_pg_locs.push_back(pg_loc);
+        }
+        return init_pg_locs;
     }
 
 };

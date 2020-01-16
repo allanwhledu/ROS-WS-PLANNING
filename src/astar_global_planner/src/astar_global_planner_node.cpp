@@ -122,6 +122,9 @@ int main(int argc, char **argv) {
     }
 
     multi_robot_astar_planner test;
+    vector <vector<tree<planner_group>::iterator>> init_pg_locs = multi_robot_astar_planner.init_set_multi_robot_astar_planner(
+            num_robots);
+    bool init_already = false;
     perm(robots_idx_lst, sizeof(robots_idx_lst) / sizeof(robots_idx_lst[0]), permt);
 
 //    ros::param::get("~x_0",startpoint_x);
@@ -172,26 +175,34 @@ int main(int argc, char **argv) {
         ROS_INFO_STREAM("spin passed.");
 
         //test tree.
-        tree<planner_group>::iterator init_planner = test.tr->child(test.top, 0);
-        init_planner->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
-        init_planner->set_planner_group(num_robots);
-        for (int j = 0; j < permt.size(); ++j) {
-            for (int idx = 0; idx < num_robots; ++idx) {
-                init_planner->planners.at(permt[j][idx])->de_map_Callback(mapmsg);
-                init_planner->planners.at(permt[j][idx])->setTarget();
-//                if (init_planner->planners.empty())
-//                    ROS_INFO_STREAM("planners init failed.");
-                if (!init_planner->planners.at(permt[j][idx])->plan.poses.empty()) {
-                    nav_plans[idx].publish(init_planner->planners.at(permt[j][idx])->plan); //TODO check 下标
-                    init_planner->pathes.push_back(init_planner->planners.at(permt[j][idx])->plan);
-                    init_planner->print_tpath();
-                    ROS_INFO_STREAM("Got init_plan_segment in main.");
-                }
-            }
+        tree<planner_group>::iterator init_planner_group = test.tr->child(test.top, 0);
+        init_planner_group->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
+        init_planner_group->set_planner_group(num_robots);
 
+        // only init once
+        if (!init_already) {
+            for (int j = 0; j < permt.size(); ++j) {
+                init_planner_group = init_pg_locs.at(j);
+                for (int idx = 0; idx < num_robots; ++idx) {
+                    init_planner_group->planners.at(permt[j][idx])->de_map_Callback(mapmsg);
+                    init_planner_group->planners.at(permt[j][idx])->setTarget();
+//                if (init_planner_group->planners.empty())
+//                    ROS_INFO_STREAM("planners init failed.");
+                    if (!init_planner_group->planners.at(permt[j][idx])->plan.poses.empty()) {
+                        nav_plans[idx].publish(init_planner_group->planners.at(permt[j][idx])->plan); //TODO check 下标
+                        init_planner_group->pathes.push_back(init_planner_group->planners.at(permt[j][idx])->plan);
+                        init_planner_group->print_tpath();
+                        ROS_INFO_STREAM("Got init_plan_segment in main.");
+                    }
+                }
+                init_already = true;
+            }
+        }
+
+        for (int j = 0; j < permt.size(); ++j) {
             vector <tree<planner_group>::iterator> open_planner_group_vec;
             tree<planner_group>::iterator last_planner_group;
-            open_planner_group_vec.push_back(init_planner);
+            open_planner_group_vec.push_back(init_planner_group);
             for (int idx = 0; idx < layer_depth; ++idx) {
                 //TODO: sort open_planner_group_vec by feedback
                 sort_open_planner_group_vec(open_planner_group_vec);
