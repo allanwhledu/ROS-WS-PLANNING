@@ -42,8 +42,8 @@ public:
 
     void add_feedback_from_path(nav_msgs::Path path, int idx) {
         feedback += planners[0]->DistanceManhattan(endpoint_x[idx], endpoint_y[idx],
-                                                      path.poses.back().pose.position.x,
-                                                      path.poses.back().pose.position.y);
+                                                   path.poses.back().pose.position.x,
+                                                   path.poses.back().pose.position.y);
     }
 
     int get_feedback(int idx) {
@@ -86,6 +86,34 @@ public:
 
             this->planners.push_back(init_planner);
         }
+
+    }
+
+    void publish_path(nav_msgs::Path &fullpath, tree<planner_group>::iterator &last_planner_group, vector <ros::Publisher> &nav_plans) {
+        fullpath.header.frame_id = "odom";
+        int dep = 0;
+        while (last_planner_group->parent_loc != last_planner_group->top_loc) {
+            reverse(last_planner_group->pathes.at(0).poses.begin(), last_planner_group->pathes.at(0).poses.end());
+            fullpath.poses.insert(fullpath.poses.end(), last_planner_group->pathes.at(0).poses.begin(),
+                                  last_planner_group->pathes.at(0).poses.end());
+            last_planner_group = last_planner_group->parent_loc;
+            dep++;
+        }
+        reverse(last_planner_group->pathes.at(0).poses.begin(), last_planner_group->pathes.at(0).poses.end());
+        fullpath.poses.insert(fullpath.poses.end(), last_planner_group->pathes.at(0).poses.begin(),
+                              last_planner_group->pathes.at(0).poses.end());
+//                for(int i = 1; i < last_planner_group->pathes.size(); i++)
+//                {
+//                    fullpath.poses.insert(fullpath.poses.end(),last_planner_group->pathes.at(0).poses.begin(),last_planner_group->pathes.at(0).poses.end());
+//                }
+
+        ROS_INFO_STREAM("dep: " << dep);
+        ROS_INFO_STREAM("now we will pub full path...");
+
+        for (auto &pose : fullpath.poses) {
+            ROS_INFO_STREAM("points in fullpath: " << pose.pose.position.x << " " << pose.pose.position.y);
+        }
+        nav_plans[0].publish(fullpath);
     }
 
     tree<planner_group>::iterator grow_new_leaf() {
