@@ -233,7 +233,7 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::
                 AddNode2Open(open, &m_node[new_y][new_x]);
                 ROS_INFO_STREAM("destination already got in openlist." << m_node[new_y][new_x].location_x
                                                                        << m_node[new_y][new_x].location_y);
-                arrived = true;
+
                 return true;
             }
 
@@ -350,6 +350,8 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
     if (path_length0 > path_length) {
         plan.poses.erase(plan.poses.end() - (path_length0 - path_length), plan.poses.end());
     }
+    if(plan.poses.back().pose.position.x == endpoint_x && plan.poses.back().pose.position.y == endpoint_y)
+        arrived = true;
 
     // return tpath.
     Tpoint tpoint;
