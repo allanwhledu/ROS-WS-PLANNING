@@ -154,7 +154,8 @@ int main(int argc, char **argv) {
 //                    ROS_INFO_STREAM("planners init failed.");
                     if (!init_planner_group->planners.at(permt[j][idx])->plan.poses.empty()) {
                         nav_plans[idx].publish(init_planner_group->planners.at(permt[j][idx])->plan); //TODO check 下标
-                        init_planner_group->add_feedback_from_path(init_planner_group->planners.at(permt[j][idx])->plan, permt[j][idx]);
+                        init_planner_group->add_feedback_from_path(init_planner_group->planners.at(permt[j][idx])->plan,
+                                                                   permt[j][idx]);
                         init_planner_group->pathes.push_back(init_planner_group->planners.at(permt[j][idx])->plan);
                         init_planner_group->print_tpath();
                         ROS_INFO_STREAM("Got init_plan_segment in main.");
@@ -203,32 +204,33 @@ int main(int argc, char **argv) {
                     for (int k = 0; k < num_robots; ++k) {
                         nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
                     }
+                    if
                 }
                 ROS_WARN_STREAM(
                         "tree size: " << test.tr->size() << ", tree depth: " << test.tr->depth(last_planner_group));
                 ROS_WARN_STREAM(
                         "current node: middle " << idx << ", outer: " << j);
+
+
+                //取feedback最小的一个pg，试探是否有planner已经到达终点，如果全部到达则发布path信息
+                sort_open_planner_group_vec(open_planner_group_vec);
+                last_planner_group = open_planner_group_vec.at(0); //last_planner_group is already sorted
+                std::cout << "** smallest feedback: " << last_planner_group->feedback << std::endl;
+                bool all_arrived = true;
+                bool single_arrived = false;
+                for (int idx = 0; idx < num_robots; ++idx) {
+                    all_arrived &= last_planner_group->planners.at(permt[j][idx])->arrived;
+                    single_arrived |= last_planner_group->planners.at(permt[j][idx])->arrived;
+                }
+                if (all_arrived) {
+                    ROS_WARN_STREAM("ALL ARRIVED AND EXIT");
+                    vector <nav_msgs::Path> fullpaths(num_robots); //TODO: init?
+                    (*last_planner_group).publish_path(fullpaths, last_planner_group, nav_plans);
+                } else if (single_arrived) {
+                    ROS_WARN_STREAM("SINGLE ARRIVED AND EXIT");
+                }
             }
             //至此，指定层数的扩展已经进行完毕
-
-            //取feedback最小的一个pg，试探是否有planner已经到达终点，如果全部到达则发布path信息
-            sort_open_planner_group_vec(open_planner_group_vec);
-            last_planner_group = open_planner_group_vec.at(0); //last_planner_group is already sorted
-
-            bool all_arrived = true;
-            bool single_arrived = false;
-            for (int idx = 0; idx < num_robots; ++idx) {
-                all_arrived &= last_planner_group->planners.at(permt[j][idx])->arrived;
-                single_arrived |= last_planner_group->planners.at(permt[j][idx])->arrived;
-            }
-            if (all_arrived) {
-                ROS_WARN_STREAM("ALL ARRIVED AND EXIT");
-                vector <nav_msgs::Path> fullpaths(num_robots); //TODO: init?
-                (*last_planner_group).publish_path(fullpaths, last_planner_group, nav_plans);
-            }
-            if (single_arrived) {
-                ROS_WARN_STREAM("SINGLE ARRIVED AND EXIT");
-            }
         }
 
         loop_count++;
