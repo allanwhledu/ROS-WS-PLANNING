@@ -1,4 +1,5 @@
 #include "multi_robot_astar_planner.h"
+#include <string>
 
 bool testhfile(int x) {
     return x == 1;
