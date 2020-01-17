@@ -48,9 +48,9 @@ struct Node {
     char gray_val;
     unsigned int location_x;
     unsigned int location_y;
-    unsigned int value_h=999;
-    unsigned int value_g=999;
-    unsigned int value_f=999;
+    unsigned int value_h = 999;
+    unsigned int value_g = 999;
+    unsigned int value_f = 999;
     Node *parent;
 
     Node();
@@ -72,6 +72,7 @@ class planner_group;
 
 class AStartFindPath {
 public:
+    int robot_id = -1;
     nav_msgs::Path plan;
     nav_msgs::Path Null_plan;
 

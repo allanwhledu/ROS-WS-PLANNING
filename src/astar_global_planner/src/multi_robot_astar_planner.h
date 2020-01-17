@@ -16,6 +16,7 @@ using namespace std;
 #define ARR_LEN(array, length){ length =  sizeof(array) / sizeof(array[0]); }
 
 struct Tpoint {
+    int robot_id;
     int x = 0;
     int y = 0;
     int t = 0;
@@ -73,6 +74,7 @@ public:
 
             if (parent_loc != top_loc) {
 //                ROS_INFO_STREAM("getting last endpoint...");
+                init_planner->robot_id = i;
                 init_planner->startpoint_x = (*parent_loc).pathes.at(i).poses.back().pose.position.x;
                 init_planner->startpoint_y = (*parent_loc).pathes.at(i).poses.back().pose.position.y;
                 init_planner->endpoint_x = endpoint_x[i];
@@ -141,7 +143,7 @@ public:
     void print_tpath() {
         std::cout << "tpath: ";
         for (auto &Tpoint : tpath)
-            std::cout << Tpoint.x << Tpoint.y << " " << Tpoint.t << " ,";
+            std::cout << "[id " << Tpoint.robot_id << " xy " << Tpoint.x << Tpoint.y << " t" << Tpoint.t << "] ,";
         std::cout << endl;
     }
 
@@ -160,8 +162,8 @@ public:
         ROS_INFO_STREAM("top is the begin.");
     }
 
-    vector<tree<planner_group>::iterator> init_set_multi_robot_astar_planner(int num_robots) {
-        vector<tree<planner_group>::iterator> init_pg_locs;
+    vector <tree<planner_group>::iterator> init_set_multi_robot_astar_planner(int num_robots) {
+        vector <tree<planner_group>::iterator> init_pg_locs;
         for (int i = 0; i < num_robots; ++i) {
             planner_group pg;
             ROS_INFO_STREAM("treeeeee: " << tr);

@@ -353,6 +353,7 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
     // return tpath.
     Tpoint tpoint;
     for (int i = 0; i < plan.poses.size(); i++) {
+        tpoint.robot_id = this->robot_id;
         tpoint.x = plan.poses.at(i).pose.position.x;
         tpoint.y = plan.poses.at(i).pose.position.y;
         tpoint.t = i * DISTANCE;
