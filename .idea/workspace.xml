@@ -31,7 +31,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4da7b6d7-a2fa-4e81-aee4-3facd065b870" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/rosout.log" beforeDir="false" afterPath="$PROJECT_DIR$/rosout.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/src/astar_global_planner/cmake-build-debug/" />
@@ -68,8 +67,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="275">
-                  <caret line="209" column="64" lean-forward="true" selection-start-line="209" selection-start-column="64" selection-end-line="209" selection-end-column="64" />
+                <state relative-caret-position="276">
+                  <caret line="211" column="99" selection-start-line="211" selection-start-column="99" selection-end-line="211" selection-end-column="99" />
                 </state>
               </provider>
             </entry>
@@ -258,7 +257,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="24153000" />
+    <option name="totallyTimeSpent" value="24190000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="57" y="23" width="1223" height="777" extended-state="6" />
@@ -338,8 +337,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="209" column="64" lean-forward="true" selection-start-line="209" selection-start-column="64" selection-end-line="209" selection-end-column="64" />
+        <state relative-caret-position="276">
+          <caret line="211" column="99" selection-start-line="211" selection-start-column="99" selection-end-line="211" selection-end-column="99" />
         </state>
       </provider>
     </entry>
