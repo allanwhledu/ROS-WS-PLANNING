@@ -154,7 +154,7 @@ int main(int argc, char **argv) {
 //                    ROS_INFO_STREAM("planners init failed.");
                     if (!init_planner_group->planners.at(permt[j][idx])->plan.poses.empty()) {
                         nav_plans[idx].publish(init_planner_group->planners.at(permt[j][idx])->plan); //TODO check 下标
-                        init_planner_group->add_feedback_from_path(init_planner_group->planners.at(permt[j][idx])->plan, permt[idx]);
+                        init_planner_group->add_feedback_from_path(init_planner_group->planners.at(permt[j][idx])->plan, permt[j][idx]);
                         init_planner_group->pathes.push_back(init_planner_group->planners.at(permt[j][idx])->plan);
                         init_planner_group->print_tpath();
                         ROS_INFO_STREAM("Got init_plan_segment in main.");
