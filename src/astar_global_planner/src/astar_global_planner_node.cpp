@@ -114,7 +114,7 @@ int main(int argc, char **argv) {
     vector <ros::Publisher> nav_plans;
     for (int l = 0; l < num_robots; ++l) {
         ros::Publisher nav_plan;
-        nav_plan = n.advertise<nav_msgs::Path>("astar_path_robot_" + intToString(l), 1);
+        nav_plan = n.advertise<nav_msgs::Path>("astar_path_robot_" + intToString(l), 10);
         nav_plans.push_back(nav_plan);
     }
     map_sub = n.subscribe<nav_msgs::OccupancyGrid>("/map", 1, &center_map_Callback);
@@ -209,8 +209,12 @@ int main(int argc, char **argv) {
                     if (all_arrived) {
                         ROS_WARN_STREAM("ALL ARRIVED AND EXIT");
                         vector <nav_msgs::Path> fullpaths(num_robots); //TODO: init?
-                        (*open_planner_group_vec.back()).publish_path(fullpaths, open_planner_group_vec.back(), nav_plans);
+
                         ROS_WARN_STREAM("OKOK");
+                        for (int i = 0; i < 20; i++) {
+                            (*open_planner_group_vec.back()).publish_path(fullpaths, open_planner_group_vec.back(), nav_plans);
+                            r.sleep();
+                        }
                         return 0;
                     }
                 }
