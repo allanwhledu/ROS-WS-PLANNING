@@ -68,10 +68,10 @@ public:
         for (int i = 0; i < num_robots; ++i) {
             AStartFindPath *init_planner;
             init_planner = new AStartFindPath;
-            ROS_INFO_STREAM("init planner completed.");
+//            ROS_INFO_STREAM("init planner completed.");
 
             if (parent_loc != top_loc) {
-                ROS_INFO_STREAM("getting last endpoint...");
+//                ROS_INFO_STREAM("getting last endpoint...");
                 init_planner->startpoint_x = (*parent_loc).pathes.at(i).poses.back().pose.position.x;
                 init_planner->startpoint_y = (*parent_loc).pathes.at(i).poses.back().pose.position.y;
                 init_planner->endpoint_x = endpoint_x[i];
