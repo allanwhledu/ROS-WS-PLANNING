@@ -204,9 +204,9 @@ int main(int argc, char **argv) {
                     bool all_arrived = true;
                     for (int k = 0; k < num_robots; ++k) {
                         nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
-                        AStartFindPath *plan = open_planner_group_vec.back()->planners.at(permt[i][k]);
-                        bool end = (plan->poses.back().pose.position.x == endpoint_x &&
-                                    plan->poses.back().pose.position.y == endpoint_y);
+                        AStartFindPath *aStartFindPath = open_planner_group_vec.back()->planners.at(permt[i][k]);
+                        bool end = (aStartFindPath->plan.poses.back().pose.position.x == endpoint_x &&
+                                aStartFindPath->plan.back().pose.position.y == endpoint_y);
                         all_arrived &= end;
                     }
                     if (all_arrived) {
