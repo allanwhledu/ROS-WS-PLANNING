@@ -204,9 +204,10 @@ int main(int argc, char **argv) {
                     bool all_arrived = true;
                     for (int k = 0; k < num_robots; ++k) {
                         nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
-                        AStartFindPath *aStartFindPath = open_planner_group_vec.back()->planners.at(permt[i][k]);
-                        all_arrived &= (aStartFindPath->x == aStartFindPath->endpoint_x) &&
-                                       (aStartFindPath->y == aStartFindPath->endpoint_y);
+                        AStartFindPath *plan = open_planner_group_vec.back()->planners.at(permt[i][k]);
+                        bool end = (plan->poses.back().pose.position.x == endpoint_x &&
+                                    plan->poses.back().pose.position.y == endpoint_y);
+                        all_arrived &= end;
                     }
                     if (all_arrived) {
                         ROS_WARN_STREAM("ALL ARRIVED AND EXIT");
@@ -222,6 +223,7 @@ int main(int argc, char **argv) {
                 ROS_WARN_STREAM("还是没有能逃过");
 
                 //取feedback最小的一个pg，试探是否有planner已经到达终点，如果全部到达则发布path信息
+                /*
                 sort_open_planner_group_vec(open_planner_group_vec);
                 last_planner_group = open_planner_group_vec.at(0); //last_planner_group is already sorted
                 std::cout << "** smallest feedback: " << last_planner_group->feedback << std::endl;
@@ -241,7 +243,7 @@ int main(int argc, char **argv) {
                     return 0;
                 } else if (single_arrived) {
                     ROS_WARN_STREAM("SINGLE ARRIVED AND EXIT");
-                }
+                }*/
             }
             //至此，指定层数的扩展已经进行完毕
         }
