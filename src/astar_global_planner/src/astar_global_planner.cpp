@@ -120,7 +120,7 @@ void AStartFindPath::AddNode2Open(std::list <ListNode> *openlist, Node *node) {
 
 void output_close_list(std::list <ListNode> *close) {
     string close_list_str = "Starting output close list";
-    it = ++close->begin();
+    auto it = ++close->begin();
     while (it != close->end()) {
         if (it->PtrToNode) {
             close_list_str += intToString(it->PtrToNode->location_x) + intToString(it->PtrToNode->location_y) +
