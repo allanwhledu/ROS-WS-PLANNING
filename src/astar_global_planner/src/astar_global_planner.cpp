@@ -4,7 +4,7 @@ bool testhfile(int x) {
     return x == 1;
 }
 
-
+/*
 extern bool Comp(list<ListNode>::iterator &first, list<ListNode>::iterator &second) {
     if (!first->PtrToNode || !second->PtrToNode) {
         ROS_WARN_STREAM("There is a NULL pointer");
@@ -13,6 +13,19 @@ extern bool Comp(list<ListNode>::iterator &first, list<ListNode>::iterator &seco
     if (first->PtrToNode->value_f >= second->PtrToNode->value_f) //TODO 这里是什么原因，会使得这里没有flag，flag是空的？
     {
         return (first->PtrToNode->value_h < second->PtrToNode->value_h);
+    } else {
+        return true;
+    }
+}*/
+
+extern bool Comp(ListNode &first, ListNode &second) {
+    if (!first.PtrToNode || !second.PtrToNode) {
+        ROS_WARN_STREAM("There is a NULL pointer");
+        return false;
+    }
+    if (first.PtrToNode->value_f >= second.PtrToNode->value_f) //TODO 这里是什么原因，会使得这里没有flag，flag是空的？
+    {
+        return (first.PtrToNode->value_h < second.PtrToNode->value_h);
     } else {
         return true;
     }
@@ -115,6 +128,7 @@ void AStartFindPath::AddNode2Open(std::list <ListNode> *openlist, Node *node) {
     opennode.PtrToNode = node;
 
     openlist->push_front(opennode);
+    sort()
     openlist->sort(Comp);
 }
 
@@ -123,8 +137,10 @@ void output_close_list(std::list <ListNode> *close) {
     auto it = ++close->begin();
     while (it != close->end()) {
         if (it->PtrToNode) {
-            close_list_str += intToString(it->PtrToNode->location_x) + intToString(it->PtrToNode->location_y) +
-                              intToString(it->PtrToNode->flag) + ", ";
+            close_list_str +=
+                    "x" + intToString(it->PtrToNode->location_x) + "y" + intToString(it->PtrToNode->location_y) +
+                    "f" + intToString(it->PtrToNode->value_f) + "h" + intToString(it->PtrToNode->value_h) +
+                    "flag" + intToString(it->PtrToNode->flag) + ", ";
         } else {
             close_list_str += "NULL PIONTER, ";
         }
