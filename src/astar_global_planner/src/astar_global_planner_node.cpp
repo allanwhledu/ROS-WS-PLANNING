@@ -42,7 +42,7 @@ grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null
         ROS_INFO_STREAM("planners init failed.");
 
     for (int i = 0; i < num_robots; ++i) {
-        ROS_INFO_STREAM("# grwow tree " << num_robots << " leaf!");
+        ROS_INFO_STREAM("# grow tree " << num_robots << " leaf!");
 //        ROS_INFO_STREAM("we can access the tr.planner.");
         newpg->planners.at(permti[i])->de_map_Callback(mapmsg);
 

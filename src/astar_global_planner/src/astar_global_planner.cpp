@@ -311,9 +311,9 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
         path += ("x" + intToString(forstepcount->location_x) + "y" + intToString(forstepcount->location_y) + " ::flag: "
                  + intToString(forstepcount->flag) + ",  ");
 
-        if (forstepcount->parent != NULL)
-            path += ("x" + intToString(forstepcount->parent->location_x) + "y" + intToString(forstepcount->parent->location_y) + " ::flag: "
-                     + intToString(forstepcount->parent->flag) + ",  ");
+//        if (forstepcount->parent != NULL)
+//            path += ("px" + intToString(forstepcount->parent->location_x) + "py" + intToString(forstepcount->parent->location_y) + " ::pflag: "
+//                     + intToString(forstepcount->parent->flag) + ",  ");
 
         geometry_msgs::PoseStamped point;
         point.pose.position.x = forstepcount->location_x;
