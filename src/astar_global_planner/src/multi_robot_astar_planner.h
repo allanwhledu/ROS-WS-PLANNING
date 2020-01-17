@@ -9,6 +9,7 @@
 
 #include "astar_global_planner.h"
 #include "utils.h"
+#include <string>
 
 using namespace std;
 

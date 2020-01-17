@@ -118,6 +118,34 @@ void AStartFindPath::AddNode2Open(std::list <ListNode> *openlist, Node *node) {
     openlist->sort(Comp);
 }
 
+void output_close_list(std::list <ListNode> *close) {
+    string close_list_str = "Starting output close list";
+    it = ++close->begin();
+    while (it != close->end()) {
+        if (it->PtrToNode) {
+            close_list_str += intToString(it->PtrToNode->location_x) + intToString(it->PtrToNode->location_y) +
+                              intToString(it->PtrToNode->flag) + ", ";
+        } else {
+            close_list_str += "NULL PIONTER, ";
+        }
+        ++it;
+    }
+    ROS_WARN_STREAM(close_list_str);
+}
+
+bool has_nullptr_in_close(std::list <ListNode> *close) {
+    bool sort_flag = true;
+    auto it = ++close->begin();
+    while (it != close->end()) {
+        if (!it->PtrToNode) {
+            ROS_WARN_STREAM("NULL PIONTER");
+            sort_flag = false;
+        }
+        ++it;
+    }
+    return sort_flag;
+}
+
 void AStartFindPath::AddNode2Close(std::list <ListNode> *close, std::list <ListNode> *open) {
     if (!open->size() || !open->front().PtrToNode) {
         ROS_INFO_STREAM("no data in openlist!");
@@ -133,37 +161,14 @@ void AStartFindPath::AddNode2Close(std::list <ListNode> *close, std::list <ListN
 
     if (closenode.PtrToNode->flag != STARTPOINT)
         close->push_back(closenode);
+    open->pop_front();
     if (!close->empty()) {
-        bool sort_flag = true;
-        auto it = ++close->begin();
-        while (it != close->end()) {
-            if (!it->PtrToNode) {
-                ROS_WARN_STREAM("NULL PIONTER");
-                sort_flag = false;
-                open->pop_front();
-            }
-            ++it;
-        }
-        ROS_INFO_STREAM("Reached here!");
-        if (sort_flag) {
+        if (has_nullptr_in_close(close)) {
             close->sort(Comp); //TODO: bug
-//            sort(close->begin(), close->end(), Comp);
             ROS_INFO_STREAM("end sort");
         }
-        ROS_WARN_STREAM("Starting output close list");
-        it = ++close->begin();
-        while (it != close->end()) {
-            if (it->PtrToNode) {
-                ROS_WARN_STREAM((it->PtrToNode->location_x) << (it->PtrToNode->location_y) <<
-                                                            (it->PtrToNode->flag));
-            } else {
-                ROS_WARN_STREAM("NULL PIONTER");
-            }
-            ++it;
-        }
-
-    } else
-        open->pop_front();
+        output_close_list(close);
+    }
 }
 
 // 不断将未探索点加入探索列表，最终得到路径
@@ -243,8 +248,8 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
         int length = 8;
 
         if (open == NULL || ++i > length) {
-            ROS_INFO_STREAM("completed segment path.");
-            ROS_INFO_STREAM(i);
+//            ROS_INFO_STREAM("completed segment path.");
+//            ROS_INFO_STREAM(i);
             break;
         }
     }
