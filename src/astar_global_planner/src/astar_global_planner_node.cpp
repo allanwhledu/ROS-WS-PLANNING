@@ -65,6 +65,7 @@ grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null
 
 void print_open_planner_group_vec(vector <tree<planner_group>::iterator> &open_planner_group_vec) {
     for (int i = 0; i < open_planner_group_vec.size(); ++i) {
+
         ROS_WARN_STREAM("feedback: " << open_planner_group_vec.at(i)->feedback);
     }
 }
@@ -153,6 +154,7 @@ int main(int argc, char **argv) {
 //                    ROS_INFO_STREAM("planners init failed.");
                     if (!init_planner_group->planners.at(permt[j][idx])->plan.poses.empty()) {
                         nav_plans[idx].publish(init_planner_group->planners.at(permt[j][idx])->plan); //TODO check 下标
+                        init_planner_group->add_feedback_from_path(new_path, permti[i]);
                         init_planner_group->pathes.push_back(init_planner_group->planners.at(permt[j][idx])->plan);
                         init_planner_group->print_tpath();
                         ROS_INFO_STREAM("Got init_plan_segment in main.");
