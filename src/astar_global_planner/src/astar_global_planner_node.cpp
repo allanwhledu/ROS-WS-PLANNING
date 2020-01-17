@@ -36,7 +36,7 @@ grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null
     newpg = last_leaf->grow_new_leaf();
 //    ROS_INFO_STREAM("newpg got in grow tree.");
 
-//    newpg->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
+    newpg->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
     //TODO: set_planner_group把startpoint给改了，改成currentpoint的位置
     newpg->set_planner_group(num_robots); //TODO 这地方卡住了
     if (newpg->planners.empty())
