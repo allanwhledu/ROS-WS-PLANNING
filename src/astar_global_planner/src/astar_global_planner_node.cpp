@@ -30,13 +30,14 @@ struct leaf {
 
 vector<int> startpoint_x(num_robots), startpoint_y(num_robots), endpoint_x(num_robots), endpoint_y(num_robots);
 
-tree<planner_group>::iterator
+tree<planner_group>::iterator // 深拷贝
 grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null_path, vector<int> &permti) {
     tree<planner_group>::iterator newpg;
     newpg = last_leaf->grow_new_leaf();
 //    ROS_INFO_STREAM("newpg got in grow tree.");
 
-    newpg->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
+//    newpg->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
+    //TODO: set_planner_group把startpoint给改了，改成currentpoint的位置
     newpg->set_planner_group(num_robots); //TODO 这地方卡住了
     if (newpg->planners.empty())
         ROS_INFO_STREAM("planners init failed.");
@@ -115,10 +116,7 @@ int main(int argc, char **argv) {
         nav_plan = n.advertise<nav_msgs::Path>("astar_path_robot_" + intToString(l), 1);
         nav_plans.push_back(nav_plan);
     }
-
     map_sub = n.subscribe<nav_msgs::OccupancyGrid>("/map", 1, &center_map_Callback);
-
-
     // wait for mapmsg.
     while (ros::ok) {
         ros::spinOnce();
@@ -166,7 +164,7 @@ int main(int argc, char **argv) {
         ROS_INFO_STREAM("INIT DONE");
 
 
-        for (int j = 0; j < permt.size(); ++j) {
+        for (int j = 0; j < permt.size(); ++j) {// 对每一个init_planner_group做一次树的扩展
             vector <tree<planner_group>::iterator> open_planner_group_vec;
             for (int k = 0; k < permt.size(); ++k) {
                 open_planner_group_vec.push_back(init_pg_locs.at(k));
@@ -174,18 +172,32 @@ int main(int argc, char **argv) {
             tree<planner_group>::iterator last_planner_group = init_pg_locs.at(j);
             ROS_WARN_STREAM("find the right init_planner_group.");
 
+            //开始纵深扩展，树已经
+
+            //             top
+            //  init1(op0)     init2(op1)
+
+            //接下来准备：
+            //             top
+            //  init1(op0)     init2(op1)
+            //  op2   op3      op4   op5
+            // .....(op6,7,8,9)..........
+            // ..........................
+            // ..........................
+
             for (int idx = 0; idx < layer_depth; ++idx) {
                 //TODO: sort open_planner_group_vec by feedback
                 sort_open_planner_group_vec(open_planner_group_vec);
                 last_planner_group = open_planner_group_vec.at(0); //last_planner_group is already sorted
 
-                // test new leaf.
+                // 从feedback最小的一个pg开始扩展
                 vector <nav_msgs::Path> nullpaths;
                 for (int i = 0; i < permt.size(); ++i) {
                     open_planner_group_vec.push_back(grow_tree(last_planner_group, nullpaths, permt[i]));
 //                    ROS_WARN_STREAM("grow_tree complete.");
-
+                    //每长出一个sub pg，就放入open_planner_group_vec的末尾，并插入到tree
                     test.tr->append_child(last_planner_group, open_planner_group_vec.back());//TODO: ?
+                    //新长出来sub pg遍历其planner进行publish
                     for (int k = 0; k < num_robots; ++k) {
                         nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
                     }
@@ -195,8 +207,9 @@ int main(int argc, char **argv) {
                 ROS_WARN_STREAM(
                         "current node: middle " << idx << ", outer: " << j);
             }
+            //至此，指定层数的扩展已经进行完毕
 
-
+            //取feedback最小的一个pg，试探是否有planner已经到达终点，如果全部到达则发布path信息
             sort_open_planner_group_vec(open_planner_group_vec);
             last_planner_group = open_planner_group_vec.at(0); //last_planner_group is already sorted
 
@@ -204,8 +217,6 @@ int main(int argc, char **argv) {
             bool single_arrived = false;
             for (int idx = 0; idx < num_robots; ++idx) {
                 all_arrived &= last_planner_group->planners.at(permt[j][idx])->arrived;
-//                if (last_planner_group->planners.at(permt[j][idx])->arrived)
-//                    break;
                 single_arrived |= last_planner_group->planners.at(permt[j][idx])->arrived;
             }
             if (all_arrived) {
@@ -215,7 +226,6 @@ int main(int argc, char **argv) {
             }
             if (single_arrived) {
                 ROS_WARN_STREAM("SINGLE ARRIVED AND EXIT");
-//                return 0;
             }
         }
 

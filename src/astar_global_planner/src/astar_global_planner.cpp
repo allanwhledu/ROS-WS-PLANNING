@@ -328,12 +328,10 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
             plan.poses.push_back(point);
             forstepcount = forstepcount->parent;
         }
-//
 //        if (forstepcount->flag == STARTPOINT)
 //            ROS_INFO_STREAM("reaching start.");
     }
     // here is the startpoint.
-
     path += ("x" + intToString(forstepcount->location_x) + "y" + intToString(forstepcount->location_y) + " ::flag: "
              + intToString(forstepcount->flag) + ",  ");
 
