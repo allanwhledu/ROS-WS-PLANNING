@@ -139,7 +139,7 @@ public:
 
     int loop_count;
 
-    bool arrived;
+    bool arrived = false;
 
     int feedback;
     int prior;
