@@ -32,7 +32,6 @@
   <component name="ChangeListManager">
     <list default="true" id="4da7b6d7-a2fa-4e81-aee4-3facd065b870" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/src/astar_global_planner/cmake-build-debug/" />
     <option name="SHOW_DIALOG" value="false" />
@@ -68,8 +67,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="194">
-                  <caret line="143" column="67" lean-forward="true" selection-start-line="143" selection-start-column="67" selection-end-line="143" selection-end-column="67" />
+                <state relative-caret-position="218">
+                  <caret line="74" column="41" lean-forward="true" selection-start-line="74" selection-start-column="41" selection-end-line="74" selection-end-column="41" />
                 </state>
               </provider>
             </entry>
@@ -81,8 +80,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-208">
-                  <caret line="83" column="43" lean-forward="true" selection-start-line="83" selection-start-column="43" selection-end-line="83" selection-end-column="43" />
+                <state relative-caret-position="-375">
+                  <caret line="33" column="16" selection-start-line="33" selection-start-column="8" selection-end-line="33" selection-end-column="16" />
                 </state>
               </provider>
             </entry>
@@ -93,36 +92,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>PtrToNode</find>
-      <find>Node</find>
-      <find>Node {</find>
-      <find>PtrToNode</find>
-      <find>-&gt;</find>
-      <find>sort</find>
-      <find>Comp</find>
-      <find>openlist</find>
-      <find>ARRIVED</find>
-      <find>output_nodelist</find>
-      <find>close_list_str</find>
-      <find>there</find>
-      <find>NULL</find>
+      <find>has_nullptr_in_close</find>
       <find>NULL p</find>
-      <find>parents:</find>
-      <find>&lt;&lt;</find>
+      <find>开始</find>
+      <find>FindDestinnation</find>
+      <find>setTarget</find>
       <find>path +=</find>
-      <find>grow</find>
-      <find>leaf</find>
       <find>flag</find>
-      <find>3</find>
+      <find>planner_group</find>
+      <find>planner_group</find>
+      <find>publish</find>
+      <find>grow_tree</find>
+      <find>grow</find>
+      <find>publi</find>
+      <find>grow_new_leaf</find>
+      <find>grow_new</find>
+      <find>get_start_and_goal</find>
+      <find>startpoint_x</find>
+      <find>set_planner_group</find>
+      <find>pose</find>
+      <find>tpath.</find>
+      <find>goal</find>
+      <find>tpath.pus</find>
+      <find>tpoint</find>
       <find>tpath</find>
-      <find>has</find>
-      <find>path</find>
-      <find>infor</find>
-      <find>info</find>
-      <find>informa</find>
-      <find>debug</find>
-      <find>debu</find>
-      <find>imformation</find>
+      <find>only</find>
+      <find>Tpoint</find>
+      <find>init</find>
+      <find>add_feedback_from_path</find>
+      <find>feedback</find>
+      <find>print_open_planner_group_vec</find>
     </findStrings>
     <replaceStrings>
       <replace>.</replace>
@@ -131,6 +130,7 @@
       <replace>nodelist_str</replace>
       <replace>+</replace>
       <replace>information</replace>
+      <replace>no_nullptr_in_close</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -257,7 +257,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="20486000" />
+    <option name="totallyTimeSpent" value="21093000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="57" y="23" width="1223" height="777" extended-state="6" />
@@ -321,13 +321,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-208">
-          <caret line="83" column="43" lean-forward="true" selection-start-line="83" selection-start-column="43" selection-end-line="83" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1136">
@@ -335,10 +328,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-375">
+          <caret line="33" column="16" selection-start-line="33" selection-start-column="8" selection-end-line="33" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="143" column="67" lean-forward="true" selection-start-line="143" selection-start-column="67" selection-end-line="143" selection-end-column="67" />
+        <state relative-caret-position="218">
+          <caret line="74" column="41" lean-forward="true" selection-start-line="74" selection-start-column="41" selection-end-line="74" selection-end-column="41" />
         </state>
       </provider>
     </entry>
