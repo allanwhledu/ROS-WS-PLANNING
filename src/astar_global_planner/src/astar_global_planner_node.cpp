@@ -220,23 +220,23 @@ int main(int argc, char **argv) {
 
 
                 //取feedback最小的一个pg，试探是否有planner已经到达终点，如果全部到达则发布path信息
-                sort_open_planner_group_vec(open_planner_group_vec);
-                last_planner_group = open_planner_group_vec.at(0); //last_planner_group is already sorted
-                std::cout << "** smallest feedback: " << last_planner_group->feedback << std::endl;
-                bool all_arrived = true;
-                bool single_arrived = false;
-                for (int idx = 0; idx < num_robots; ++idx) {
-                    all_arrived &= last_planner_group->planners.at(permt[j][idx])->arrived;
-                    single_arrived |= last_planner_group->planners.at(permt[j][idx])->arrived;
-                }
-                if (all_arrived) {
-                    ROS_WARN_STREAM("ALL ARRIVED AND EXIT");
-                    vector <nav_msgs::Path> fullpaths(num_robots); //TODO: init?
-                    (*last_planner_group).publish_path(fullpaths, last_planner_group, nav_plans);
-                    return 0;
-                } else if (single_arrived) {
-                    ROS_WARN_STREAM("SINGLE ARRIVED AND EXIT");
-                }
+//                sort_open_planner_group_vec(open_planner_group_vec);
+//                last_planner_group = open_planner_group_vec.at(0); //last_planner_group is already sorted
+//                std::cout << "** smallest feedback: " << last_planner_group->feedback << std::endl;
+//                bool all_arrived = true;
+//                bool single_arrived = false;
+//                for (int idx = 0; idx < num_robots; ++idx) {
+//                    all_arrived &= last_planner_group->planners.at(permt[j][idx])->arrived;
+//                    single_arrived |= last_planner_group->planners.at(permt[j][idx])->arrived;
+//                }
+//                if (all_arrived) {
+//                    ROS_WARN_STREAM("ALL ARRIVED AND EXIT");
+//                    vector <nav_msgs::Path> fullpaths(num_robots); //TODO: init?
+//                    (*last_planner_group).publish_path(fullpaths, last_planner_group, nav_plans);
+//                    return 0;
+//                } else if (single_arrived) {
+//                    ROS_WARN_STREAM("SINGLE ARRIVED AND EXIT");
+//                }
             }
             //至此，指定层数的扩展已经进行完毕
         }
