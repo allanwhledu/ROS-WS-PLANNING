@@ -205,8 +205,8 @@ int main(int argc, char **argv) {
                     for (int k = 0; k < num_robots; ++k) {
                         nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
                         AStartFindPath *aStartFindPath = open_planner_group_vec.back()->planners.at(permt[i][k]);
-                        all_arrived &= (aStartFindPath->x == aStartFindPath->startpoint_x) &&
-                                       (aStartFindPath->y == aStartFindPath->startpoint_y);
+                        all_arrived &= (aStartFindPath->x == aStartFindPath->endpoint_x) &&
+                                       (aStartFindPath->y == aStartFindPath->endpoint_y);
                     }
                     if (all_arrived) {
                         ROS_WARN_STREAM("ALL ARRIVED AND EXIT");
@@ -219,7 +219,7 @@ int main(int argc, char **argv) {
                         "tree size: " << test.tr->size() << ", tree depth: " << test.tr->depth(last_planner_group));
                 ROS_WARN_STREAM(
                         "current node: middle " << idx << ", outer: " << j);
-
+                ROS_WARN_STREAM("还是没有能逃过");
 
                 //取feedback最小的一个pg，试探是否有planner已经到达终点，如果全部到达则发布path信息
                 sort_open_planner_group_vec(open_planner_group_vec);
@@ -228,8 +228,11 @@ int main(int argc, char **argv) {
                 bool all_arrived = true;
                 bool single_arrived = false;
                 for (int idx = 0; idx < num_robots; ++idx) {
-                    all_arrived &= last_planner_group->planners.at(permt[j][idx])->arrived;
-                    single_arrived |= last_planner_group->planners.at(permt[j][idx])->arrived;
+                    AStartFindPath *aStartFindPath = last_planner_group->planners.at(permt[i][k]);
+                    all_arrived &= (aStartFindPath->x == aStartFindPath->endpoint_x) &&
+                                   (aStartFindPath->y == aStartFindPath->endpoint_y);
+                    single_arrived |= (aStartFindPath->x == aStartFindPath->endpoint_x) &&
+                                      (aStartFindPath->y == aStartFindPath->endpoint_y);
                 }
                 if (all_arrived) {
                     ROS_WARN_STREAM("ALL ARRIVED AND EXIT");
