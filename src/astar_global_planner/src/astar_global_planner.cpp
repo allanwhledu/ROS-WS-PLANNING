@@ -128,7 +128,7 @@ void AStartFindPath::AddNode2Open(std::list <ListNode> *openlist, Node *node) {
     opennode.PtrToNode = node;
 
     openlist->push_front(opennode);
-    sort()
+//    sort()
     openlist->sort(Comp);
 }
 
