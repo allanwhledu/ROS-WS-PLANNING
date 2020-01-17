@@ -204,7 +204,7 @@ int main(int argc, char **argv) {
                     bool all_arrived = true;
                     for (int k = 0; k < num_robots; ++k) {
                         nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
-                        all_arrived &= last_planner_group->planners.at(permt[j][idx])->arrived;
+                        all_arrived &= last_planner_group->planners.at(permt[i][k])->arrived;
                     }
                     if (all_arrived) {
                         ROS_WARN_STREAM("ALL ARRIVED AND EXIT");
