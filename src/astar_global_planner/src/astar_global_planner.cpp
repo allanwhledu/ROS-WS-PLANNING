@@ -231,7 +231,8 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::
                 m_node[new_y][new_x].parent = &m_node[center_y][center_x];
                 m_node[new_y][new_x].value_g = m_node[center_y][center_x].value_g + 10;
                 AddNode2Open(open, &m_node[new_y][new_x]);
-                ROS_INFO_STREAM("destination already got in openlist.");
+                ROS_INFO_STREAM("destination already got in openlist." << m_node[new_y][new_x].location_x
+                                                                       << m_node[new_y][new_x].location_y);
                 arrived = true;
                 return true;
             }
