@@ -49,8 +49,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.h">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="292">
-                  <caret line="70" column="20" selection-start-line="70" selection-start-column="20" selection-end-line="70" selection-end-column="20" />
+                <state relative-caret-position="169">
+                  <caret line="75" column="23" selection-start-line="75" selection-start-column="19" selection-end-line="75" selection-end-column="23" />
                 </state>
               </provider>
             </entry>
@@ -58,7 +58,7 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1136">
+                <state relative-caret-position="1050">
                   <caret line="358" column="32" lean-forward="true" selection-start-line="358" selection-start-column="32" selection-end-line="358" selection-end-column="32" />
                 </state>
               </provider>
@@ -67,8 +67,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="288">
-                  <caret line="156" column="88" lean-forward="true" selection-start-line="156" selection-start-column="88" selection-end-line="156" selection-end-column="88" />
+                <state relative-caret-position="313">
+                  <caret line="162" column="13" lean-forward="true" selection-start-line="162" selection-start-column="13" selection-end-line="162" selection-end-column="13" />
                 </state>
               </provider>
             </entry>
@@ -80,8 +80,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="338">
-                  <caret line="45" column="31" selection-start-line="45" selection-start-column="9" selection-end-line="45" selection-end-column="31" />
+                <state relative-caret-position="246">
+                  <caret line="31" column="37" selection-start-line="31" selection-start-column="29" selection-end-line="31" selection-end-column="37" />
                 </state>
               </provider>
             </entry>
@@ -92,7 +92,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>has_nullptr_in_close</find>
       <find>NULL p</find>
       <find>开始</find>
       <find>FindDestinnation</find>
@@ -122,6 +121,7 @@
       <find>feedback</find>
       <find>print_open_planner_group_vec</find>
       <find>add_feedback_from_path</find>
+      <find>As</find>
     </findStrings>
     <replaceStrings>
       <replace>.</replace>
@@ -257,7 +257,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="21426000" />
+    <option name="totallyTimeSpent" value="21602000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="57" y="23" width="1223" height="777" extended-state="6" />
@@ -314,31 +314,31 @@
     <state x="976" y="365" width="672" height="676" key="search.everywhere.popup/65.24.2495.1416@65.24.2495.1416" timestamp="1579167918021" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="246">
+          <caret line="31" column="37" selection-start-line="31" selection-start-column="29" selection-end-line="31" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="70" column="20" selection-start-line="70" selection-start-column="20" selection-end-line="70" selection-end-column="20" />
+        <state relative-caret-position="169">
+          <caret line="75" column="23" selection-start-line="75" selection-start-column="19" selection-end-line="75" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1136">
+        <state relative-caret-position="1050">
           <caret line="358" column="32" lean-forward="true" selection-start-line="358" selection-start-column="32" selection-end-line="358" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
-          <caret line="45" column="31" selection-start-line="45" selection-start-column="9" selection-end-line="45" selection-end-column="31" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="156" column="88" lean-forward="true" selection-start-line="156" selection-start-column="88" selection-end-line="156" selection-end-column="88" />
+        <state relative-caret-position="313">
+          <caret line="162" column="13" lean-forward="true" selection-start-line="162" selection-start-column="13" selection-end-line="162" selection-end-column="13" />
         </state>
       </provider>
     </entry>
