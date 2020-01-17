@@ -209,7 +209,7 @@ int main(int argc, char **argv) {
                 single_arrived |= last_planner_group->planners.at(permt[j][idx])->arrived;
             }
             if (all_arrived) {
-                ROS_WARN_STREAM("ARRIVED AND EXIT");
+                ROS_WARN_STREAM("ALL ARRIVED AND EXIT");
                 vector <nav_msgs::Path> fullpaths(num_robots); //TODO: init?
                 (*last_planner_group).publish_path(fullpaths, last_planner_group, nav_plans);
             }

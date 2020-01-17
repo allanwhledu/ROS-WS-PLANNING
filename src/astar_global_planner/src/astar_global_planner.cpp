@@ -20,15 +20,14 @@ extern bool Comp(list<ListNode>::iterator &first, list<ListNode>::iterator &seco
 
 extern bool Comp(ListNode first, ListNode second) {
     if (!first.PtrToNode || !second.PtrToNode) {
-        ROS_WARN_STREAM("There is a NULL pointer");
+        std::cout << ("There is a NULL pointer") << std::endl;
         return false;
     }
     if (first.PtrToNode->value_f >= second.PtrToNode->value_f) //TODO 这里是什么原因，会使得这里没有flag，flag是空的？
-    {
         return (first.PtrToNode->value_h < second.PtrToNode->value_h);
-    } else {
+    else
         return true;
-    }
+
 }
 
 // 结构体和类的初始化
@@ -119,7 +118,7 @@ bool AStartFindPath::IsInCloseList(int x, int y) {
 }
 
 // 与维护列表有关的子函数
-void AStartFindPath::AddNode2Open(std::list <ListNode> *openlist, Node *node) {
+void AStartFindPath::AddNode2Open(std::list <ListNode> *open, Node *node) {
     if (node->flag != STARTPOINT) {
         node->flag = INOPEN;
     }
@@ -127,26 +126,9 @@ void AStartFindPath::AddNode2Open(std::list <ListNode> *openlist, Node *node) {
     ListNode opennode;
     opennode.PtrToNode = node;
 
-    openlist->push_front(opennode);
+    open->push_front(opennode);
 //    sort()
-    openlist->sort(Comp);
-}
-
-void output_close_list(std::list <ListNode> *close) {
-    string close_list_str = "Starting output close list: ";
-    auto it = ++close->begin();
-    while (it != close->end()) {
-        if (it->PtrToNode) {
-            close_list_str +=
-                    "x" + intToString(it->PtrToNode->location_x) + "y" + intToString(it->PtrToNode->location_y) +
-                    "f" + intToString(it->PtrToNode->value_f) + "h" + intToString(it->PtrToNode->value_h) +
-                    "flag" + intToString(it->PtrToNode->flag) + ", ";
-        } else {
-            close_list_str += "NULL PIONTER, ";
-        }
-        ++it;
-    }
-    ROS_WARN_STREAM(close_list_str);
+    open->sort(Comp);
 }
 
 bool has_nullptr_in_close(std::list <ListNode> *close) {
@@ -161,6 +143,41 @@ bool has_nullptr_in_close(std::list <ListNode> *close) {
     }
     return sort_flag;
 }
+
+void output_nodelist(std::list <ListNode> *close, bool isopen) {
+    string open_or_close = isopen ? "open" : "close";
+    string nodelist_str = "Starting output " + open_or_close + " list: ";
+    auto it = ++close->begin();
+    while (it != close->end()) {
+        if (it->PtrToNode) {
+            nodelist_str +=
+                    "f" + intToString(it->PtrToNode->value_f) + "h" + intToString(it->PtrToNode->value_h) +
+                    "x" + intToString(it->PtrToNode->location_x) + "y" + intToString(it->PtrToNode->location_y) +
+                    " parent x" + intToString(it->PtrToNode->parent->location_x) + "y" +
+                    intToString(it->PtrToNode->parent->location_y) +
+                    " flag" + intToString(it->PtrToNode->flag) + ", ";
+        } else {
+            nodelist_str += "NULL PIONTER, ";
+        }
+        ++it;
+    }
+    ROS_WARN_STREAM(nodelist_str);
+
+/*
+    ROS_INFO_STREAM("now points in open: " << open->size());
+    for (list<ListNode>::iterator it = open->begin(); it != open->end(); ++it)
+        if (it->PtrToNode->parent != NULL)
+            ROS_INFO_STREAM(
+                    it->PtrToNode->location_x << " " << it->PtrToNode->location_y
+                                              << " f" << it->PtrToNode->value_f
+                                              << " h" << it->PtrToNode->value_h
+                                              << " g" << it->PtrToNode->value_g
+                                              << " flag" << it->PtrToNode->flag
+                                              << " parent-> " << it->PtrToNode->parent->location_x << " "
+                                              << it->PtrToNode->parent->location_y);
+*/
+}
+
 
 void AStartFindPath::AddNode2Close(std::list <ListNode> *close, std::list <ListNode> *open) {
     if (!open->size() || !open->front().PtrToNode) {
@@ -183,7 +200,7 @@ void AStartFindPath::AddNode2Close(std::list <ListNode> *close, std::list <ListN
             close->sort(Comp); //TODO: bug
             ROS_INFO_STREAM("end sort");
         }
-        output_close_list(close);
+        output_nodelist(close, false);
     }
 }
 
@@ -193,15 +210,7 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::
     int center_x = open->front().PtrToNode->location_x;
     int center_y = open->front().PtrToNode->location_y;
 
-    ROS_INFO_STREAM("now points in open: " << open->size());
-    for (list<ListNode>::iterator it = open->begin(); it != open->end(); ++it)
-        if (it->PtrToNode->parent != NULL)
-            ROS_INFO_STREAM(
-                    it->PtrToNode->location_x << " " << it->PtrToNode->location_y << " flag" << it->PtrToNode->flag
-                                              << " h" << it->PtrToNode->value_h << " g" << it->PtrToNode->value_g
-                                              << " f" << it->PtrToNode->value_f << " parent-> "
-                                              << it->PtrToNode->parent->location_x << " "
-                                              << it->PtrToNode->parent->location_y);
+    output_nodelist(open, true);
 
     // 利用传入的center xy信息开始check
     AddNode2Close(close, open);
@@ -296,13 +305,14 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
     forstepcount = &m_node[closeAndopen->front().PtrToNode->location_y][closeAndopen->front().PtrToNode->location_x];
 
     plan.header.frame_id = plan.header.frame_id = "odom";
+    string path = "path: ";
     while (forstepcount->flag != STARTPOINT) {
-        ROS_INFO_STREAM("point:" << " " << forstepcount->location_x << " " << forstepcount->location_y << " flag: "
-                                 << forstepcount->flag);
+        path += "x" + forstepcount->location_x + "y" + forstepcount->location_y + " ::flag: "
+                + forstepcount->flag + ",  ";
 
         if (forstepcount->parent != NULL)
-            ROS_INFO_STREAM(
-                    "parents:" << " " << forstepcount->parent->location_x << " " << forstepcount->parent->location_y);
+            path += "x" + forstepcount->parent->location_x + "y" + forstepcount->parent->location_y + " ::flag: "
+                    + forstepcount->parent->flag + ",  ";
 
         geometry_msgs::PoseStamped point;
         point.pose.position.x = forstepcount->location_x;
@@ -317,14 +327,16 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
             plan.poses.push_back(point);
             forstepcount = forstepcount->parent;
         }
-
-
-        if (forstepcount->flag == STARTPOINT)
-            ROS_INFO_STREAM("reaching start.");
+//
+//        if (forstepcount->flag == STARTPOINT)
+//            ROS_INFO_STREAM("reaching start.");
     }
     // here is the startpoint.
-    ROS_INFO_STREAM("point:" << " " << forstepcount->location_x << " " << forstepcount->location_y << " flag: "
-                             << forstepcount->flag);
+
+    path += "x" + forstepcount->location_x + "y" + forstepcount->location_y + " ::flag: "
+            + forstepcount->flag + ",  ";
+
+    ROS_INFO_STREAM(path);
 
     geometry_msgs::PoseStamped point;
     point.pose.position.x = forstepcount->location_x;
