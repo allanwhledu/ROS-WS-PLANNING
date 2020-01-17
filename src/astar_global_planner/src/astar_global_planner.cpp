@@ -18,7 +18,7 @@ extern bool Comp(list<ListNode>::iterator &first, list<ListNode>::iterator &seco
     }
 }*/
 
-extern bool Comp(ListNode &first, ListNode &second) {
+extern bool Comp(ListNode first, ListNode second) {
     if (!first.PtrToNode || !second.PtrToNode) {
         ROS_WARN_STREAM("There is a NULL pointer");
         return false;
