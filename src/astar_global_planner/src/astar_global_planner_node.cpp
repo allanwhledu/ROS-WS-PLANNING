@@ -201,10 +201,17 @@ int main(int argc, char **argv) {
                     //每长出一个sub pg，就放入open_planner_group_vec的末尾，并插入到tree
                     test.tr->append_child(last_planner_group, open_planner_group_vec.back());//TODO: ?
                     //新长出来sub pg遍历其planner进行publish
+                    bool all_arrived = true;
                     for (int k = 0; k < num_robots; ++k) {
                         nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
+                        all_arrived &= last_planner_group->planners.at(permt[j][idx])->arrived;
                     }
-                    if
+                    if (all_arrived) {
+                        ROS_WARN_STREAM("ALL ARRIVED AND EXIT");
+                        vector <nav_msgs::Path> fullpaths(num_robots); //TODO: init?
+                        (*last_planner_group).publish_path(fullpaths, last_planner_group, nav_plans);
+                        return 0;
+                    }
                 }
                 ROS_WARN_STREAM(
                         "tree size: " << test.tr->size() << ", tree depth: " << test.tr->depth(last_planner_group));
@@ -226,6 +233,7 @@ int main(int argc, char **argv) {
                     ROS_WARN_STREAM("ALL ARRIVED AND EXIT");
                     vector <nav_msgs::Path> fullpaths(num_robots); //TODO: init?
                     (*last_planner_group).publish_path(fullpaths, last_planner_group, nav_plans);
+                    return 0;
                 } else if (single_arrived) {
                     ROS_WARN_STREAM("SINGLE ARRIVED AND EXIT");
                 }
