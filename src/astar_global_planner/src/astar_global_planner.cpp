@@ -308,12 +308,12 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
     plan.header.frame_id = plan.header.frame_id = "odom";
     string path = "path: ";
     while (forstepcount->flag != STARTPOINT) {
-        path += ("x" + forstepcount->location_x + "y" + forstepcount->location_y + " ::flag: "
-                 + forstepcount->flag + ",  ");
+        path += ("x" + intToString(forstepcount->location_x) + "y" + intToString(forstepcount->location_y) + " ::flag: "
+                 + intToString(forstepcount->flag) + ",  ");
 
         if (forstepcount->parent != NULL)
-            path += ("x" + forstepcount->parent->location_x + "y" + forstepcount->parent->location_y + " ::flag: "
-                     + forstepcount->parent->flag + ",  ");
+            path += ("x" + intToString(forstepcount->parent->location_x) + "y" + intToString(forstepcount->parent->location_y) + " ::flag: "
+                     + intToString(forstepcount->parent->flag) + ",  ");
 
         geometry_msgs::PoseStamped point;
         point.pose.position.x = forstepcount->location_x;
@@ -334,8 +334,8 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
     }
     // here is the startpoint.
 
-    path += ("x" + forstepcount->location_x + "y" + forstepcount->location_y + " ::flag: "
-             + forstepcount->flag + ",  ");
+    path += ("x" + intToString(forstepcount->location_x) + "y" + intToString(forstepcount->location_y) + " ::flag: "
+             + intToString(forstepcount->flag) + ",  ");
 
     ROS_INFO_STREAM(path);
 
