@@ -98,19 +98,21 @@ public:
     void publish_path(vector <nav_msgs::Path> &fullpaths, tree<planner_group>::iterator &last_planner_group,
                       vector <ros::Publisher> &nav_plans) {
         for (int i = 0; i < (*last_planner_group).planners.size(); ++i) {
+            ROS_WARN_STREAM("planners size: "<<(*last_planner_group).planners.size());
             nav_msgs::Path fullpath = fullpaths.at(i);
             fullpath.header.frame_id = "odom";
             int dep = 0;
-            while (last_planner_group->parent_loc != last_planner_group->top_loc) {
-                reverse(last_planner_group->pathes.at(i).poses.begin(), last_planner_group->pathes.at(i).poses.end());
-                fullpath.poses.insert(fullpath.poses.end(), last_planner_group->pathes.at(i).poses.begin(),
-                                      last_planner_group->pathes.at(i).poses.end());
-                last_planner_group = last_planner_group->parent_loc;
+            tree<planner_group>::iterator pointer_group = last_planner_group;
+            while (pointer_group->parent_loc != pointer_group->top_loc) {
+                reverse(pointer_group->pathes.at(i).poses.begin(), pointer_group->pathes.at(i).poses.end());
+                fullpath.poses.insert(fullpath.poses.end(), pointer_group->pathes.at(i).poses.begin(),
+                                      pointer_group->pathes.at(i).poses.end());
+                pointer_group = pointer_group->parent_loc;
                 dep++;
             }
-            reverse(last_planner_group->pathes.at(i).poses.begin(), last_planner_group->pathes.at(i).poses.end());
-            fullpath.poses.insert(fullpath.poses.end(), last_planner_group->pathes.at(i).poses.begin(),
-                                  last_planner_group->pathes.at(i).poses.end());
+            reverse(pointer_group->pathes.at(i).poses.begin(), pointer_group->pathes.at(i).poses.end());
+            fullpath.poses.insert(fullpath.poses.end(), pointer_group->pathes.at(i).poses.begin(),
+                                  pointer_group->pathes.at(i).poses.end());
             //                for(int i = 1; i < last_planner_group->pathes.size(); i++)
             //                {
             //                    fullpath.poses.insert(fullpath.poses.end(),last_planner_group->pathes.at(i).poses.begin(),last_planner_group->pathes.at(i).poses.end());
