@@ -21,7 +21,7 @@ extern bool Comp(list<ListNode>::iterator &first, list<ListNode>::iterator &seco
 
 extern bool Comp(ListNode first, ListNode second) {
     if (!first.PtrToNode || !second.PtrToNode) {
-        std::cout << ("There is a NULL pointer") << std::endl;
+//        std::cout << ("There is a NULL pointer") << std::endl;
         return false;
     }
     if (first.PtrToNode->value_f >= second.PtrToNode->value_f) //TODO 这里是什么原因，会使得这里没有flag，flag是空的？
@@ -132,7 +132,7 @@ void AStartFindPath::AddNode2Open(std::list <ListNode> *open, Node *node) {
     open->sort(Comp);
 }
 
-bool has_nullptr_in_close(std::list <ListNode> *close) {
+bool no_nullptr_in_close(std::list <ListNode> *close) {
     bool sort_flag = true;
     auto it = ++close->begin();
     while (it != close->end()) {
@@ -197,9 +197,9 @@ void AStartFindPath::AddNode2Close(std::list <ListNode> *close, std::list <ListN
         close->push_back(closenode);
     open->pop_front();
     if (!close->empty()) {
-        if (has_nullptr_in_close(close)) {
+        if (no_nullptr_in_close(close)) {
             close->sort(Comp); //TODO: bug
-            ROS_INFO_STREAM("end sort");
+//            ROS_INFO_STREAM("end sort");
         }
         output_nodelist(close, false);
     }
@@ -319,12 +319,12 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
         point.pose.position.x = forstepcount->location_x;
         point.pose.position.y = forstepcount->location_y;
 
-        ROS_INFO_STREAM("debug imformation1.");
+//        ROS_INFO_STREAM("debug information1.");
         if (forstepcount->parent == NULL) {
-            ROS_INFO_STREAM("debug imformation2.");
+//            ROS_INFO_STREAM("debug information2.");
             break;
         } else {
-            ROS_INFO_STREAM("debug imformation3.");
+//            ROS_INFO_STREAM("debug information3.");
             plan.poses.push_back(point);
             forstepcount = forstepcount->parent;
         }
@@ -376,7 +376,7 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
 //
 //        while(!(tempnode->location_x==last_endpoint_x && tempnode->location_y==last_endpoint_y))
 //        {
-//            ROS_INFO_STREAM("debug imformation3.");
+//            ROS_INFO_STREAM("debug information3.");
 //            plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
 //            plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
 //            ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
@@ -406,14 +406,14 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
 //
 //    while(tempnode->parent->flag!=STARTPOINT)
 //    {
-//        ROS_INFO_STREAM("debug imformation1.");
+//        ROS_INFO_STREAM("debug information1.");
 //        plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
 //        plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
 //        ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
 //
 //        tempnode=tempnode->parent;
 //    }
-//    ROS_INFO_STREAM("debug imformation.");
+//    ROS_INFO_STREAM("debug information.");
 //    plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
 //    plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
 //    ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
@@ -424,7 +424,7 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
 //    plan.poses[i].pose.position.y=startpoint_y*m_resolution;
 //    ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<m_node[startpoint_y][startpoint_x].flag<<" "<<m_node[startpoint_y][startpoint_x].value_f);
 
-    ROS_INFO_STREAM("path constructed.");
+//    ROS_INFO_STREAM("path constructed.");
 }
 
 // get map to planner class.
@@ -521,9 +521,9 @@ void AStartFindPath::setTarget() {
 
 
     // run algorithm.
-    ROS_INFO_STREAM("getting path...");
+//    ROS_INFO_STREAM("getting path...");
     FindDestinnation(openlist, closelist);
-    ROS_INFO_STREAM("has get path.");
+//    ROS_INFO_STREAM("has get path.");
 }
 
 void AStartFindPath::clear_tmpplan() {
