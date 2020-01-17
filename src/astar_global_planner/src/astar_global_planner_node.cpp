@@ -141,7 +141,7 @@ int main(int argc, char **argv) {
         // only init once
         if (!init_already) {
             for (int j = 0; j < permt.size(); ++j) {
-                tree<planner_group>::iterator init_planner_group = test.tr->child(test.top, 0);
+                tree<planner_group>::iterator init_planner_group = test.tr->child(test.top, j);
                 init_planner_group->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
                 init_planner_group->set_planner_group(num_robots);
 

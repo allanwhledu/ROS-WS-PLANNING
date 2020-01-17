@@ -81,6 +81,7 @@ public:
                 init_planner->endpoint_y = endpoint_y[i];
                 ROS_INFO_STREAM("got last endpoint.");
             } else {
+                init_planner->robot_id = i;
                 init_planner->startpoint_x = startpoint_x[i];
                 init_planner->startpoint_y = startpoint_y[i];
                 init_planner->endpoint_x = endpoint_x[i];
