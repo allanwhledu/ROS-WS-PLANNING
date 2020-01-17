@@ -233,7 +233,7 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::
                 AddNode2Open(open, &m_node[new_y][new_x]);
                 ROS_INFO_STREAM("destination already got in openlist." << m_node[new_y][new_x].location_x
                                                                        << m_node[new_y][new_x].location_y);
-                arrived = true;
+//                arrived = true;
                 return true;
             }
 
