@@ -228,7 +228,7 @@ int main(int argc, char **argv) {
                 bool all_arrived = true;
                 bool single_arrived = false;
                 for (int idx = 0; idx < num_robots; ++idx) {
-                    AStartFindPath *aStartFindPath = last_planner_group->planners.at(permt[i][k]);
+                    AStartFindPath *aStartFindPath = last_planner_group->planners.at(permt[j][idx]);
                     all_arrived &= (aStartFindPath->x == aStartFindPath->endpoint_x) &&
                                    (aStartFindPath->y == aStartFindPath->endpoint_y);
                     single_arrived |= (aStartFindPath->x == aStartFindPath->endpoint_x) &&
