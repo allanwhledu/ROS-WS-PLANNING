@@ -6,8 +6,9 @@ int m_height, m_width, m_resolution;
 
 int robots_start_end_points[][4] = {
         {1, 1, 7, 1},
+        {7, 1, 1, 1},
 //        {7, 1, 1, 3},
-        {7, 4, 1, 4},
+//        {7, 4, 1, 2},
 };
 int num_robots = 2;
 int layer_depth = 2;
@@ -89,11 +90,11 @@ int main(int argc, char **argv) {
         robots_idx_lst[m] = m;
     }
 
+    perm(robots_idx_lst, sizeof(robots_idx_lst) / sizeof(robots_idx_lst[0]), permt);
     multi_robot_astar_planner test;
     vector <tree<planner_group>::iterator> init_pg_locs = test.init_set_multi_robot_astar_planner(
-            num_robots);
+            permt.size());
     bool init_already = false;
-    perm(robots_idx_lst, sizeof(robots_idx_lst) / sizeof(robots_idx_lst[0]), permt);
 
 //    ros::param::get("~x_0",startpoint_x);
 //    ros::param::get("~y_0",startpoint_y);
@@ -141,7 +142,10 @@ int main(int argc, char **argv) {
 
         // only init once
         if (!init_already) {
+            ROS_INFO_STREAM("permt.size()" << permt.size());
+
             for (int j = 0; j < permt.size(); ++j) {
+                ROS_INFO_STREAM("INIT_PG IDX:" << j);
                 tree<planner_group>::iterator init_planner_group = test.tr->child(test.top, j);
                 init_planner_group->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
                 init_planner_group->set_planner_group(num_robots);
@@ -211,8 +215,9 @@ int main(int argc, char **argv) {
                         vector <nav_msgs::Path> fullpaths(num_robots); //TODO: init?
 
                         ROS_WARN_STREAM("OKOK");
-                        for (int i = 0; i < 20; i++) {
-                            (*open_planner_group_vec.back()).publish_path(fullpaths, open_planner_group_vec.back(), nav_plans);
+                        for (int i = 0; i < 1; i++) {
+                            (*open_planner_group_vec.back()).publish_path(fullpaths, open_planner_group_vec.back(),
+                                                                          nav_plans);
                             r.sleep();
                         }
                         return 0;

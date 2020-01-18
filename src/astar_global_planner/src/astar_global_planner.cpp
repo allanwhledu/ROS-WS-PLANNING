@@ -207,6 +207,7 @@ void AStartFindPath::AddNode2Close(std::list <ListNode> *close, std::list <ListN
 
 // 不断将未探索点加入探索列表，最终得到路径
 bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::list <ListNode> *close) {
+    printf("%d\n", open->front().PtrToNode);
     // 遍历openlist，并输出其中的所有点坐标
     int center_x = open->front().PtrToNode->location_x;
     int center_y = open->front().PtrToNode->location_y;
@@ -226,14 +227,13 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::
 
         if (new_x >= 0 && new_y >= 0 && new_y < m_height && new_x < m_width &&
             IsAvailable(new_x, new_y, m_node[center_y][center_x].value_g + 10)) {
-
+//            ROS_WARN_STREAM("IsAvailable" << i);
             if (m_node[new_y][new_x].flag == DESTINATION) {
                 m_node[new_y][new_x].parent = &m_node[center_y][center_x];
                 m_node[new_y][new_x].value_g = m_node[center_y][center_x].value_g + 10;
                 AddNode2Open(open, &m_node[new_y][new_x]);
                 ROS_INFO_STREAM("destination already got in openlist." << m_node[new_y][new_x].location_x
                                                                        << m_node[new_y][new_x].location_y);
-
                 return true;
             }
 
@@ -243,6 +243,7 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::
             m_node[new_y][new_x].value_f = m_node[new_y][new_x].value_g + m_node[new_y][new_x].value_h;
 
             // 加入到 openlist中
+//            ROS_WARN_STREAM("Add to openlist" << i);
 
 //            ROS_INFO_STREAM(
 //                    "add node " << m_node[new_y][new_x].location_x << "," << m_node[new_y][new_x].location_y << ","
@@ -259,7 +260,7 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::
 
     // 重排openlist
     IsChangeParent(open, center_x, center_y);
-
+    ROS_WARN_STREAM("Check_and_Put_to_Openlist FALSE!");
     return false;
 }
 
@@ -273,12 +274,13 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
     // circulate check...
     while (!Check_and_Put_to_Openlist(open, close)) {
         int length = 8;
-
-        if (open == NULL || ++i > length) {
+        if (!open->front().PtrToNode || !open->size() || !open || ++i > length) {
 //            ROS_INFO_STREAM("completed segment path.");
 //            ROS_INFO_STREAM(i);
+            printf("计算路径失敗！！%d\n", i);
             break;
         }
+        printf("#计算路径 %d\n", i - 1);
     }
     printf("计算路径成功！！\n");
 
@@ -289,6 +291,7 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
     closeAndopen = new std::list<ListNode>;
 
     closeAndopen->assign(openlist->begin(), openlist->end());
+
     for (list<ListNode>::iterator it = closelist->begin(); it != closelist->end(); ++it)
         closeAndopen->push_back(*it);
     closeAndopen->sort(Comp);
@@ -343,15 +346,20 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
     point.pose.position.y = forstepcount->location_y;
     plan.poses.push_back(point);
 
-    reverse(plan.poses.begin(), plan.poses.end());
+    reverse(plan.poses.begin(), plan.poses.end());//TODO 估计是这儿出了问题，后头把起点当终点了
 
     int path_length = 4;
     int path_length0 = plan.poses.size();
     if (path_length0 > path_length) {
         plan.poses.erase(plan.poses.end() - (path_length0 - path_length), plan.poses.end());
     }
-    if(plan.poses.back().pose.position.x == endpoint_x && plan.poses.back().pose.position.y == endpoint_y)
+
+    if (plan.poses.back().pose.position.x == endpoint_x && plan.poses.back().pose.position.y == endpoint_y)
         arrived = true;
+
+    printf("check arriv: curr%d%d start%d%d end%d%d des%d%d xy%d%d\n", plan.poses.back().pose.position.x,
+           plan.poses.back().pose.position.y, startpoint_x,
+           startpoint_y, endpoint_x, endpoint_y, des_x, des_y, x, y);
 
     // return tpath.
     Tpoint tpoint;
@@ -518,8 +526,8 @@ void AStartFindPath::setTarget() {
 
     // 2. change endpoint's flag.
     m_node[des_y][des_x].flag = DESTINATION;
-    endpoint_x = des_x;
-    endpoint_y = des_y;
+//    endpoint_x = des_x;
+//    endpoint_y = des_y;
 
 
     // run algorithm.
