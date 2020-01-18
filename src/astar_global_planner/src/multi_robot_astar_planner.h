@@ -86,7 +86,7 @@ public:
             }
             init_planner->endpoint_x = endpoint_x[i];
             init_planner->endpoint_y = endpoint_y[i];
-            ROS_INFO_STREAM("got destination." << init_planner->startpoint_x << init_planner->startpoint_y);
+            ROS_INFO_STREAM("got destination." << init_planner->endpoint_x << init_planner->endpoint_y);
 
             init_planner->group_ptr = this;
 
