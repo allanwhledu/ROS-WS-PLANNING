@@ -5,20 +5,6 @@ bool testhfile(int x) {
     return x == 1;
 }
 
-/*
-extern bool Comp(list<ListNode>::iterator &first, list<ListNode>::iterator &second) {
-    if (!first->PtrToNode || !second->PtrToNode) {
-        ROS_WARN_STREAM("There is a NULL pointer");
-        return false;
-    }
-    if (first->PtrToNode->value_f >= second->PtrToNode->value_f) //TODO 这里是什么原因，会使得这里没有flag，flag是空的？
-    {
-        return (first->PtrToNode->value_h < second->PtrToNode->value_h);
-    } else {
-        return true;
-    }
-}*/
-
 extern bool Comp(ListNode first, ListNode second) {
     if (!first.PtrToNode || !second.PtrToNode) {
 //        std::cout << ("There is a NULL pointer") << std::endl;
@@ -526,9 +512,8 @@ void AStartFindPath::setTarget() {
 
     // 2. change endpoint's flag.
     m_node[des_y][des_x].flag = DESTINATION;
-//    endpoint_x = des_x;
-//    endpoint_y = des_y;
-
+    endpoint_x = des_x;
+    endpoint_y = des_y;
 
     // run algorithm.
 //    ROS_INFO_STREAM("getting path...");

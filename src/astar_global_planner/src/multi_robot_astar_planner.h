@@ -66,7 +66,7 @@ public:
     }
 
 
-    void set_planner_group(int num_robots) {
+    void set_planner_group(int num_robots, vector<int> &permti) {
         for (int i = 0; i < num_robots; ++i) {
             AStartFindPath *init_planner;
             init_planner = new AStartFindPath;
@@ -77,16 +77,14 @@ public:
                 init_planner->robot_id = i;
                 init_planner->startpoint_x = (*parent_loc).pathes.at(i).poses.back().pose.position.x;
                 init_planner->startpoint_y = (*parent_loc).pathes.at(i).poses.back().pose.position.y;
-                init_planner->endpoint_x = endpoint_x[i];
-                init_planner->endpoint_y = endpoint_y[i];
-                ROS_INFO_STREAM("got last endpoint.");
+                ROS_INFO_STREAM("got last endpoint as now startpoint.");
             } else {
                 init_planner->robot_id = i;
-                init_planner->startpoint_x = startpoint_x[i];
-                init_planner->startpoint_y = startpoint_y[i];
-                init_planner->endpoint_x = endpoint_x[i];
-                init_planner->endpoint_y = endpoint_y[i];
+                init_planner->startpoint_x = startpoint_x[permti[i]];
+                init_planner->startpoint_y = startpoint_y[permti[i]];
             }
+            init_planner->endpoint_x = endpoint_x[permti[i]];
+            init_planner->endpoint_y = endpoint_y[permti[i]];
 
             init_planner->group_ptr = this;
 

@@ -39,7 +39,7 @@ grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null
 
     newpg->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
     //TODO: set_planner_group把startpoint给改了，改成currentpoint的位置
-    newpg->set_planner_group(num_robots); //TODO 这地方卡住了
+    newpg->set_planner_group(num_robots, permti); //TODO 这地方卡住了
     if (newpg->planners.empty())
         ROS_INFO_STREAM("planners init failed.");
 
@@ -148,7 +148,7 @@ int main(int argc, char **argv) {
                 ROS_INFO_STREAM("INIT_PG IDX:" << j);
                 tree<planner_group>::iterator init_planner_group = test.tr->child(test.top, j);
                 init_planner_group->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
-                init_planner_group->set_planner_group(num_robots);
+                init_planner_group->set_planner_group(num_robots, permt[j]);
 
                 init_pg_locs.push_back(init_planner_group);
                 for (int idx = 0; idx < num_robots; ++idx) {

@@ -31,13 +31,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4da7b6d7-a2fa-4e81-aee4-3facd065b870" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/astar_global_planner/map/lyf.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/astar_global_planner/map/prior (another copy).png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/astar_global_planner/map/prior (copy).png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/astar_global_planner/src/lyf.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/grid_map/src/lyf.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/astar_global_planner/map/prior.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/astar_global_planner/map/prior.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h" afterDir="false" />
@@ -50,8 +44,75 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
+  <component name="FileEditorManager">
+    <splitter split-orientation="horizontal" split-proportion="0.5859441">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1625">
+                  <caret line="125" column="27" selection-start-line="125" selection-start-column="27" selection-end-line="125" selection-end-column="27" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="6110">
+                  <caret line="470" column="23" selection-start-line="470" selection-start-column="23" selection-end-line="470" selection-end-column="23" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="290">
+                  <caret line="43" column="49" lean-forward="true" selection-start-line="43" selection-start-column="49" selection-end-line="43" selection-end-column="49" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="80">
+                  <caret line="68" column="26" selection-start-line="68" selection-start-column="9" selection-end-line="68" selection-end-column="26" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>reverse</find>
+      <find>GetPos</find>
+      <find>endpoint_y</find>
+      <find>endpoint_y =</find>
+      <find>permt</find>
+      <find>set_planner_group</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.cpp" />
+        <option value="$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h" />
+        <option value="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp" />
+      </list>
+    </option>
   </component>
   <component name="ProjectId" id="1WQUVMMy86B3qRkaqSO4TIvnJMF" />
   <component name="ProjectViewState">
@@ -64,6 +125,18 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
   </component>
   <component name="RunManager">
     <configuration name="Unnamed" type="CMakeRunConfiguration" factoryName="Application" nameIsGenerated="true" PASS_PARENT_ENVS_2="true" EXPLICIT_BUILD_TARGET_NAME="all">
@@ -100,6 +173,34 @@
       <workItem from="1579147469466" duration="59000" />
     </task>
     <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="2005000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="57" y="23" width="1223" height="777" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" weight="0.24978831" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Database Changes" order="8" />
+      <window_info anchor="bottom" id="Terminal" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="CMake" order="11" weight="0.329927" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+    </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -144,6 +245,29 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6110">
+          <caret line="470" column="23" selection-start-line="470" selection-start-column="23" selection-end-line="470" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="68" column="26" selection-start-line="68" selection-start-column="9" selection-end-line="68" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="43" column="49" lean-forward="true" selection-start-line="43" selection-start-column="49" selection-end-line="43" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
   </component>
   <component name="masterDetails">
     <states>
