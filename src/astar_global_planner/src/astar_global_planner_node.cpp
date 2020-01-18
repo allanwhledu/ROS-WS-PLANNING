@@ -61,7 +61,7 @@ grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null
         }
     }
     for (int i = 0; i < num_robots; ++i) {
-        newpg->pathes.push_back(newpg->planners.get_planner_by_robot_ID(i)->plan);
+        newpg->pathes.push_back(newpg->get_planner_by_robot_ID(i)->plan);
         newpg->print_tpath();
     }
     return newpg;
@@ -168,7 +168,7 @@ int main(int argc, char **argv) {
                     }
                 }
                 for (int idx = 0; idx < num_robots; ++idx) {
-                    init_planner_group->pathes.push_back(init_planner_group.get_planner_by_robot_ID(idx)->plan);
+                    init_planner_group->pathes.push_back(init_planner_group->get_planner_by_robot_ID(idx)->plan);
                     ROS_INFO_STREAM("Got init_plan_segment in main.");
                 }
                 init_planner_group->print_tpath();
