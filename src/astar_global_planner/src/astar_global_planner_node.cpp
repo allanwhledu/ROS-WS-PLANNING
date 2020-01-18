@@ -49,17 +49,20 @@ grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null
         newpg->planners.at(permti[i])->de_map_Callback(mapmsg);
 
         newpg->planners.at(permti[i])->setTarget();
+    }
 
-        if (!newpg->planners.at(permti[i])->plan.poses.empty()) {
-            nav_msgs::Path new_path = newpg->planners.at(permti[i])->plan;
+    // 让pathes还是按照 机器人ID（0，1...） 顺序
+    for (int i = 0; i < num_robots; ++i) {
+        if (!newpg->planners.at(i)->plan.poses.empty()) {
+            nav_msgs::Path new_path = newpg->planners.at(i)->plan;
             null_path.push_back(new_path);
-            (*newpg).add_feedback_from_path(new_path, permti[i]); //TODO: 是在这里吗？　还是应该在main函数里
-
-            newpg->pathes.push_back(newpg->planners.at(permti[i])->plan);
-            newpg->print_tpath();
-
+            (*newpg).add_feedback_from_path(new_path, i); //TODO: 是在这里吗？　还是应该在main函数里
 //            ROS_INFO_STREAM("Got init_plan_segment in grow_tree.");
         }
+    }
+    for (int i = 0; i < num_robots; ++i) {
+        newpg->pathes.push_back(newpg->planners.get_planner_by_robot_ID(i)->plan);
+        newpg->print_tpath();
     }
     return newpg;
 }
@@ -157,14 +160,18 @@ int main(int argc, char **argv) {
 //                if (init_planner_group->planners.empty())
 //                    ROS_INFO_STREAM("planners init failed.");
                     if (!init_planner_group->planners.at(permt[j][idx])->plan.poses.empty()) {
-                        nav_plans[idx].publish(init_planner_group->planners.at(permt[j][idx])->plan); //TODO check 下标
-                        init_planner_group->add_feedback_from_path(init_planner_group->planners.at(permt[j][idx])->plan,
-                                                                   permt[j][idx]);
-                        init_planner_group->pathes.push_back(init_planner_group->planners.at(permt[j][idx])->plan);
-                        init_planner_group->print_tpath();
-                        ROS_INFO_STREAM("Got init_plan_segment in main.");
+                        nav_plans[idx].publish(
+                                init_planner_group->planners.at(permt[j][idx])->plan); //TODO check 下标
+                        init_planner_group->add_feedback_from_path(
+                                init_planner_group->planners.at(permt[j][idx])->plan,
+                                permt[j][idx]);
                     }
                 }
+                for (int idx = 0; idx < num_robots; ++idx) {
+                    init_planner_group->pathes.push_back(init_planner_group.get_planner_by_robot_ID(idx)->plan);
+                    ROS_INFO_STREAM("Got init_plan_segment in main.");
+                }
+                init_planner_group->print_tpath();
             }
             init_already = true;
         }

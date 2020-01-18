@@ -78,7 +78,7 @@ public:
                 init_planner->startpoint_x = (*parent_loc).pathes.at(i).poses.back().pose.position.x;
                 init_planner->startpoint_y = (*parent_loc).pathes.at(i).poses.back().pose.position.y;
                 ROS_INFO_STREAM("got last currentpoint as now startpoint." << init_planner->startpoint_x
-                                                                       << init_planner->startpoint_y);
+                                                                           << init_planner->startpoint_y);
             } else {
                 init_planner->robot_id = i;
                 init_planner->startpoint_x = startpoint_x[i];
@@ -94,6 +94,14 @@ public:
         }
 
     }
+
+    AStartFindPath *get_planner_by_robot_ID(int rid) {
+        for (int i = 0; i < planners.size(); ++i) {
+            if (planners.at(i)->robot_id == rid)
+                return planners.at(i);
+        }
+    }
+
 
     void publish_path(vector <nav_msgs::Path> &fullpaths, tree<planner_group>::iterator &last_planner_group,
                       vector <ros::Publisher> &nav_plans) {

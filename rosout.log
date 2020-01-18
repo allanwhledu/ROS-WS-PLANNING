@@ -1,314 +1,314 @@
-[0m[ INFO] [1579355480.141959482]: solidding the tree.[0m
-[0m[ INFO] [1579355480.141984224]: top is the begin.[0m
-[0m[ INFO] [1579355480.141990565]: treeeeee: 0x12d2e70[0m
-[0m[ INFO] [1579355480.141997528]: treeeeee: 0x12d2e70[0m
-[0m[ INFO] [1579355480.877843237, 0.500000000]: get map.[0m
-[0m[ INFO] [1579355480.877863360, 0.500000000]: solid multi_robot_planner.[0m
-[0m[ INFO] [1579355480.877871874, 0.500000000]: spin passed.[0m
-[0m[ INFO] [1579355480.877878376, 0.500000000]: permt.size()2[0m
-[0m[ INFO] [1579355480.877884856, 0.500000000]: INIT_PG IDX:0[0m
-[0m[ INFO] [1579355480.877893808, 0.500000000]: pg pointer in s and g: 0x12d3368[0m
-[33m[ WARN] [1579355480.877924604, 0.500000000]: this is a new planner[0m
-[0m[ INFO] [1579355480.877931978, 0.500000000]: got destination.11[0m
-[33m[ WARN] [1579355480.877968989, 0.500000000]: this is a new planner[0m
-[0m[ INFO] [1579355480.877974799, 0.500000000]: got destination.71[0m
-[0m[ INFO] [1579355480.877982888, 0.500000000]: get map with height and width as 30 31 1[0m
-[0m[ INFO] [1579355480.878027801, 0.500000000]: now test the map[0m
-[0m[ INFO] [1579355480.878045070, 0.500000000]: now test the nodes[0m
-[0m[ INFO] [1579355480.878529550, 0.500000000]: goal and it's flag 7 1 0[0m
-[0m[ INFO] [1579355480.878538649, 0.500000000]: start point in map 1 1
+[0m[ INFO] [1579355748.533660812]: solidding the tree.[0m
+[0m[ INFO] [1579355748.533689941]: top is the begin.[0m
+[0m[ INFO] [1579355748.533699533]: treeeeee: 0x1b90e70[0m
+[0m[ INFO] [1579355748.533708726]: treeeeee: 0x1b90e70[0m
+[0m[ INFO] [1579355749.369018514, 0.500000000]: get map.[0m
+[0m[ INFO] [1579355749.369039737, 0.500000000]: solid multi_robot_planner.[0m
+[0m[ INFO] [1579355749.369048762, 0.500000000]: spin passed.[0m
+[0m[ INFO] [1579355749.369054644, 0.500000000]: permt.size()2[0m
+[0m[ INFO] [1579355749.369061121, 0.500000000]: INIT_PG IDX:0[0m
+[0m[ INFO] [1579355749.369070399, 0.500000000]: pg pointer in s and g: 0x1b91368[0m
+[33m[ WARN] [1579355749.369101765, 0.500000000]: this is a new planner[0m
+[0m[ INFO] [1579355749.369109249, 0.500000000]: got destination.71[0m
+[33m[ WARN] [1579355749.369141346, 0.500000000]: this is a new planner[0m
+[0m[ INFO] [1579355749.369147254, 0.500000000]: got destination.11[0m
+[0m[ INFO] [1579355749.369156158, 0.500000000]: get map with height and width as 30 31 1[0m
+[0m[ INFO] [1579355749.369189111, 0.500000000]: now test the map[0m
+[0m[ INFO] [1579355749.369198914, 0.500000000]: now test the nodes[0m
+[0m[ INFO] [1579355749.369710712, 0.500000000]: goal and it's flag 7 1 0[0m
+[0m[ INFO] [1579355749.369721924, 0.500000000]: start point in map 1 1
 [0m
-[0m[ INFO] [1579355480.878543669, 0.500000000]: start and it's flag 1 1 0[0m
+[0m[ INFO] [1579355749.369727621, 0.500000000]: start and it's flag 1 1 0[0m
 开始计算路径！
-[0m[ INFO] [1579355480.878553239, 0.500000000]: start points:1 1[0m
-19866120
-[33m[ WARN] [1579355480.878561612, 0.500000000]: Starting output open list: [0m
-[0m[ INFO] [1579355480.878569797, 0.500000000]: checking point 1,1,, g:0, f:60, flag:4[0m
-[33m[ WARN] [1579355480.878578179, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+[0m[ INFO] [1579355749.369736488, 0.500000000]: start points:1 1[0m
+28952840
+[33m[ WARN] [1579355749.369744697, 0.500000000]: Starting output open list: [0m
+[0m[ INFO] [1579355749.369751353, 0.500000000]: checking point 1,1,, g:0, f:60, flag:4[0m
+[33m[ WARN] [1579355749.369759762, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 0
-19866160
-[33m[ WARN] [1579355480.878584627, 0.500000000]: Starting output open list: [0m
-[33m[ WARN] [1579355480.878590548, 0.500000000]: Starting output close list: [0m
-[0m[ INFO] [1579355480.878596799, 0.500000000]: checking point 2,1,, g:10, f:60, flag:3[0m
-[33m[ WARN] [1579355480.878601926, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+28952880
+[33m[ WARN] [1579355749.369764540, 0.500000000]: Starting output open list: [0m
+[33m[ WARN] [1579355749.369771040, 0.500000000]: Starting output close list: [0m
+[0m[ INFO] [1579355749.369777262, 0.500000000]: checking point 2,1,, g:10, f:60, flag:3[0m
+[33m[ WARN] [1579355749.369784328, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 1
-19866200
-[33m[ WARN] [1579355480.878608052, 0.500000000]: Starting output open list: [0m
-[33m[ WARN] [1579355480.878628494, 0.500000000]: Starting output close list: f60h50x2y1 parent x1y1 flag3, [0m
-[0m[ INFO] [1579355480.878640417, 0.500000000]: checking point 3,1,, g:20, f:60, flag:3[0m
-[33m[ WARN] [1579355480.878652091, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+28952920
+[33m[ WARN] [1579355749.369790053, 0.500000000]: Starting output open list: [0m
+[33m[ WARN] [1579355749.369805830, 0.500000000]: Starting output close list: f60h50x2y1 parent x1y1 flag3, [0m
+[0m[ INFO] [1579355749.369811687, 0.500000000]: checking point 3,1,, g:20, f:60, flag:3[0m
+[33m[ WARN] [1579355749.369816614, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 2
-19866240
-[33m[ WARN] [1579355480.878663022, 0.500000000]: Starting output open list: [0m
-[33m[ WARN] [1579355480.878683006, 0.500000000]: Starting output close list: f60h40x3y1 parent x2y1 flag3, f60h50x2y1 parent x1y1 flag3, [0m
-[0m[ INFO] [1579355480.878693051, 0.500000000]: checking point 4,1,, g:30, f:60, flag:3[0m
-[33m[ WARN] [1579355480.878700132, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+28952960
+[33m[ WARN] [1579355749.369822279, 0.500000000]: Starting output open list: [0m
+[33m[ WARN] [1579355749.369832167, 0.500000000]: Starting output close list: f60h40x3y1 parent x2y1 flag3, f60h50x2y1 parent x1y1 flag3, [0m
+[0m[ INFO] [1579355749.369838808, 0.500000000]: checking point 4,1,, g:30, f:60, flag:3[0m
+[33m[ WARN] [1579355749.369844268, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 3
-19866280
-[33m[ WARN] [1579355480.878707141, 0.500000000]: Starting output open list: [0m
-[33m[ WARN] [1579355480.878718568, 0.500000000]: Starting output close list: f60h30x4y1 parent x3y1 flag3, f60h40x3y1 parent x2y1 flag3, f60h50x2y1 parent x1y1 flag3, [0m
-[0m[ INFO] [1579355480.878724909, 0.500000000]: checking point 5,1,, g:40, f:60, flag:3[0m
-[33m[ WARN] [1579355480.878733164, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+28953000
+[33m[ WARN] [1579355749.369850090, 0.500000000]: Starting output open list: [0m
+[33m[ WARN] [1579355749.369860732, 0.500000000]: Starting output close list: f60h30x4y1 parent x3y1 flag3, f60h40x3y1 parent x2y1 flag3, f60h50x2y1 parent x1y1 flag3, [0m
+[0m[ INFO] [1579355749.369866497, 0.500000000]: checking point 5,1,, g:40, f:60, flag:3[0m
+[33m[ WARN] [1579355749.369875680, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 4
-19866320
-[33m[ WARN] [1579355480.878740608, 0.500000000]: Starting output open list: f80h30x5y2 parent x5y1 flag2, [0m
-[33m[ WARN] [1579355480.878752742, 0.500000000]: Starting output close list: f60h20x5y1 parent x4y1 flag3, f60h30x4y1 parent x3y1 flag3, f60h40x3y1 parent x2y1 flag3, f60h50x2y1 parent x1y1 flag3, [0m
-[0m[ INFO] [1579355480.878758615, 0.500000000]: checking point 6,1,, g:50, f:60, flag:3[0m
-[0m[ INFO] [1579355480.878772174, 0.500000000]: destination already got in openlist.71[0m
+28953040
+[33m[ WARN] [1579355749.369882604, 0.500000000]: Starting output open list: f80h30x5y2 parent x5y1 flag2, [0m
+[33m[ WARN] [1579355749.369895893, 0.500000000]: Starting output close list: f60h20x5y1 parent x4y1 flag3, f60h30x4y1 parent x3y1 flag3, f60h40x3y1 parent x2y1 flag3, f60h50x2y1 parent x1y1 flag3, [0m
+[0m[ INFO] [1579355749.369901788, 0.500000000]: checking point 6,1,, g:50, f:60, flag:3[0m
+[0m[ INFO] [1579355749.369910019, 0.500000000]: destination already got in openlist.71[0m
 计算路径成功！！
-[0m[ INFO] [1579355480.878795043, 0.500000000]: path: x7y1 ::flag: 2,  x6y1 ::flag: 3,  x5y1 ::flag: 3,  x4y1 ::flag: 3,  x3y1 ::flag: 3,  x2y1 ::flag: 3,  x1y1 ::flag: 4,  [0m
+[0m[ INFO] [1579355749.369927456, 0.500000000]: path: x7y1 ::flag: 2,  x6y1 ::flag: 3,  x5y1 ::flag: 3,  x4y1 ::flag: 3,  x3y1 ::flag: 3,  x2y1 ::flag: 3,  x1y1 ::flag: 4,  [0m
 check arriv: curr11 start71 end71 des11 xy46065160
 tpath: [id 0 xy 11 t0] ,[id 0 xy 21 t10] ,[id 0 xy 31 t20] ,[id 0 xy 41 t30] ,
-[0m[ INFO] [1579355480.878845138, 0.500000000]: Got init_plan_segment in main.[0m
-[0m[ INFO] [1579355480.878855015, 0.500000000]: get map with height and width as 30 31 1[0m
-[0m[ INFO] [1579355480.878893867, 0.500000000]: now test the map[0m
-[0m[ INFO] [1579355480.878906621, 0.500000000]: now test the nodes[0m
-[0m[ INFO] [1579355480.879230018, 0.500000000]: goal and it's flag 1 1 0[0m
-[0m[ INFO] [1579355480.879239570, 0.500000000]: start point in map 7 1
+[0m[ INFO] [1579355749.369991632, 0.500000000]: Got init_plan_segment in main.[0m
+[0m[ INFO] [1579355749.370004182, 0.500000000]: get map with height and width as 30 31 1[0m
+[0m[ INFO] [1579355749.370042148, 0.500000000]: now test the map[0m
+[0m[ INFO] [1579355749.370055213, 0.500000000]: now test the nodes[0m
+[0m[ INFO] [1579355749.370436364, 0.500000000]: goal and it's flag 1 1 0[0m
+[0m[ INFO] [1579355749.370448903, 0.500000000]: start point in map 7 1
 [0m
-[0m[ INFO] [1579355480.879250316, 0.500000000]: start and it's flag 7 1 0[0m
+[0m[ INFO] [1579355749.370458478, 0.500000000]: start and it's flag 7 1 0[0m
 开始计算路径！
-[0m[ INFO] [1579355480.879258888, 0.500000000]: start points:7 1[0m
-19904648
-[33m[ WARN] [1579355480.879269070, 0.500000000]: Starting output open list: [0m
-[0m[ INFO] [1579355480.879277970, 0.500000000]: checking point 7,1,, g:0, f:60, flag:4[0m
-[33m[ WARN] [1579355480.879287580, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+[0m[ INFO] [1579355749.370467897, 0.500000000]: start points:7 1[0m
+29074328
+[33m[ WARN] [1579355749.370479358, 0.500000000]: Starting output open list: [0m
+[0m[ INFO] [1579355749.370489857, 0.500000000]: checking point 7,1,, g:0, f:60, flag:4[0m
+[33m[ WARN] [1579355749.370498236, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 0
-19904608
-[33m[ WARN] [1579355480.879296719, 0.500000000]: Starting output open list: [0m
-[33m[ WARN] [1579355480.879305667, 0.500000000]: Starting output close list: [0m
-[0m[ INFO] [1579355480.879314137, 0.500000000]: checking point 6,1,, g:10, f:60, flag:3[0m
-[33m[ WARN] [1579355480.879322794, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+29074288
+[33m[ WARN] [1579355749.370506315, 0.500000000]: Starting output open list: [0m
+[33m[ WARN] [1579355749.370514270, 0.500000000]: Starting output close list: [0m
+[0m[ INFO] [1579355749.370523769, 0.500000000]: checking point 6,1,, g:10, f:60, flag:3[0m
+[33m[ WARN] [1579355749.370532184, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 1
-19904568
-[33m[ WARN] [1579355480.879330795, 0.500000000]: Starting output open list: [0m
-[33m[ WARN] [1579355480.879344087, 0.500000000]: Starting output close list: f60h50x6y1 parent x7y1 flag3, [0m
-[0m[ INFO] [1579355480.879352322, 0.500000000]: checking point 5,1,, g:20, f:60, flag:3[0m
-[33m[ WARN] [1579355480.879362639, 0.500000000]: conflict in 4,1,30.[0m
-[33m[ WARN] [1579355480.879370910, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+29074248
+[33m[ WARN] [1579355749.370541880, 0.500000000]: Starting output open list: [0m
+[33m[ WARN] [1579355749.370557647, 0.500000000]: Starting output close list: f60h50x6y1 parent x7y1 flag3, [0m
+[0m[ INFO] [1579355749.370566143, 0.500000000]: checking point 5,1,, g:20, f:60, flag:3[0m
+[33m[ WARN] [1579355749.370576177, 0.500000000]: conflict in 4,1,30.[0m
+[33m[ WARN] [1579355749.370584443, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 2
-19905816
-[33m[ WARN] [1579355480.879380223, 0.500000000]: Starting output open list: [0m
-[33m[ WARN] [1579355480.879393217, 0.500000000]: Starting output close list: f60h50x6y1 parent x7y1 flag3, f80h50x5y2 parent x5y1 flag3, [0m
-[0m[ INFO] [1579355480.879401841, 0.500000000]: checking point 5,2,, g:30, f:80, flag:3[0m
-[33m[ WARN] [1579355480.879411015, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+29068056
+[33m[ WARN] [1579355749.370592801, 0.500000000]: Starting output open list: [0m
+[33m[ WARN] [1579355749.370605755, 0.500000000]: Starting output close list: f60h50x6y1 parent x7y1 flag3, f80h50x5y2 parent x5y1 flag3, [0m
+[0m[ INFO] [1579355749.370614413, 0.500000000]: checking point 5,2,, g:30, f:80, flag:3[0m
+[33m[ WARN] [1579355749.370622723, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 3
-19907064
-[33m[ WARN] [1579355480.879419664, 0.500000000]: Starting output open list: [0m
-[33m[ WARN] [1579355480.879434809, 0.500000000]: Starting output close list: f60h50x6y1 parent x7y1 flag3, f80h50x5y2 parent x5y1 flag3, f100h60x5y3 parent x5y2 flag3, [0m
-[0m[ INFO] [1579355480.879443481, 0.500000000]: checking point 5,3,, g:40, f:100, flag:3[0m
-[33m[ WARN] [1579355480.879457236, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+29075496
+[33m[ WARN] [1579355749.370629929, 0.500000000]: Starting output open list: [0m
+[33m[ WARN] [1579355749.370644486, 0.500000000]: Starting output close list: f60h50x6y1 parent x7y1 flag3, f80h50x5y2 parent x5y1 flag3, f100h60x5y3 parent x5y2 flag3, [0m
+[0m[ INFO] [1579355749.370653315, 0.500000000]: checking point 5,3,, g:40, f:100, flag:3[0m
+[33m[ WARN] [1579355749.370666961, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 4
-19907024
-[33m[ WARN] [1579355480.879469053, 0.500000000]: Starting output open list: f120h70x6y3 parent x5y3 flag2, f120h70x5y4 parent x5y3 flag2, [0m
-[33m[ WARN] [1579355480.879484969, 0.500000000]: Starting output close list: f60h50x6y1 parent x7y1 flag3, f80h50x5y2 parent x5y1 flag3, f100h50x4y3 parent x5y3 flag3, f100h60x5y3 parent x5y2 flag3, [0m
-[0m[ INFO] [1579355480.879493849, 0.500000000]: checking point 4,3,, g:50, f:100, flag:3[0m
-[33m[ WARN] [1579355480.879506141, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+29075456
+[33m[ WARN] [1579355749.370678334, 0.500000000]: Starting output open list: f120h70x6y3 parent x5y3 flag2, f120h70x5y4 parent x5y3 flag2, [0m
+[33m[ WARN] [1579355749.370694586, 0.500000000]: Starting output close list: f60h50x6y1 parent x7y1 flag3, f80h50x5y2 parent x5y1 flag3, f100h50x4y3 parent x5y3 flag3, f100h60x5y3 parent x5y2 flag3, [0m
+[0m[ INFO] [1579355749.370704150, 0.500000000]: checking point 4,3,, g:50, f:100, flag:3[0m
+[33m[ WARN] [1579355749.370715011, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 5
-19906984
-[33m[ WARN] [1579355480.879517644, 0.500000000]: Starting output open list: f120h70x6y3 parent x5y3 flag2, f120h70x5y4 parent x5y3 flag2, [0m
-[33m[ WARN] [1579355480.879535092, 0.500000000]: Starting output close list: f100h40x3y3 parent x4y3 flag3, f60h50x6y1 parent x7y1 flag3, f80h50x5y2 parent x5y1 flag3, f100h50x4y3 parent x5y3 flag3, f100h60x5y3 parent x5y2 flag3, [0m
-[0m[ INFO] [1579355480.879543574, 0.500000000]: checking point 3,3,, g:60, f:100, flag:3[0m
-[33m[ WARN] [1579355480.879557614, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+29075416
+[33m[ WARN] [1579355749.370726546, 0.500000000]: Starting output open list: f120h70x6y3 parent x5y3 flag2, f120h70x5y4 parent x5y3 flag2, [0m
+[33m[ WARN] [1579355749.370742995, 0.500000000]: Starting output close list: f100h40x3y3 parent x4y3 flag3, f60h50x6y1 parent x7y1 flag3, f80h50x5y2 parent x5y1 flag3, f100h50x4y3 parent x5y3 flag3, f100h60x5y3 parent x5y2 flag3, [0m
+[0m[ INFO] [1579355749.370751636, 0.500000000]: checking point 3,3,, g:60, f:100, flag:3[0m
+[33m[ WARN] [1579355749.370766458, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 6
-19906944
-[33m[ WARN] [1579355480.879569973, 0.500000000]: Starting output open list: f120h50x3y4 parent x3y3 flag2, f120h70x6y3 parent x5y3 flag2, f120h70x5y4 parent x5y3 flag2, [0m
-[33m[ WARN] [1579355480.879587437, 0.500000000]: Starting output close list: f60h40x5y1 parent x6y1 flag3, f60h50x6y1 parent x7y1 flag3, f80h50x5y2 parent x5y1 flag3, f100h40x3y3 parent x4y3 flag3, f100h50x4y3 parent x5y3 flag3, f100h60x5y3 parent x5y2 flag3, [0m
-[0m[ INFO] [1579355480.879605965, 0.500000000]: checking point 2,3,, g:70, f:100, flag:3[0m
-[33m[ WARN] [1579355480.879618440, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+29075376
+[33m[ WARN] [1579355749.370778646, 0.500000000]: Starting output open list: f120h50x3y4 parent x3y3 flag2, f120h70x6y3 parent x5y3 flag2, f120h70x5y4 parent x5y3 flag2, [0m
+[33m[ WARN] [1579355749.370796336, 0.500000000]: Starting output close list: f60h40x5y1 parent x6y1 flag3, f60h50x6y1 parent x7y1 flag3, f80h50x5y2 parent x5y1 flag3, f100h40x3y3 parent x4y3 flag3, f100h50x4y3 parent x5y3 flag3, f100h60x5y3 parent x5y2 flag3, [0m
+[0m[ INFO] [1579355749.370817653, 0.500000000]: checking point 2,3,, g:70, f:100, flag:3[0m
+[33m[ WARN] [1579355749.370830415, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 7
-19906904
-[33m[ WARN] [1579355480.879631269, 0.500000000]: Starting output open list: f120h50x3y4 parent x3y3 flag2, f120h70x6y3 parent x5y3 flag2, f120h70x5y4 parent x5y3 flag2, [0m
-[33m[ WARN] [1579355480.879650065, 0.500000000]: Starting output close list: f60h40x5y1 parent x6y1 flag3, f100h40x3y3 parent x4y3 flag3, f60h50x6y1 parent x7y1 flag3, f80h50x5y2 parent x5y1 flag3, f100h30x2y3 parent x3y3 flag3, f100h50x4y3 parent x5y3 flag3, f100h60x5y3 parent x5y2 flag3, [0m
-[0m[ INFO] [1579355480.879659713, 0.500000000]: checking point 1,3,, g:80, f:100, flag:3[0m
-[33m[ WARN] [1579355480.879672337, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+29075336
+[33m[ WARN] [1579355749.370840154, 0.500000000]: Starting output open list: f120h50x3y4 parent x3y3 flag2, f120h70x6y3 parent x5y3 flag2, f120h70x5y4 parent x5y3 flag2, [0m
+[33m[ WARN] [1579355749.370856610, 0.500000000]: Starting output close list: f60h40x5y1 parent x6y1 flag3, f100h40x3y3 parent x4y3 flag3, f60h50x6y1 parent x7y1 flag3, f80h50x5y2 parent x5y1 flag3, f100h30x2y3 parent x3y3 flag3, f100h50x4y3 parent x5y3 flag3, f100h60x5y3 parent x5y2 flag3, [0m
+[0m[ INFO] [1579355749.370862678, 0.500000000]: checking point 1,3,, g:80, f:100, flag:3[0m
+[33m[ WARN] [1579355749.370871428, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 计算路径失敗！！9
 计算路径成功！！
-[0m[ INFO] [1579355480.879694064, 0.500000000]: path: x2y3 ::flag: 3,  x3y3 ::flag: 3,  x4y3 ::flag: 3,  x5y3 ::flag: 3,  x5y2 ::flag: 3,  x5y1 ::flag: 3,  x6y1 ::flag: 3,  x7y1 ::flag: 4,  [0m
+[0m[ INFO] [1579355749.370891558, 0.500000000]: path: x2y3 ::flag: 3,  x3y3 ::flag: 3,  x4y3 ::flag: 3,  x5y3 ::flag: 3,  x5y2 ::flag: 3,  x5y1 ::flag: 3,  x6y1 ::flag: 3,  x7y1 ::flag: 4,  [0m
 check arriv: curr71 start11 end11 des71 xy46065160
 tpath: [id 0 xy 11 t0] ,[id 0 xy 21 t10] ,[id 0 xy 31 t20] ,[id 0 xy 41 t30] ,[id 1 xy 71 t0] ,[id 1 xy 61 t10] ,[id 1 xy 51 t20] ,[id 1 xy 52 t30] ,
-[0m[ INFO] [1579355480.879715421, 0.500000000]: Got init_plan_segment in main.[0m
-[0m[ INFO] [1579355480.879724272, 0.500000000]: INIT_PG IDX:1[0m
-[0m[ INFO] [1579355480.879736372, 0.500000000]: pg pointer in s and g: 0x12d36a8[0m
-[33m[ WARN] [1579355480.879763458, 0.500000000]: this is a new planner[0m
-[0m[ INFO] [1579355480.879771774, 0.500000000]: got destination.11[0m
-[33m[ WARN] [1579355480.879798972, 0.500000000]: this is a new planner[0m
-[0m[ INFO] [1579355480.879807131, 0.500000000]: got destination.71[0m
-[0m[ INFO] [1579355480.879817673, 0.500000000]: get map with height and width as 30 31 1[0m
-[0m[ INFO] [1579355480.879852831, 0.500000000]: now test the map[0m
-[0m[ INFO] [1579355480.879865306, 0.500000000]: now test the nodes[0m
-[0m[ INFO] [1579355480.880197143, 0.500000000]: goal and it's flag 1 1 0[0m
-[0m[ INFO] [1579355480.880206577, 0.500000000]: start point in map 7 1
+[0m[ INFO] [1579355749.370912492, 0.500000000]: Got init_plan_segment in main.[0m
+[0m[ INFO] [1579355749.370918967, 0.500000000]: INIT_PG IDX:1[0m
+[0m[ INFO] [1579355749.370928258, 0.500000000]: pg pointer in s and g: 0x1b916a8[0m
+[33m[ WARN] [1579355749.370961499, 0.500000000]: this is a new planner[0m
+[0m[ INFO] [1579355749.370968057, 0.500000000]: got destination.71[0m
+[33m[ WARN] [1579355749.370989635, 0.500000000]: this is a new planner[0m
+[0m[ INFO] [1579355749.370996286, 0.500000000]: got destination.11[0m
+[0m[ INFO] [1579355749.371003891, 0.500000000]: get map with height and width as 30 31 1[0m
+[0m[ INFO] [1579355749.371035166, 0.500000000]: now test the map[0m
+[0m[ INFO] [1579355749.371045526, 0.500000000]: now test the nodes[0m
+[0m[ INFO] [1579355749.371349048, 0.500000000]: goal and it's flag 1 1 0[0m
+[0m[ INFO] [1579355749.371356530, 0.500000000]: start point in map 7 1
 [0m
-[0m[ INFO] [1579355480.880216668, 0.500000000]: start and it's flag 7 1 0[0m
+[0m[ INFO] [1579355749.371360883, 0.500000000]: start and it's flag 7 1 0[0m
 开始计算路径！
-[0m[ INFO] [1579355480.880225479, 0.500000000]: start points:7 1[0m
-20021272
-[33m[ WARN] [1579355480.880234583, 0.500000000]: Starting output open list: [0m
-[0m[ INFO] [1579355480.880244055, 0.500000000]: checking point 7,1,, g:0, f:60, flag:4[0m
-[33m[ WARN] [1579355480.880253206, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+[0m[ INFO] [1579355749.371368641, 0.500000000]: start points:7 1[0m
+29188216
+[33m[ WARN] [1579355749.371373843, 0.500000000]: Starting output open list: [0m
+[0m[ INFO] [1579355749.371379529, 0.500000000]: checking point 7,1,, g:0, f:60, flag:4[0m
+[33m[ WARN] [1579355749.371385351, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 0
-20021232
-[33m[ WARN] [1579355480.880262469, 0.500000000]: Starting output open list: [0m
-[33m[ WARN] [1579355480.880271663, 0.500000000]: Starting output close list: [0m
-[0m[ INFO] [1579355480.880280495, 0.500000000]: checking point 6,1,, g:10, f:60, flag:3[0m
-[33m[ WARN] [1579355480.880289182, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+29188176
+[33m[ WARN] [1579355749.371390287, 0.500000000]: Starting output open list: [0m
+[33m[ WARN] [1579355749.371396027, 0.500000000]: Starting output close list: [0m
+[0m[ INFO] [1579355749.371402100, 0.500000000]: checking point 6,1,, g:10, f:60, flag:3[0m
+[33m[ WARN] [1579355749.371407691, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 1
-20021192
-[33m[ WARN] [1579355480.880297426, 0.500000000]: Starting output open list: [0m
-[33m[ WARN] [1579355480.880311043, 0.500000000]: Starting output close list: f60h50x6y1 parent x7y1 flag3, [0m
-[0m[ INFO] [1579355480.880319492, 0.500000000]: checking point 5,1,, g:20, f:60, flag:3[0m
-[33m[ WARN] [1579355480.880331927, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+29188136
+[33m[ WARN] [1579355749.371412238, 0.500000000]: Starting output open list: [0m
+[33m[ WARN] [1579355749.371423298, 0.500000000]: Starting output close list: f60h50x6y1 parent x7y1 flag3, [0m
+[0m[ INFO] [1579355749.371429164, 0.500000000]: checking point 5,1,, g:20, f:60, flag:3[0m
+[33m[ WARN] [1579355749.371437178, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 2
-20021152
-[33m[ WARN] [1579355480.880342689, 0.500000000]: Starting output open list: f80h50x5y2 parent x5y1 flag2, [0m
-[33m[ WARN] [1579355480.880355755, 0.500000000]: Starting output close list: f60h40x5y1 parent x6y1 flag3, f60h50x6y1 parent x7y1 flag3, [0m
-[0m[ INFO] [1579355480.880364357, 0.500000000]: checking point 4,1,, g:30, f:60, flag:3[0m
-[33m[ WARN] [1579355480.880376075, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+29188096
+[33m[ WARN] [1579355749.371444083, 0.500000000]: Starting output open list: f80h50x5y2 parent x5y1 flag2, [0m
+[33m[ WARN] [1579355749.371453338, 0.500000000]: Starting output close list: f60h40x5y1 parent x6y1 flag3, f60h50x6y1 parent x7y1 flag3, [0m
+[0m[ INFO] [1579355749.371459193, 0.500000000]: checking point 4,1,, g:30, f:60, flag:3[0m
+[33m[ WARN] [1579355749.371468573, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 3
-20021112
-[33m[ WARN] [1579355480.880386600, 0.500000000]: Starting output open list: f80h50x5y2 parent x5y1 flag2, [0m
-[33m[ WARN] [1579355480.880401554, 0.500000000]: Starting output close list: f60h30x4y1 parent x5y1 flag3, f60h40x5y1 parent x6y1 flag3, f60h50x6y1 parent x7y1 flag3, [0m
-[0m[ INFO] [1579355480.880409918, 0.500000000]: checking point 3,1,, g:40, f:60, flag:3[0m
-[33m[ WARN] [1579355480.880421125, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+29188056
+[33m[ WARN] [1579355749.371475996, 0.500000000]: Starting output open list: f80h50x5y2 parent x5y1 flag2, [0m
+[33m[ WARN] [1579355749.371487115, 0.500000000]: Starting output close list: f60h30x4y1 parent x5y1 flag3, f60h40x5y1 parent x6y1 flag3, f60h50x6y1 parent x7y1 flag3, [0m
+[0m[ INFO] [1579355749.371492856, 0.500000000]: checking point 3,1,, g:40, f:60, flag:3[0m
+[33m[ WARN] [1579355749.371500636, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 4
-20021072
-[33m[ WARN] [1579355480.880431143, 0.500000000]: Starting output open list: f80h50x5y2 parent x5y1 flag2, [0m
-[33m[ WARN] [1579355480.880447139, 0.500000000]: Starting output close list: f60h20x3y1 parent x4y1 flag3, f60h30x4y1 parent x5y1 flag3, f60h40x5y1 parent x6y1 flag3, f60h50x6y1 parent x7y1 flag3, [0m
-[0m[ INFO] [1579355480.880455657, 0.500000000]: checking point 2,1,, g:50, f:60, flag:3[0m
-[0m[ INFO] [1579355480.880467093, 0.500000000]: destination already got in openlist.11[0m
+29188016
+[33m[ WARN] [1579355749.371507691, 0.500000000]: Starting output open list: f80h50x5y2 parent x5y1 flag2, [0m
+[33m[ WARN] [1579355749.371520354, 0.500000000]: Starting output close list: f60h20x3y1 parent x4y1 flag3, f60h30x4y1 parent x5y1 flag3, f60h40x5y1 parent x6y1 flag3, f60h50x6y1 parent x7y1 flag3, [0m
+[0m[ INFO] [1579355749.371526299, 0.500000000]: checking point 2,1,, g:50, f:60, flag:3[0m
+[0m[ INFO] [1579355749.371534247, 0.500000000]: destination already got in openlist.11[0m
 计算路径成功！！
-[0m[ INFO] [1579355480.880486854, 0.500000000]: path: x1y1 ::flag: 2,  x2y1 ::flag: 3,  x3y1 ::flag: 3,  x4y1 ::flag: 3,  x5y1 ::flag: 3,  x6y1 ::flag: 3,  x7y1 ::flag: 4,  [0m
+[0m[ INFO] [1579355749.371550539, 0.500000000]: path: x1y1 ::flag: 2,  x2y1 ::flag: 3,  x3y1 ::flag: 3,  x4y1 ::flag: 3,  x5y1 ::flag: 3,  x6y1 ::flag: 3,  x7y1 ::flag: 4,  [0m
 check arriv: curr71 start11 end11 des71 xy46065160
 tpath: [id 1 xy 71 t0] ,[id 1 xy 61 t10] ,[id 1 xy 51 t20] ,[id 1 xy 41 t30] ,
-[0m[ INFO] [1579355480.880510113, 0.500000000]: Got init_plan_segment in main.[0m
-[0m[ INFO] [1579355480.880519833, 0.500000000]: get map with height and width as 30 31 1[0m
-[0m[ INFO] [1579355480.880556954, 0.500000000]: now test the map[0m
-[0m[ INFO] [1579355480.880569703, 0.500000000]: now test the nodes[0m
-[0m[ INFO] [1579355480.880881305, 0.500000000]: goal and it's flag 7 1 0[0m
-[0m[ INFO] [1579355480.880891083, 0.500000000]: start point in map 1 1
+[0m[ INFO] [1579355749.371571414, 0.500000000]: Got init_plan_segment in main.[0m
+[0m[ INFO] [1579355749.371578518, 0.500000000]: get map with height and width as 30 31 1[0m
+[0m[ INFO] [1579355749.371612493, 0.500000000]: now test the map[0m
+[0m[ INFO] [1579355749.371621642, 0.500000000]: now test the nodes[0m
+[0m[ INFO] [1579355749.371952561, 0.500000000]: goal and it's flag 7 1 0[0m
+[0m[ INFO] [1579355749.371961238, 0.500000000]: start point in map 1 1
 [0m
-[0m[ INFO] [1579355480.880901525, 0.500000000]: start and it's flag 1 1 0[0m
+[0m[ INFO] [1579355749.371967348, 0.500000000]: start and it's flag 1 1 0[0m
 开始计算路径！
-[0m[ INFO] [1579355480.880910050, 0.500000000]: start points:1 1[0m
-20061576
-[33m[ WARN] [1579355480.880919089, 0.500000000]: Starting output open list: [0m
-[0m[ INFO] [1579355480.880928390, 0.500000000]: checking point 1,1,, g:0, f:60, flag:4[0m
-[33m[ WARN] [1579355480.880936571, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+[0m[ INFO] [1579355749.371975076, 0.500000000]: start points:1 1[0m
+29229480
+[33m[ WARN] [1579355749.371981214, 0.500000000]: Starting output open list: [0m
+[0m[ INFO] [1579355749.371987782, 0.500000000]: checking point 1,1,, g:0, f:60, flag:4[0m
+[33m[ WARN] [1579355749.371992863, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 0
-20061616
-[33m[ WARN] [1579355480.880942884, 0.500000000]: Starting output open list: [0m
-[33m[ WARN] [1579355480.880950133, 0.500000000]: Starting output close list: [0m
-[0m[ INFO] [1579355480.880958632, 0.500000000]: checking point 2,1,, g:10, f:60, flag:3[0m
-[33m[ WARN] [1579355480.880966338, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+29229520
+[33m[ WARN] [1579355749.371999546, 0.500000000]: Starting output open list: [0m
+[33m[ WARN] [1579355749.372004800, 0.500000000]: Starting output close list: [0m
+[0m[ INFO] [1579355749.372011076, 0.500000000]: checking point 2,1,, g:10, f:60, flag:3[0m
+[33m[ WARN] [1579355749.372015743, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 1
-20061656
-[33m[ WARN] [1579355480.880976605, 0.500000000]: Starting output open list: [0m
-[33m[ WARN] [1579355480.880988841, 0.500000000]: Starting output close list: f60h50x2y1 parent x1y1 flag3, [0m
-[0m[ INFO] [1579355480.880997571, 0.500000000]: checking point 3,1,, g:20, f:60, flag:3[0m
-[33m[ WARN] [1579355480.881008194, 0.500000000]: conflict in 4,1,30.[0m
-[33m[ WARN] [1579355480.881014962, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+29229560
+[33m[ WARN] [1579355749.372022716, 0.500000000]: Starting output open list: [0m
+[33m[ WARN] [1579355749.372033947, 0.500000000]: Starting output close list: f60h50x2y1 parent x1y1 flag3, [0m
+[0m[ INFO] [1579355749.372040418, 0.500000000]: checking point 3,1,, g:20, f:60, flag:3[0m
+[33m[ WARN] [1579355749.372049524, 0.500000000]: conflict in 4,1,30.[0m
+[33m[ WARN] [1579355749.372055025, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 计算路径失敗！！2
 计算路径成功！！
-[0m[ INFO] [1579355480.881031563, 0.500000000]: path: x3y1 ::flag: 3,  x2y1 ::flag: 3,  x1y1 ::flag: 4,  [0m
+[0m[ INFO] [1579355749.372069379, 0.500000000]: path: x3y1 ::flag: 3,  x2y1 ::flag: 3,  x1y1 ::flag: 4,  [0m
 check arriv: curr11 start71 end71 des11 xy46065160
 tpath: [id 1 xy 71 t0] ,[id 1 xy 61 t10] ,[id 1 xy 51 t20] ,[id 1 xy 41 t30] ,[id 0 xy 11 t0] ,[id 0 xy 21 t10] ,[id 0 xy 31 t20] ,
-[0m[ INFO] [1579355480.881057524, 0.500000000]: Got init_plan_segment in main.[0m
-[0m[ INFO] [1579355480.881067878, 0.500000000]: INIT DONE[0m
-[33m[ WARN] [1579355480.881078922, 0.500000000]: find the right init_planner_group.[0m
-[33m[ WARN] [1579355480.881089807, 0.500000000]: feedback: 70[0m
-[33m[ WARN] [1579355480.881098166, 0.500000000]: feedback: 80[0m
-[0m[ INFO] [1579355480.881110651, 0.500000000]: pg pointer in s and g: 0x132aee8[0m
-[33m[ WARN] [1579355480.881148438, 0.500000000]: this is a new planner[0m
-[0m[ INFO] [1579355480.881158718, 0.500000000]: got last currentpoint as now startpoint.41[0m
-[0m[ INFO] [1579355480.881167408, 0.500000000]: got destination.41[0m
-[33m[ WARN] [1579355480.881192385, 0.500000000]: this is a new planner[0m
-[0m[ INFO] [1579355480.881201370, 0.500000000]: got last currentpoint as now startpoint.31[0m
-[0m[ INFO] [1579355480.881210033, 0.500000000]: got destination.31[0m
-[0m[ INFO] [1579355480.881219764, 0.500000000]: # grow tree 2 leaf![0m
-[0m[ INFO] [1579355480.881229343, 0.500000000]: get map with height and width as 30 31 1[0m
-[0m[ INFO] [1579355480.881267199, 0.500000000]: now test the map[0m
-[0m[ INFO] [1579355480.881279607, 0.500000000]: now test the nodes[0m
-[0m[ INFO] [1579355480.881677500, 0.500000000]: goal and it's flag 7 1 0[0m
-[0m[ INFO] [1579355480.881687823, 0.500000000]: start point in map 4 1
+[0m[ INFO] [1579355749.372088400, 0.500000000]: Got init_plan_segment in main.[0m
+[0m[ INFO] [1579355749.372096388, 0.500000000]: INIT DONE[0m
+[33m[ WARN] [1579355749.372104955, 0.500000000]: find the right init_planner_group.[0m
+[33m[ WARN] [1579355749.372112757, 0.500000000]: feedback: 70[0m
+[33m[ WARN] [1579355749.372118479, 0.500000000]: feedback: 80[0m
+[0m[ INFO] [1579355749.372131275, 0.500000000]: pg pointer in s and g: 0x1bdf368[0m
+[33m[ WARN] [1579355749.372151736, 0.500000000]: this is a new planner[0m
+[0m[ INFO] [1579355749.372158662, 0.500000000]: got last currentpoint as now startpoint.41[0m
+[0m[ INFO] [1579355749.372166939, 0.500000000]: got destination.71[0m
+[33m[ WARN] [1579355749.372194695, 0.500000000]: this is a new planner[0m
+[0m[ INFO] [1579355749.372200546, 0.500000000]: got last currentpoint as now startpoint.31[0m
+[0m[ INFO] [1579355749.372205316, 0.500000000]: got destination.11[0m
+[0m[ INFO] [1579355749.372211997, 0.500000000]: # grow tree 2 leaf![0m
+[0m[ INFO] [1579355749.372220531, 0.500000000]: get map with height and width as 30 31 1[0m
+[0m[ INFO] [1579355749.372251252, 0.500000000]: now test the map[0m
+[0m[ INFO] [1579355749.372260237, 0.500000000]: now test the nodes[0m
+[0m[ INFO] [1579355749.372657688, 0.500000000]: goal and it's flag 7 1 0[0m
+[0m[ INFO] [1579355749.372667486, 0.500000000]: start point in map 4 1
 [0m
-[0m[ INFO] [1579355480.881698264, 0.500000000]: start and it's flag 4 1 0[0m
+[0m[ INFO] [1579355749.372671798, 0.500000000]: start and it's flag 4 1 0[0m
 开始计算路径！
-[0m[ INFO] [1579355480.881706907, 0.500000000]: start points:4 1[0m
-20175952
-[33m[ WARN] [1579355480.881716031, 0.500000000]: Starting output open list: [0m
-[0m[ INFO] [1579355480.881724705, 0.500000000]: checking point 4,1,, g:0, f:30, flag:4[0m
-[33m[ WARN] [1579355480.881735869, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+[0m[ INFO] [1579355749.372678761, 0.500000000]: start points:4 1[0m
+29342880
+[33m[ WARN] [1579355749.372685987, 0.500000000]: Starting output open list: [0m
+[0m[ INFO] [1579355749.372692127, 0.500000000]: checking point 4,1,, g:0, f:30, flag:4[0m
+[33m[ WARN] [1579355749.372701008, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 0
-20175992
-[33m[ WARN] [1579355480.881748887, 0.500000000]: Starting output open list: f50h40x3y1 parent x4y1 flag2, [0m
-[33m[ WARN] [1579355480.881758275, 0.500000000]: Starting output close list: [0m
-[0m[ INFO] [1579355480.881766434, 0.500000000]: checking point 5,1,, g:10, f:30, flag:3[0m
-[33m[ WARN] [1579355480.881779464, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+29342920
+[33m[ WARN] [1579355749.372708995, 0.500000000]: Starting output open list: f50h40x3y1 parent x4y1 flag2, [0m
+[33m[ WARN] [1579355749.372713865, 0.500000000]: Starting output close list: [0m
+[0m[ INFO] [1579355749.372719314, 0.500000000]: checking point 5,1,, g:10, f:30, flag:3[0m
+[33m[ WARN] [1579355749.372730246, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 1
-20176032
-[33m[ WARN] [1579355480.881792310, 0.500000000]: Starting output open list: f50h30x5y2 parent x5y1 flag2, f50h40x3y1 parent x4y1 flag2, [0m
-[33m[ WARN] [1579355480.881804621, 0.500000000]: Starting output close list: f30h20x5y1 parent x4y1 flag3, [0m
-[0m[ INFO] [1579355480.881812729, 0.500000000]: checking point 6,1,, g:20, f:30, flag:3[0m
-[0m[ INFO] [1579355480.881824245, 0.500000000]: destination already got in openlist.71[0m
+29342960
+[33m[ WARN] [1579355749.372738582, 0.500000000]: Starting output open list: f50h30x5y2 parent x5y1 flag2, f50h40x3y1 parent x4y1 flag2, [0m
+[33m[ WARN] [1579355749.372749784, 0.500000000]: Starting output close list: f30h20x5y1 parent x4y1 flag3, [0m
+[0m[ INFO] [1579355749.372754025, 0.500000000]: checking point 6,1,, g:20, f:30, flag:3[0m
+[0m[ INFO] [1579355749.372760443, 0.500000000]: destination already got in openlist.71[0m
 计算路径成功！！
-[0m[ INFO] [1579355480.881841227, 0.500000000]: path: x7y1 ::flag: 2,  x6y1 ::flag: 3,  x5y1 ::flag: 3,  x4y1 ::flag: 4,  [0m
+[0m[ INFO] [1579355749.372772577, 0.500000000]: path: x7y1 ::flag: 2,  x6y1 ::flag: 3,  x5y1 ::flag: 3,  x4y1 ::flag: 4,  [0m
 check arriv: curr41 start71 end71 des41 xy46065160
 tpath: [id 0 xy 41 t0] ,[id 0 xy 51 t10] ,[id 0 xy 61 t20] ,[id 0 xy 71 t30] ,
-[0m[ INFO] [1579355480.881866164, 0.500000000]: # grow tree 2 leaf![0m
-[0m[ INFO] [1579355480.881875881, 0.500000000]: get map with height and width as 30 31 1[0m
-[0m[ INFO] [1579355480.881916337, 0.500000000]: now test the map[0m
-[0m[ INFO] [1579355480.881928991, 0.500000000]: now test the nodes[0m
-[0m[ INFO] [1579355480.882231170, 0.500000000]: goal and it's flag 1 1 0[0m
-[0m[ INFO] [1579355480.882241937, 0.500000000]: start point in map 3 1
+[0m[ INFO] [1579355749.372793132, 0.500000000]: # grow tree 2 leaf![0m
+[0m[ INFO] [1579355749.372800325, 0.500000000]: get map with height and width as 30 31 1[0m
+[0m[ INFO] [1579355749.372831117, 0.500000000]: now test the map[0m
+[0m[ INFO] [1579355749.372839026, 0.500000000]: now test the nodes[0m
+[0m[ INFO] [1579355749.373157466, 0.500000000]: goal and it's flag 1 1 0[0m
+[0m[ INFO] [1579355749.373166245, 0.500000000]: start point in map 3 1
 [0m
-[0m[ INFO] [1579355480.882252224, 0.500000000]: start and it's flag 3 1 0[0m
+[0m[ INFO] [1579355749.373171016, 0.500000000]: start and it's flag 3 1 0[0m
 开始计算路径！
-[0m[ INFO] [1579355480.882260627, 0.500000000]: start points:3 1[0m
-20216088
-[33m[ WARN] [1579355480.882269645, 0.500000000]: Starting output open list: [0m
-[0m[ INFO] [1579355480.882281451, 0.500000000]: checking point 3,1,, g:0, f:20, flag:4[0m
-[33m[ WARN] [1579355480.882309306, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
+[0m[ INFO] [1579355749.373175971, 0.500000000]: start points:3 1[0m
+29386440
+[33m[ WARN] [1579355749.373181298, 0.500000000]: Starting output open list: [0m
+[0m[ INFO] [1579355749.373186148, 0.500000000]: checking point 3,1,, g:0, f:20, flag:4[0m
+[33m[ WARN] [1579355749.373194454, 0.500000000]: Check_and_Put_to_Openlist FALSE![0m
 #计算路径 0
-20216048
-[33m[ WARN] [1579355480.882320749, 0.500000000]: Starting output open list: f40h30x4y1 parent x3y1 flag2, [0m
-[33m[ WARN] [1579355480.882329889, 0.500000000]: Starting output close list: [0m
-[0m[ INFO] [1579355480.882339053, 0.500000000]: checking point 2,1,, g:10, f:20, flag:3[0m
-[0m[ INFO] [1579355480.882350191, 0.500000000]: destination already got in openlist.11[0m
+29386400
+[33m[ WARN] [1579355749.373203906, 0.500000000]: Starting output open list: f40h30x4y1 parent x3y1 flag2, [0m
+[33m[ WARN] [1579355749.373209947, 0.500000000]: Starting output close list: [0m
+[0m[ INFO] [1579355749.373214120, 0.500000000]: checking point 2,1,, g:10, f:20, flag:3[0m
+[0m[ INFO] [1579355749.373220815, 0.500000000]: destination already got in openlist.11[0m
 计算路径成功！！
-[0m[ INFO] [1579355480.882365262, 0.500000000]: path: x1y1 ::flag: 2,  x2y1 ::flag: 3,  x3y1 ::flag: 4,  [0m
+[0m[ INFO] [1579355749.373232008, 0.500000000]: path: x1y1 ::flag: 2,  x2y1 ::flag: 3,  x3y1 ::flag: 4,  [0m
 check arriv: curr31 start11 end11 des31 xy46065160
 tpath: [id 0 xy 41 t0] ,[id 0 xy 51 t10] ,[id 0 xy 61 t20] ,[id 0 xy 71 t30] ,[id 1 xy 31 t0] ,[id 1 xy 21 t10] ,[id 1 xy 11 t20] ,
-[33m[ WARN] [1579355480.882399026, 0.500000000]: ALL ARRIVED AND EXIT[0m
-[33m[ WARN] [1579355480.882410501, 0.500000000]: OKOK[0m
-[33m[ WARN] [1579355480.882420759, 0.500000000]: planners size: 2[0m
-[0m[ INFO] [1579355480.882433297, 0.500000000]: dep: 1[0m
-[0m[ INFO] [1579355480.882442852, 0.500000000]: now we will pub full path...[0m
-[0m[ INFO] [1579355480.882460537, 0.500000000]: points in fullpath: 7 1[0m
-[0m[ INFO] [1579355480.882469526, 0.500000000]: points in fullpath: 6 1[0m
-[0m[ INFO] [1579355480.882479909, 0.500000000]: points in fullpath: 5 1[0m
-[0m[ INFO] [1579355480.882488938, 0.500000000]: points in fullpath: 4 1[0m
-[0m[ INFO] [1579355480.882497992, 0.500000000]: points in fullpath: 4 1[0m
-[0m[ INFO] [1579355480.882507211, 0.500000000]: points in fullpath: 5 1[0m
-[0m[ INFO] [1579355480.882516867, 0.500000000]: points in fullpath: 6 1[0m
-[0m[ INFO] [1579355480.882527663, 0.500000000]: points in fullpath: 7 1[0m
-[33m[ WARN] [1579355480.882538694, 0.500000000]: planners size: 2[0m
-[0m[ INFO] [1579355480.882549259, 0.500000000]: dep: 1[0m
-[0m[ INFO] [1579355480.882557255, 0.500000000]: now we will pub full path...[0m
-[0m[ INFO] [1579355480.882566827, 0.500000000]: points in fullpath: 1 1[0m
-[0m[ INFO] [1579355480.882575478, 0.500000000]: points in fullpath: 2 1[0m
-[0m[ INFO] [1579355480.882584382, 0.500000000]: points in fullpath: 3 1[0m
-[0m[ INFO] [1579355480.882593185, 0.500000000]: points in fullpath: 3 1[0m
-[0m[ INFO] [1579355480.882602658, 0.500000000]: points in fullpath: 2 1[0m
-[0m[ INFO] [1579355480.882610124, 0.500000000]: points in fullpath: 1 1[0m
-[0m[ INFO] [1579355480.155439621]: Loading map from image "/home/lyunfan/ROS-WS-PLANNING/src/astar_global_planner/map/prior.png"[0m
-[0m[ INFO] [1579355480.579594110, 0.200000000]: Read a 31 X 30 map @ 1.000 m/cell[0m
-... logging to /home/lyunfan/.ros/log/9ad765a4-39f9-11ea-a55e-0028f8db9ba1/roslaunch-lyunfan-MS-7A67-2829.log
+[33m[ WARN] [1579355749.373274842, 0.500000000]: ALL ARRIVED AND EXIT[0m
+[33m[ WARN] [1579355749.373284849, 0.500000000]: OKOK[0m
+[33m[ WARN] [1579355749.373293891, 0.500000000]: planners size: 2[0m
+[0m[ INFO] [1579355749.373303796, 0.500000000]: dep: 1[0m
+[0m[ INFO] [1579355749.373309478, 0.500000000]: now we will pub full path...[0m
+[0m[ INFO] [1579355749.373322891, 0.500000000]: points in fullpath: 7 1[0m
+[0m[ INFO] [1579355749.373328769, 0.500000000]: points in fullpath: 6 1[0m
+[0m[ INFO] [1579355749.373333742, 0.500000000]: points in fullpath: 5 1[0m
+[0m[ INFO] [1579355749.373339191, 0.500000000]: points in fullpath: 4 1[0m
+[0m[ INFO] [1579355749.373344076, 0.500000000]: points in fullpath: 4 1[0m
+[0m[ INFO] [1579355749.373349365, 0.500000000]: points in fullpath: 5 1[0m
+[0m[ INFO] [1579355749.373354850, 0.500000000]: points in fullpath: 6 1[0m
+[0m[ INFO] [1579355749.373360126, 0.500000000]: points in fullpath: 7 1[0m
+[33m[ WARN] [1579355749.373369415, 0.500000000]: planners size: 2[0m
+[0m[ INFO] [1579355749.373376459, 0.500000000]: dep: 1[0m
+[0m[ INFO] [1579355749.373380383, 0.500000000]: now we will pub full path...[0m
+[0m[ INFO] [1579355749.373387493, 0.500000000]: points in fullpath: 1 1[0m
+[0m[ INFO] [1579355749.373392391, 0.500000000]: points in fullpath: 2 1[0m
+[0m[ INFO] [1579355749.373397763, 0.500000000]: points in fullpath: 3 1[0m
+[0m[ INFO] [1579355749.373401893, 0.500000000]: points in fullpath: 3 1[0m
+[0m[ INFO] [1579355749.373407577, 0.500000000]: points in fullpath: 2 1[0m
+[0m[ INFO] [1579355749.373413303, 0.500000000]: points in fullpath: 1 1[0m
+[0m[ INFO] [1579355748.547945016]: Loading map from image "/home/lyunfan/ROS-WS-PLANNING/src/astar_global_planner/map/prior.png"[0m
+[0m[ INFO] [1579355749.131613290, 0.300000000]: Read a 31 X 30 map @ 1.000 m/cell[0m
+... logging to /home/lyunfan/.ros/log/3ad0a50c-39fa-11ea-a55e-0028f8db9ba1/roslaunch-lyunfan-MS-7A67-4893.log
 Checking log directory for disk usage. This may take awhile.
 Press Ctrl-C to interrupt
 Done checking log file disk usage. Usage is <1GB.
 ]2;/home/lyunfan/ROS-WS-PLANNING/src/astar_global_planner/launch/task.launch
-[1mstarted roslaunch server http://lyunfan-MS-7A67:45041/[0m
+[1mstarted roslaunch server http://lyunfan-MS-7A67:44215/[0m
 
 SUMMARY
 ========
@@ -334,20 +334,20 @@ NODES
     trimap_node (trimap/trimap_node)
 
 auto-starting new master
-[1mprocess[master]: started with pid [2839][0m
+[1mprocess[master]: started with pid [4903][0m
 [1mROS_MASTER_URI=http://localhost:11311[0m
 ]2;/home/lyunfan/ROS-WS-PLANNING/src/astar_global_planner/launch/task.launch http://localhost:11311
-[1msetting /run_id to 9ad765a4-39f9-11ea-a55e-0028f8db9ba1[0m
-[1mprocess[rosout-1]: started with pid [2852][0m
+[1msetting /run_id to 3ad0a50c-39fa-11ea-a55e-0028f8db9ba1[0m
+[1mprocess[rosout-1]: started with pid [4916][0m
 started core service [/rosout]
-[1mprocess[model-2]: started with pid [2860][0m
-[1mprocess[maptoodom_broadcaster-3]: started with pid [2872][0m
-[1mprocess[map_pub-4]: started with pid [2879][0m
-[1mprocess[rviz-5]: started with pid [2884][0m
-[1mprocess[rob1/astar_planner-6]: started with pid [2890][0m
-[1mprocess[trimap_node-7]: started with pid [2907][0m
+[1mprocess[model-2]: started with pid [4923][0m
+[1mprocess[maptoodom_broadcaster-3]: started with pid [4932][0m
+[1mprocess[map_pub-4]: started with pid [4942][0m
+[1mprocess[rviz-5]: started with pid [4953][0m
+[1mprocess[rob1/astar_planner-6]: started with pid [4961][0m
+[1mprocess[trimap_node-7]: started with pid [4972][0m
 [1m[rob1/astar_planner-6] process has finished cleanly
-log file: /home/lyunfan/.ros/log/9ad765a4-39f9-11ea-a55e-0028f8db9ba1/rob1-astar_planner-6*.log[0m
+log file: /home/lyunfan/.ros/log/3ad0a50c-39fa-11ea-a55e-0028f8db9ba1/rob1-astar_planner-6*.log[0m
 [trimap_node-7] killing on exit
 [rviz-5] killing on exit
 [map_pub-4] killing on exit
