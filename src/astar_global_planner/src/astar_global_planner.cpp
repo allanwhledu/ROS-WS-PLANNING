@@ -512,8 +512,8 @@ void AStartFindPath::setTarget() {
 
     // 2. change endpoint's flag.
     m_node[des_y][des_x].flag = DESTINATION;
-    endpoint_x = des_x;
-    endpoint_y = des_y;
+//    endpoint_x = des_x;
+//    endpoint_y = des_y;
 
     // run algorithm.
 //    ROS_INFO_STREAM("getting path...");
