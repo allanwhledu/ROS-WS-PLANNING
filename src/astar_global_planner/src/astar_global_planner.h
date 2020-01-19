@@ -116,9 +116,6 @@ public:
 //    int m_height,m_width;
 //    double m_resolution;
 
-    //Lists
-//    ListNode* openlist;
-//    ListNode* closelist ;
     std::list <ListNode> *closelist;
     std::list <ListNode> *openlist;
 

@@ -89,7 +89,8 @@ bool AStartFindPath::IsAvailable(int x, int y, int time) {
 
     for (auto it = group_ptr->tpath.begin(); it != group_ptr->tpath.end(); it++) {
         // this is not very good if
-        if ((x == it->x && y == it->y && time == it->t) || (x == it->x && y == it->y && time == (it->t)-10) || (x == it->x && y == it->y && time == (it->t)+10)) {
+        if ((x == it->x && y == it->y && time == it->t) || (x == it->x && y == it->y && time == (it->t) - 10) ||
+            (x == it->x && y == it->y && time == (it->t) + 10)) {
             ROS_WARN_STREAM("conflict in " << x << "," << y << "," << time << ".");
             return false;
         }
@@ -187,7 +188,8 @@ void AStartFindPath::AddNode2Close(std::list <ListNode> *close, std::list <ListN
     open->pop_front();
     if (!close->empty()) {
         ROS_WARN_STREAM("put to close and check...(startpoint would not into close)");
-        ROS_WARN_STREAM(close->back().PtrToNode->location_x<<close->back().PtrToNode->location_y<<" "<<close->back().PtrToNode->flag);
+        ROS_WARN_STREAM(close->back().PtrToNode->location_x << close->back().PtrToNode->location_y << " "
+                                                            << close->back().PtrToNode->flag);
         if (no_nullptr_in_close(close)) {
             close->sort(Comp); //TODO: bug
 //            ROS_INFO_STREAM("end sort");
@@ -241,8 +243,7 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::
                                 << ", h:" << m_node[new_y][new_x].value_h << "," << ", g:"
                                 << m_node[new_y][new_x].value_g << ", f:" << m_node[new_y][new_x].value_f);
             AddNode2Open(open, &m_node[new_y][new_x]);
-        }
-        else
+        } else
             ROS_INFO_STREAM(
                     "will not add node " << m_node[new_y][new_x].location_x << "," << m_node[new_y][new_x].location_y
                                          << "," << ", g:" << m_node[new_y][new_x].value_g << ", f:"
@@ -260,23 +261,21 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
     printf("开始计算路径！\n");
 
     // check 1 step from startpoint.
-    ROS_INFO_STREAM("start points:" << startpoint_x << " " << startpoint_y);
+//    ROS_INFO_STREAM("start points:" << startpoint_x << " " << startpoint_y);
 
     // circulate check...
     while (!Check_and_Put_to_Openlist(open, close)) {
         printf("#计算路径 %d\n", i - 1);
 
+//        ROS_INFO_STREAM("completed segment path.");
+//        ROS_INFO_STREAM(i);
         int length = 8;
         if (++i > length) {
-//            ROS_INFO_STREAM("completed segment path.");
-//            ROS_INFO_STREAM(i);
             printf("no destination in length %d\n", i);
             break;
         }
 
         if (!open->front().PtrToNode || !open->size() || !open) {
-//            ROS_INFO_STREAM("completed segment path.");
-//            ROS_INFO_STREAM(i);
             printf("计算路径失敗！！%d\n", i);
             noPath = true;
             break;
@@ -296,9 +295,9 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
         closeAndopen->push_back(*it);
     closeAndopen->sort(Comp);
 
-    ROS_INFO_STREAM("now points in closeAndopen: " << closeAndopen->size());
-    if(!closeAndopen->empty())
-    {
+//    ROS_INFO_STREAM("now points in closeAndopen: " << closeAndopen->size());
+    if (!closeAndopen->empty()) {
+        /*
         for (list<ListNode>::iterator it = closeAndopen->begin(); it != closeAndopen->end(); ++it)
             if (it->PtrToNode->parent != NULL)
                 ROS_INFO_STREAM(
@@ -306,14 +305,15 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
                                                   << " h" << it->PtrToNode->value_h << " g" << it->PtrToNode->value_g
                                                   << " f" << it->PtrToNode->value_f << " parent-> "
                                                   << it->PtrToNode->parent->location_x << " "
-                                                  << it->PtrToNode->parent->location_y);
+                                                  << it->PtrToNode->parent->location_y);*/
         Node *forstepcount;
         forstepcount = &m_node[closeAndopen->front().PtrToNode->location_y][closeAndopen->front().PtrToNode->location_x];
 
         plan.header.frame_id = plan.header.frame_id = "odom";
         string path = "path: ";
         while (forstepcount->flag != STARTPOINT) {
-            path += ("x" + intToString(forstepcount->location_x) + "y" + intToString(forstepcount->location_y) + " ::flag: "
+            path += ("x" + intToString(forstepcount->location_x) + "y" + intToString(forstepcount->location_y) +
+                     " ::flag: "
                      + intToString(forstepcount->flag) + ",  ");
 
 //        if (forstepcount->parent != NULL)
@@ -353,9 +353,8 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
         int path_length0 = plan.poses.size();
         if (path_length0 > path_length) {
             plan.poses.erase(plan.poses.end() - (path_length0 - path_length), plan.poses.end());
-        } else
-        {
-            for(int i = 0; i< path_length - path_length0; i++)
+        } else {
+            for (int i = 0; i < path_length - path_length0; i++)
                 plan.poses.push_back(plan.poses.back());
         }
 
@@ -365,8 +364,10 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
 //    printf("check arriv: curr%d%d start%d%d end%d%d des%d%d xy%d%d\n", plan.poses.back().pose.position.x,
 //           plan.poses.back().pose.position.y, startpoint_x,
 //           startpoint_y, endpoint_x, endpoint_y, des_x, des_y, x, y);
-        ROS_WARN_STREAM("check arriv: curr"<<plan.poses.back().pose.position.x<<plan.poses.back().pose.position.y<<" start"<<startpoint_x<<
-                                           startpoint_y<<" end"<<endpoint_x<<endpoint_y<<" des"<<des_x<<des_y<<" xy"<<x<<y);
+        ROS_WARN_STREAM("check arriv: curr" << plan.poses.back().pose.position.x << plan.poses.back().pose.position.y
+                                            << " start" << startpoint_x <<
+                                            startpoint_y << " end" << endpoint_x << endpoint_y << " des" << des_x
+                                            << des_y << " xy" << x << y);
 
         // return tpath.
         Tpoint tpoint;
@@ -377,22 +378,20 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
             tpoint.t = i * DISTANCE;
             group_ptr->tpath.push_back(tpoint);
         }
-    } else
-    {
+    } else {
         geometry_msgs::PoseStamped point;
         point.pose.position.x = startpoint_x;
         point.pose.position.y = startpoint_y;
         plan.poses.push_back(point);
 
-        reverse(plan.poses.begin(), plan.poses.end());//TODO 估计是这儿出了问题，后头把起点当终点了
+        reverse(plan.poses.begin(), plan.poses.end()); //TODO 估计是这儿出了问题，后头把起点当终点了
 
         int path_length = 4;
         int path_length0 = plan.poses.size();
         if (path_length0 > path_length) {
             plan.poses.erase(plan.poses.end() - (path_length0 - path_length), plan.poses.end());
-        } else
-        {
-            for(int i = 0; i< path_length - path_length0; i++)
+        } else {
+            for (int i = 0; i < path_length - path_length0; i++)
                 plan.poses.push_back(plan.poses.back());
         }
 
@@ -402,8 +401,10 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
 //    printf("check arriv: curr%d%d start%d%d end%d%d des%d%d xy%d%d\n", plan.poses.back().pose.position.x,
 //           plan.poses.back().pose.position.y, startpoint_x,
 //           startpoint_y, endpoint_x, endpoint_y, des_x, des_y, x, y);
-        ROS_WARN_STREAM("check arriv: curr"<<plan.poses.back().pose.position.x<<plan.poses.back().pose.position.y<<" start"<<startpoint_x<<
-                                           startpoint_y<<" end"<<endpoint_x<<endpoint_y<<" des"<<des_x<<des_y<<" xy"<<x<<y);
+        ROS_WARN_STREAM("check arriv: curr" << plan.poses.back().pose.position.x << plan.poses.back().pose.position.y
+                                            << " start" << startpoint_x <<
+                                            startpoint_y << " end" << endpoint_x << endpoint_y << " des" << des_x
+                                            << des_y << " xy" << x << y);
 
         // return tpath.
         Tpoint tpoint;
@@ -543,9 +544,8 @@ void AStartFindPath::setTarget() {
 
     // set start.
     GetPos(x, y);
-    ROS_INFO_STREAM("start and it's flag " << m_node[y][x].location_x << " " << m_node[y][x].location_y << " "
-                                           << m_node[y][x].flag);
-
+//    ROS_INFO_STREAM("start and it's flag " << m_node[y][x].location_x << " " << m_node[y][x].location_y << " "
+//                                           << m_node[y][x].flag);
 
     // load map in rootloop.
 
@@ -573,13 +573,8 @@ void AStartFindPath::setTarget() {
 
     // 2. change endpoint's flag.
     m_node[des_y][des_x].flag = DESTINATION;
-//    endpoint_x = des_x;
-//    endpoint_y = des_y;
 
-    // run algorithm.
-//    ROS_INFO_STREAM("getting path...");
     FindDestinnation(openlist, closelist);
-//    ROS_INFO_STREAM("has get path.");
 }
 
 void AStartFindPath::clear_tmpplan() {

@@ -78,7 +78,7 @@ void print_open_planner_group_vec(vector <tree<planner_group>::iterator> &open_p
 
 void sort_open_planner_group_vec(vector <tree<planner_group>::iterator> &open_planner_group_vec) {
     sort(open_planner_group_vec.begin(), open_planner_group_vec.end(), feedback_smaller_than);
-    print_open_planner_group_vec(open_planner_group_vec);
+//    print_open_planner_group_vec(open_planner_group_vec);
 }
 
 
