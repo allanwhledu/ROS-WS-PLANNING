@@ -222,17 +222,17 @@ int main(int argc, char **argv) {
             ROS_WARN_STREAM(
                     "tree size: " << test.tr->size() << ", tree depth: " << test.tr->depth(last_planner_group));
 
-            //至此，指定层数的扩展已经进行完毕
-//        }
+        }
+        //至此，指定层数的扩展已经进行完毕
 
-            loop_count++;
+        loop_count++;
 //
 //        for (int i = 0; i < 3; i++) {
 //            r.sleep();
 //        }
 
-            ROS_INFO_STREAM("next loop -----------------------");
-        }
-
-        return 0;
+        ROS_INFO_STREAM("next loop -----------------------");
     }
+
+    return 0;
+}
