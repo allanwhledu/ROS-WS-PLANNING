@@ -221,6 +221,9 @@ int main(int argc, char **argv) {
                         (*open_planner_group_vec.back()).publish_path(fullpaths, open_planner_group_vec.back(),
                                                                       nav_plans);
                         r.sleep();
+                        r.sleep();
+                        r.sleep();
+                        r.sleep();
                     }
                     exit(0);
                 }

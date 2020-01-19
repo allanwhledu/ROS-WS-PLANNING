@@ -90,8 +90,8 @@ bool AStartFindPath::IsAvailable(int x, int y, int time) {
     for (auto it = group_ptr->tpath.begin(); it != group_ptr->tpath.end(); it++) {
         bool xy_conflict = x == it->x && y == it->y;
         // this is not very good if
-        if ((xy_conflict && time == it->t) || (xy_conflict && time == (it->t) - 10)
-            || (xy_conflict && time == (it->t) + 10)) {
+        if (xy_conflict )
+        {
             ROS_WARN_STREAM("conflict in " << x << "," << y << "," << time << ".");
             return false;
         }

@@ -130,8 +130,11 @@ public:
             ROS_INFO_STREAM("dep: " << dep);
             ROS_INFO_STREAM("now we will pub full path...");
             if (!published)
-                for (auto &pose : fullpath.poses)
-                    ROS_INFO_STREAM("points in fullpath: " << pose.pose.position.x << " " << pose.pose.position.y);
+                for (auto j = 0; j<fullpath.poses.size(); j++)
+                {
+                    ROS_INFO_STREAM("points in fullpath: " << fullpath.poses.at(j).pose.position.y<< " " << fullpath.poses.at(j).pose.position.x<<" "<<j);
+                }
+
             nav_plans[i].publish(fullpath);
         }
         published = true;
