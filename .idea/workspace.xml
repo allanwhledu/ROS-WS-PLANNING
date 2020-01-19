@@ -32,6 +32,7 @@
   <component name="ChangeListManager">
     <list default="true" id="4da7b6d7-a2fa-4e81-aee4-3facd065b870" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/rosout.log" beforeDir="false" afterPath="$PROJECT_DIR$/rosout.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -47,8 +48,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="283">
-              <caret line="158" column="25" lean-forward="true" selection-start-line="158" selection-start-column="8" selection-end-line="158" selection-end-column="25" />
+            <state relative-caret-position="153">
+              <caret line="148" column="39" lean-forward="true" selection-start-line="148" selection-start-column="39" selection-end-line="148" selection-end-column="39" />
             </state>
           </provider>
         </entry>
@@ -65,8 +66,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="371" column="23" selection-start-line="371" selection-start-column="18" selection-end-line="371" selection-end-column="23" />
+            <state relative-caret-position="229">
+              <caret line="527" column="30" selection-start-line="527" selection-start-column="21" selection-end-line="527" selection-end-column="30" />
             </state>
           </provider>
         </entry>
@@ -74,8 +75,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="291">
-              <caret line="58" column="29" selection-start-line="58" selection-start-column="29" selection-end-line="58" selection-end-column="29" />
+            <state relative-caret-position="216">
+              <caret line="51" column="42" selection-start-line="51" selection-start-column="42" selection-end-line="51" selection-end-column="42" />
             </state>
           </provider>
         </entry>
@@ -84,23 +85,16 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>endpoint_y</find>
-      <find>endpoint_y =</find>
-      <find>permt</find>
-      <find>set_planner_group</find>
       <find>endpoint_x</find>
       <find>startpoint_x</find>
       <find>startpoint_x =</find>
       <find>got dest</find>
       <find>pathes</find>
       <find>settar</find>
-      <find>setTarget</find>
       <find>add_feedback_from_path</find>
       <find>get_planner_by_robot_ID</find>
       <find>now</find>
-      <find>tpath</find>
       <find>init_already</find>
-      <find>print_tpath</find>
       <find>output_nodelist</find>
       <find>start and</find>
       <find>now points</find>
@@ -114,6 +108,13 @@
       <find>失败</find>
       <find>失敗</find>
       <find>_tpath</find>
+      <find>print_tpath</find>
+      <find>IsAvailable</find>
+      <find>10</find>
+      <find>tpath</find>
+      <find>失</find>
+      <find>FindDestinnation</find>
+      <find>setTarget</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -196,7 +197,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="7708000" />
+    <option name="totallyTimeSpent" value="8500000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="57" y="23" width="1223" height="777" extended-state="6" />
@@ -275,24 +276,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.cpp">
+    <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="371" column="23" selection-start-line="371" selection-start-column="18" selection-end-line="371" selection-end-column="23" />
+        <state relative-caret-position="153">
+          <caret line="148" column="39" lean-forward="true" selection-start-line="148" selection-start-column="39" selection-end-line="148" selection-end-column="39" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/multi_robot_astar_planner.h">
+    <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="158" column="25" lean-forward="true" selection-start-line="158" selection-start-column="8" selection-end-line="158" selection-end-column="25" />
+        <state relative-caret-position="229">
+          <caret line="527" column="30" selection-start-line="527" selection-start-column="21" selection-end-line="527" selection-end-column="30" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="58" column="29" selection-start-line="58" selection-start-column="29" selection-end-line="58" selection-end-column="29" />
+        <state relative-caret-position="216">
+          <caret line="51" column="42" selection-start-line="51" selection-start-column="42" selection-end-line="51" selection-end-column="42" />
         </state>
       </provider>
     </entry>

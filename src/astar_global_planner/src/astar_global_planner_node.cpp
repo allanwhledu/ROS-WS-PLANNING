@@ -49,7 +49,7 @@ grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null
 //        ROS_INFO_STREAM("we can access the tr.planner.");
         newpg->planners.at(permti[i])->de_map_Callback(mapmsg);
         newpg->planners.at(permti[i])->setTarget();
-        if ((*newpg).planners.at(i)->noPath == true) {
+        if ((*newpg).planners.at(permti[i])->noPath == true) {
             (*newpg).noPath = true;
         }
     }
@@ -63,8 +63,7 @@ grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null
         if (!newpg->planners.at(i)->plan.poses.empty()) {
             nav_msgs::Path new_path = newpg->planners.at(i)->plan;
             null_path.push_back(new_path);
-            (*newpg).add_feedback_from_path(newpg->planners.at(i), i); //TODO: 是在这里吗？　还是应该在main函数里
-//            ROS_INFO_STREAM("Got init_plan_segment in grow_tree.");
+            (*newpg).add_feedback_from_path(newpg->planners.at(i), i);
         }
     }
     for (int i = 0; i < num_robots; ++i) {
