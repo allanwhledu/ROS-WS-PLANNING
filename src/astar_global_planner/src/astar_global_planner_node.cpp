@@ -73,14 +73,16 @@ grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null
 }
 
 void print_open_planner_group_vec(vector <tree<planner_group>::iterator> &open_planner_group_vec) {
+    std::cout << "feedback:";
     for (int i = 0; i < open_planner_group_vec.size(); ++i) {
-        ROS_WARN_STREAM("feedback: " << open_planner_group_vec.at(i)->feedback);
+        std::cout << " " << open_planner_group_vec.at(i)->feedback;
     }
+    std::cout << endl;
 }
 
 void sort_open_planner_group_vec(vector <tree<planner_group>::iterator> &open_planner_group_vec) {
     sort(open_planner_group_vec.begin(), open_planner_group_vec.end(), feedback_smaller_than);
-//    print_open_planner_group_vec(open_planner_group_vec);
+    print_open_planner_group_vec(open_planner_group_vec);
 }
 
 
@@ -163,7 +165,7 @@ int main(int argc, char **argv) {
                 init_planner_group->print_tpath();
                 for (int idx = 0; idx < num_robots; ++idx) {
                     init_planner_group->pathes.push_back(init_planner_group->get_planner_by_robot_ID(idx)->plan);
-                    ROS_INFO_STREAM("Got init_plan_segment in main.");
+//                    ROS_INFO_STREAM("Got init_plan_segment in main.");
                 }
             }
             init_already = true;
@@ -200,7 +202,7 @@ int main(int argc, char **argv) {
             vector <nav_msgs::Path> nullpaths;
             for (int i = 0; i < permt.size(); ++i) {
                 open_planner_group_vec.push_back(grow_tree(last_planner_group, nullpaths, permt[i]));
-//                    ROS_WARN_STREAM("grow_tree complete.");
+                ROS_WARN_STREAM("grow_tree complete.");
                 //每长出一个sub pg，就放入open_planner_group_vec的末尾，并插入到tree
                 test.tr->append_child(last_planner_group, open_planner_group_vec.back());
                 //新长出来sub pg遍历其planner进行publish

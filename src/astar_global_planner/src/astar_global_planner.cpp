@@ -323,27 +323,18 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
                      " ::flag: "
                      + intToString(forstepcount->flag) + ",  ");
 
-//        if (forstepcount->parent != NULL)
-//            path += ("px" + intToString(forstepcount->parent->location_x) + "py" + intToString(forstepcount->parent->location_y) + " ::pflag: "
-//                     + intToString(forstepcount->parent->flag) + ",  ");
-
             geometry_msgs::PoseStamped point;
             point.pose.position.x = forstepcount->location_x;
             point.pose.position.y = forstepcount->location_y;
 
-//        ROS_INFO_STREAM("debug information1.");
             if (forstepcount->parent == NULL) {
-//            ROS_INFO_STREAM("debug information2.");
                 break;
             } else {
-//            ROS_INFO_STREAM("debug information3.");
                 plan.poses.push_back(point);
                 forstepcount = forstepcount->parent;
             }
-//        if (forstepcount->flag == STARTPOINT)
-//            ROS_INFO_STREAM("reaching start.");
         }
-        // here is the startpoint.
+        // startpoint.
         path += ("x" + intToString(forstepcount->location_x) + "y" + intToString(forstepcount->location_y) + " ::flag: "
                  + intToString(forstepcount->flag) + ",  ");
 
