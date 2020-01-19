@@ -186,6 +186,7 @@ int main(int argc, char **argv) {
         // .....(op6,7,8,9)..........
         // ..........................
         // ..........................
+
         tree<planner_group>::iterator last_planner_group;
         for (int idx = 0; idx < layer_depth; ++idx) {
             ROS_WARN_STREAM("finding the right planner_group." << " and idx:" << idx);
@@ -199,7 +200,7 @@ int main(int argc, char **argv) {
                 open_planner_group_vec.push_back(grow_tree(last_planner_group, nullpaths, permt[i]));
 //                    ROS_WARN_STREAM("grow_tree complete.");
                 //每长出一个sub pg，就放入open_planner_group_vec的末尾，并插入到tree
-                test.tr->append_child(last_planner_group, open_planner_group_vec.back());//TODO: ?
+                test.tr->append_child(last_planner_group, open_planner_group_vec.back());
                 //新长出来sub pg遍历其planner进行publish
                 bool all_arrived = true;
                 for (int k = 0; k < num_robots; ++k) {
@@ -208,15 +209,15 @@ int main(int argc, char **argv) {
                 }
                 if (all_arrived) {
                     ROS_WARN_STREAM("ALL ARRIVED AND EXIT");
-                    vector <nav_msgs::Path> fullpaths(num_robots); //TODO: init?
+                    vector <nav_msgs::Path> fullpaths(num_robots);
 
                     ROS_WARN_STREAM("OKOK");
                     for (int i = 0; i < 1; i++) {
                         (*open_planner_group_vec.back()).publish_path(fullpaths, open_planner_group_vec.back(),
                                                                       nav_plans);
-                        r.sleep();
+                        //r.sleep();
                     }
-                    return 0;
+                    exit(0);
                 }
             }
             ROS_WARN_STREAM(
@@ -230,9 +231,7 @@ int main(int argc, char **argv) {
 //        for (int i = 0; i < 3; i++) {
 //            r.sleep();
 //        }
-
         ROS_INFO_STREAM("next loop -----------------------");
     }
-
-    return 0;
+    exit(0);
 }

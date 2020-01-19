@@ -54,7 +54,7 @@ AStartFindPath::AStartFindPath() {
 int AStartFindPath::GetPos(int &x, int &y) {
     x = startpoint_x;
     y = startpoint_y;
-    ROS_INFO_STREAM("start point in map " << startpoint_x << " " << startpoint_y << "\n");
+//    ROS_INFO_STREAM("start point in map " << startpoint_x << " " << startpoint_y << "\n");
     return 0;
 }
 
@@ -506,7 +506,7 @@ void AStartFindPath::de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr &ms
         }
     }
 
-    ROS_INFO_STREAM("now test the map");
+//    ROS_INFO_STREAM("now test the map");
     for (int i = 0; i < m_height; i++) {
         for (int j = 0; j < m_width; j++) {
             int gray = msg->data[(i) * m_width + (j)];
@@ -514,7 +514,7 @@ void AStartFindPath::de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr &ms
         }
 //        ROS_INFO_STREAM("\n");
     }
-    ROS_INFO_STREAM("now test the nodes");
+//    ROS_INFO_STREAM("now test the nodes");
     for (int i = 0; i < m_height; i++) {
         for (int j = 0; j < m_width; j++) {
             int gray = m_node[i][j].gray_val;
