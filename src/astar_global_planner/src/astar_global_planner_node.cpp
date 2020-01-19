@@ -49,8 +49,14 @@ grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null
 //        ROS_INFO_STREAM("we can access the tr.planner.");
         newpg->planners.at(permti[i])->de_map_Callback(mapmsg);
         newpg->planners.at(permti[i])->setTarget();
+        if ((*newpg).planners.at(i)->noPath == true) {
+            (*newpg).noPath = true;
+        }
     }
-    newpg->print_tpath();
+    if (!(*newpg).noPath)
+        newpg->print_tpath();
+    else
+        std::cout << "tpath: no path!" << endl;
 
     // 让pathes还是按照 机器人ID（0，1...） 顺序
     for (int i = 0; i < num_robots; ++i) {
@@ -59,9 +65,6 @@ grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null
             null_path.push_back(new_path);
             (*newpg).add_feedback_from_path(newpg->planners.at(i), i); //TODO: 是在这里吗？　还是应该在main函数里
 //            ROS_INFO_STREAM("Got init_plan_segment in grow_tree.");
-        }
-        if ((*newpg).planners.at(i)->noPath == true) {
-            (*newpg).noPath = true;
         }
     }
     for (int i = 0; i < num_robots; ++i) {
