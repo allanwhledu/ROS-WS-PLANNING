@@ -132,9 +132,9 @@ public:
             if (!published)
                 for (auto &pose : fullpath.poses)
                     ROS_INFO_STREAM("points in fullpath: " << pose.pose.position.x << " " << pose.pose.position.y);
-            published = true;
             nav_plans[i].publish(fullpath);
         }
+        published = true;
     }
 
     tree<planner_group>::iterator grow_new_leaf() {

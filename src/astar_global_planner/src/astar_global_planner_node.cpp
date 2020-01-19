@@ -8,7 +8,7 @@ int robots_start_end_points[][4] = {
         {1, 1, 7, 1},
         {7, 1, 1, 1},
 //        {7, 1, 1, 3},
-        {7, 4, 1, 3},
+        {7, 4, 3, 1},
 };
 int num_robots = 3;
 int layer_depth = 4;
