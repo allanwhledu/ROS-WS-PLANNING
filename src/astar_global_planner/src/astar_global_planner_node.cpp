@@ -192,7 +192,8 @@ int main(int argc, char **argv) {
         // ..........................
 
         tree<planner_group>::iterator last_planner_group;
-        for (int idx = 0; idx < layer_depth; ++idx) {
+        int num_nodes_to_expand = 10;
+        for (int idx = 0; idx < num_nodes_to_expand; ++idx) {
             ROS_WARN_STREAM("finding the right planner_group." << " and idx:" << idx);
             //TODO: sort open_planner_group_vec by feedback
             sort_open_planner_group_vec(open_planner_group_vec);

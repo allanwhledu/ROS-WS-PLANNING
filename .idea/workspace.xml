@@ -76,8 +76,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="204" column="55" lean-forward="true" selection-start-line="204" selection-start-column="55" selection-end-line="204" selection-end-column="55" />
+            <state relative-caret-position="204">
+              <caret line="194" column="37" selection-start-line="194" selection-start-column="37" selection-end-line="194" selection-end-column="37" />
             </state>
           </provider>
         </entry>
@@ -112,10 +112,10 @@
       <find>check</find>
       <find>point</find>
       <find>Got init_plan_segment in main</find>
-      <find>layer_depth</find>
       <find>last_planner_group</find>
       <find>feedback</find>
       <find>feed</find>
+      <find>layer_depth</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -198,7 +198,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10822000" />
+    <option name="totallyTimeSpent" value="10917000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="57" y="23" width="1223" height="777" extended-state="6" />
@@ -311,8 +311,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/astar_global_planner/src/astar_global_planner_node.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="204" column="55" lean-forward="true" selection-start-line="204" selection-start-column="55" selection-end-line="204" selection-end-column="55" />
+        <state relative-caret-position="204">
+          <caret line="194" column="37" selection-start-line="194" selection-start-column="37" selection-end-line="194" selection-end-column="37" />
         </state>
       </provider>
     </entry>
