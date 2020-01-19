@@ -33,6 +33,7 @@ public:
 
     int feedback = 9999;
     bool noPath = false;
+    bool published = false;
     vector <Tpoint> tpath;
 
     vector <nav_msgs::Path> pathes;
@@ -44,10 +45,9 @@ public:
     tree<planner_group>::iterator self_loc;
     tree<planner_group>::iterator child_loc;
 
-    void add_feedback_from_path(AStartFindPath* planner, int idx) {
+    void add_feedback_from_path(AStartFindPath *planner, int idx) {
         if (feedback == 9999) { feedback = 0; }
-        if(planner->noPath == true)
-        {
+        if (planner->noPath == true) {
             feedback += 10000;
         } else
             feedback += DistManhattan(endpoint_x.at(idx), endpoint_y.at(idx),
@@ -129,10 +129,10 @@ public:
 
             ROS_INFO_STREAM("dep: " << dep);
             ROS_INFO_STREAM("now we will pub full path...");
-
-            for (auto &pose : fullpath.poses) {
-                ROS_INFO_STREAM("points in fullpath: " << pose.pose.position.x << " " << pose.pose.position.y);
-            }
+            if (!published)
+                for (auto &pose : fullpath.poses)
+                    ROS_INFO_STREAM("points in fullpath: " << pose.pose.position.x << " " << pose.pose.position.y);
+            published = true;
             nav_plans[i].publish(fullpath);
         }
     }

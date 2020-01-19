@@ -217,10 +217,10 @@ int main(int argc, char **argv) {
                     vector <nav_msgs::Path> fullpaths(num_robots);
 
                     ROS_WARN_STREAM("OKOK");
-                    for (int i = 0; i < 1; i++) {
+                    for (int i = 0; i < 100; i++) {
                         (*open_planner_group_vec.back()).publish_path(fullpaths, open_planner_group_vec.back(),
                                                                       nav_plans);
-                        //r.sleep();
+                        r.sleep();
                     }
                     exit(0);
                 }
