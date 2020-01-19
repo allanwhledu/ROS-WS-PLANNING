@@ -225,7 +225,8 @@ int main(int argc, char **argv) {
                 }
             }
             ROS_WARN_STREAM(
-                    "tree size: " << test.tr->size() << ", tree depth: " << test.tr->depth(last_planner_group));
+                    //"tree size: " << test.tr->size() << ", " <<
+                    "tree depth: " << idx /*test.tr->depth(last_planner_group)*/);
 
         }
         //至此，指定层数的扩展已经进行完毕
