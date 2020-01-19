@@ -257,6 +257,12 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::
     return false;
 }
 
+bool check_tpath_valid(vector <Tpoint> &tpath) {
+    for (int i = 0; i < tpath.size(); ++i) {
+
+    }
+}
+
 void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <ListNode> *close) {
     int i = 0;
     printf("开始计算路径！\n");
@@ -348,142 +354,40 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
         point.pose.position.y = forstepcount->location_y;
         plan.poses.push_back(point);
 
-        reverse(plan.poses.begin(), plan.poses.end());//TODO 估计是这儿出了问题，后头把起点当终点了
-
-        int path_length = 4;
-        int path_length0 = plan.poses.size();
-        if (path_length0 > path_length) {
-            plan.poses.erase(plan.poses.end() - (path_length0 - path_length), plan.poses.end());
-        } else {
-            for (int i = 0; i < path_length - path_length0; i++)
-                plan.poses.push_back(plan.poses.back());
-        }
-
-        if (plan.poses.back().pose.position.x == endpoint_x && plan.poses.back().pose.position.y == endpoint_y)
-            arrived = true;
-
-//    printf("check arriv: curr%d%d start%d%d end%d%d des%d%d xy%d%d\n", plan.poses.back().pose.position.x,
-//           plan.poses.back().pose.position.y, startpoint_x,
-//           startpoint_y, endpoint_x, endpoint_y, des_x, des_y, x, y);
-        ROS_WARN_STREAM("check arriv: curr" << plan.poses.back().pose.position.x << plan.poses.back().pose.position.y
-                                            << " start" << startpoint_x <<
-                                            startpoint_y << " end" << endpoint_x << endpoint_y << " des" << des_x
-                                            << des_y << " xy" << x << y);
-
-        // return tpath.
-        Tpoint tpoint;
-        for (int i = 0; i < plan.poses.size(); i++) {
-            tpoint.robot_id = this->robot_id;
-            tpoint.x = plan.poses.at(i).pose.position.x;
-            tpoint.y = plan.poses.at(i).pose.position.y;
-            tpoint.t = i * DISTANCE;
-            group_ptr->tpath.push_back(tpoint);
-        }
     } else {
         geometry_msgs::PoseStamped point;
         point.pose.position.x = startpoint_x;
         point.pose.position.y = startpoint_y;
         plan.poses.push_back(point);
 
-        reverse(plan.poses.begin(), plan.poses.end()); //TODO 估计是这儿出了问题，后头把起点当终点了
-
-        int path_length = 4;
-        int path_length0 = plan.poses.size();
-        if (path_length0 > path_length) {
-            plan.poses.erase(plan.poses.end() - (path_length0 - path_length), plan.poses.end());
-        } else {
-            for (int i = 0; i < path_length - path_length0; i++)
-                plan.poses.push_back(plan.poses.back());
-        }
-
-        if (plan.poses.back().pose.position.x == endpoint_x && plan.poses.back().pose.position.y == endpoint_y)
-            arrived = true;
-
-//    printf("check arriv: curr%d%d start%d%d end%d%d des%d%d xy%d%d\n", plan.poses.back().pose.position.x,
-//           plan.poses.back().pose.position.y, startpoint_x,
-//           startpoint_y, endpoint_x, endpoint_y, des_x, des_y, x, y);
-        ROS_WARN_STREAM("check arriv: curr" << plan.poses.back().pose.position.x << plan.poses.back().pose.position.y
-                                            << " start" << startpoint_x <<
-                                            startpoint_y << " end" << endpoint_x << endpoint_y << " des" << des_x
-                                            << des_y << " xy" << x << y);
-
-        // return tpath.
-        Tpoint tpoint;
-        for (int i = 0; i < plan.poses.size(); i++) {
-            tpoint.robot_id = this->robot_id;
-            tpoint.x = plan.poses.at(i).pose.position.x;
-            tpoint.y = plan.poses.at(i).pose.position.y;
-            tpoint.t = i * DISTANCE;
-            group_ptr->tpath.push_back(tpoint);
-        }
     }
 
+    reverse(plan.poses.begin(), plan.poses.end()); //TODO 估计是这儿出了问题，后头把起点当终点了
 
+    int path_length = 4;
+    int path_length0 = plan.poses.size();
+    if (path_length0 > path_length) {
+        plan.poses.erase(plan.poses.end() - (path_length0 - path_length), plan.poses.end());
+    } else {
+        for (int i = 0; i < path_length - path_length0; i++)
+            plan.poses.push_back(plan.poses.back());
+    }
 
-
-//
-//    if(isRootLoop == false)
-//    {
-//        i--;
-//        ROS_INFO_STREAM("How many steps in path: "<<i);
-//        plan.poses.resize(i);
-//        plan.header.frame_id="odom";
-//
-//        Node* tempnode;
-//        tempnode= &m_node[open->front().PtrToNode->location_y][open->front().PtrToNode->location_x];
-//
-//
-//        while(!(tempnode->location_x==last_endpoint_x && tempnode->location_y==last_endpoint_y))
-//        {
-//            ROS_INFO_STREAM("debug information3.");
-//            plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
-//            plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
-//            ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
-//            tempnode=tempnode->parent;
-//        }
-//
-//        plan.poses[--i].pose.position.x=last_endpoint_x*m_resolution;
-//        plan.poses[i].pose.position.y=last_endpoint_y*m_resolution;
-//        ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
-//
-//        ROS_INFO_STREAM("soon return.");
-//        return;
-//
-//    }
-//
-//
-//    ROS_INFO_STREAM("How many steps in path: "<<i);
-//    plan.poses.resize(i);
-//    plan.header.frame_id="odom";
-//
-//
-//    // construct path from map.
-//    Node* tempnode;
-//    tempnode= &m_node[open->front().PtrToNode->location_y][open->front().PtrToNode->location_x];
-//
-//
-//
-//    while(tempnode->parent->flag!=STARTPOINT)
-//    {
-//        ROS_INFO_STREAM("debug information1.");
-//        plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
-//        plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
-//        ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
-//
-//        tempnode=tempnode->parent;
-//    }
-//    ROS_INFO_STREAM("debug information.");
-//    plan.poses[--i].pose.position.x=tempnode->location_x*m_resolution;
-//    plan.poses[i].pose.position.y=tempnode->location_y*m_resolution;
-//    ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<tempnode->flag<<" "<<tempnode->value_f);
-//
-////    tempnode=tempnode->parent;
-//    ROS_INFO_STREAM("this is the first loop.");
-//    plan.poses[--i].pose.position.x=startpoint_x*m_resolution;
-//    plan.poses[i].pose.position.y=startpoint_y*m_resolution;
-//    ROS_INFO_STREAM("i= "<<i<<" point in path: "<<plan.poses[i].pose.position.x<<" "<<plan.poses[i].pose.position.y<<" "<<m_node[startpoint_y][startpoint_x].flag<<" "<<m_node[startpoint_y][startpoint_x].value_f);
-
-//    ROS_INFO_STREAM("path constructed.");
+    if (plan.poses.back().pose.position.x == endpoint_x && plan.poses.back().pose.position.y == endpoint_y)
+        arrived = true;
+    ROS_WARN_STREAM("check arriv: curr" << plan.poses.back().pose.position.x << plan.poses.back().pose.position.y
+                                        << " start" << startpoint_x <<
+                                        startpoint_y << " end" << endpoint_x << endpoint_y << " des" << des_x
+                                        << des_y << " xy" << x << y);
+    // return tpath.
+    Tpoint tpoint;
+    for (int i = 0; i < plan.poses.size(); i++) {
+        tpoint.robot_id = this->robot_id;
+        tpoint.x = plan.poses.at(i).pose.position.x;
+        tpoint.y = plan.poses.at(i).pose.position.y;
+        tpoint.t = i * DISTANCE;
+        group_ptr->tpath.push_back(tpoint);
+    }
 }
 
 // get map to planner class.
@@ -507,21 +411,15 @@ void AStartFindPath::de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr &ms
         }
     }
 
-//    ROS_INFO_STREAM("now test the map");
     for (int i = 0; i < m_height; i++) {
         for (int j = 0; j < m_width; j++) {
             int gray = msg->data[(i) * m_width + (j)];
-//            ROS_INFO_STREAM(gray<<" ");
         }
-//        ROS_INFO_STREAM("\n");
     }
-//    ROS_INFO_STREAM("now test the nodes");
     for (int i = 0; i < m_height; i++) {
         for (int j = 0; j < m_width; j++) {
             int gray = m_node[i][j].gray_val;
-//            ROS_INFO_STREAM("node "<<m_node[i][j].location_x<<" "<<m_node[i][j].location_y<<" and gray value "<<gray<<" ");
         }
-//        ROS_INFO_STREAM("\n");
     }
 }
 
@@ -545,9 +443,6 @@ void AStartFindPath::setTarget() {
 
     // set start.
     GetPos(x, y);
-//    ROS_INFO_STREAM("start and it's flag " << m_node[y][x].location_x << " " << m_node[y][x].location_y << " "
-//                                           << m_node[y][x].flag);
-
     // load map in rootloop.
 
     if (openlist->size()) {
@@ -610,21 +505,6 @@ deepCopyMnode(Node *msg1[], int m_height, int m_width, Node *msg2[], const nav_m
 
     for (int i = 0; i < m_height; i++) {
         for (int j = 0; j < m_width; j++) {
-//            if(msg2[i][j].parent!=NULL)
-//            {
-//
-//                int x = msg2[i][j].parent->location_y;
-//                int y = msg2[i][j].parent->location_x;
-//                msg1[i][j].flag = msg2[i][j].flag;
-//                msg1[i][j].value_g = msg2[i][j].value_g;
-//                msg1[i][j].value_h = msg2[i][j].value_h;
-//                msg1[i][j].value_f = msg2[i][j].value_f;
-//                msg1[i][j].parent = &msg1[y][x];
-//                ROS_INFO_STREAM("for m_node.yx"<<y<<" "<<x);
-//                ROS_INFO_STREAM("for parents msg2[y][x]"<<msg2[y][x].location_y<<" "<<msg1[y][x].location_x);
-//                ROS_INFO_STREAM("for parents msg1[y][x]"<<msg1[y][x].location_y<<" "<<msg1[y][x].location_x);
-//            }
-
             if (msg2[i][j].flag == 4 || msg2[i][j].flag == 5) {
                 int x = msg2[i][j].location_x;
                 int y = msg2[i][j].location_y;
