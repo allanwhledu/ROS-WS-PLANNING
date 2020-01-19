@@ -88,7 +88,8 @@ bool AStartFindPath::IsAvailable(int x, int y, int time) {
         return false;
 
     for (auto it = group_ptr->tpath.begin(); it != group_ptr->tpath.end(); it++) {
-        if (x == it->x && y == it->y && time == it->t) {
+        // this is not very good if
+        if ((x == it->x && y == it->y && time == it->t) || (x == it->x && y == it->y && time == (it->t)-10) || (x == it->x && y == it->y && time == (it->t)+10)) {
             ROS_WARN_STREAM("conflict in " << x << "," << y << "," << time << ".");
             return false;
         }
@@ -131,24 +132,24 @@ bool no_nullptr_in_close(std::list <ListNode> *close) {
     return sort_flag;
 }
 
-void output_nodelist(std::list <ListNode> *close, bool isopen) {
-    string open_or_close = isopen ? "open" : "close";
-    string nodelist_str = "Starting output " + open_or_close + " list: ";
-    auto it = ++close->begin();
-    while (it != close->end()) {
-        if (it->PtrToNode) {
-            nodelist_str +=
-                    "f" + intToString(it->PtrToNode->value_f) + "h" + intToString(it->PtrToNode->value_h) +
-                    "x" + intToString(it->PtrToNode->location_x) + "y" + intToString(it->PtrToNode->location_y) +
-                    " parent x" + intToString(it->PtrToNode->parent->location_x) + "y" +
-                    intToString(it->PtrToNode->parent->location_y) +
-                    " flag" + intToString(it->PtrToNode->flag) + ", ";
-        } else {
-            nodelist_str += "NULL PIONTER, ";
-        }
-        ++it;
-    }
-    ROS_WARN_STREAM(nodelist_str);
+//void output_nodelist(std::list <ListNode> *close, bool isopen) {
+//    string open_or_close = isopen ? "open" : "close";
+//    string nodelist_str = "Starting output " + open_or_close + " list: ";
+//    auto it = ++close->begin();
+//    while (it != close->end()) {
+//        if (it->PtrToNode) {
+//            nodelist_str +=
+//                    "f" + intToString(it->PtrToNode->value_f) + "h" + intToString(it->PtrToNode->value_h) +
+//                    "x" + intToString(it->PtrToNode->location_x) + "y" + intToString(it->PtrToNode->location_y) +
+//                    " parent x" + intToString(it->PtrToNode->parent->location_x) + "y" +
+//                    intToString(it->PtrToNode->parent->location_y) +
+//                    " flag" + intToString(it->PtrToNode->flag) + ", ";
+//        } else {
+//            nodelist_str += "NULL PIONTER, ";
+//        }
+//        ++it;
+//    }
+//    ROS_WARN_STREAM(nodelist_str);
 
 /*
     ROS_INFO_STREAM("now points in open: " << open->size());
@@ -163,7 +164,7 @@ void output_nodelist(std::list <ListNode> *close, bool isopen) {
                                               << " parent-> " << it->PtrToNode->parent->location_x << " "
                                               << it->PtrToNode->parent->location_y);
 */
-}
+//}
 
 
 void AStartFindPath::AddNode2Close(std::list <ListNode> *close, std::list <ListNode> *open) {
@@ -179,26 +180,30 @@ void AStartFindPath::AddNode2Close(std::list <ListNode> *close, std::list <ListN
     ListNode closenode;
     closenode.PtrToNode = open->front().PtrToNode;
 
+    // here keep out startpoint from close.
     if (closenode.PtrToNode->flag != STARTPOINT)
         close->push_back(closenode);
+
     open->pop_front();
     if (!close->empty()) {
+        ROS_WARN_STREAM("put to close and check...(startpoint would not into close)");
+        ROS_WARN_STREAM(close->back().PtrToNode->location_x<<close->back().PtrToNode->location_y<<" "<<close->back().PtrToNode->flag);
         if (no_nullptr_in_close(close)) {
             close->sort(Comp); //TODO: bug
 //            ROS_INFO_STREAM("end sort");
         }
-        output_nodelist(close, false);
+//        output_nodelist(close, false);
     }
 }
 
 // 不断将未探索点加入探索列表，最终得到路径
 bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::list <ListNode> *close) {
-    printf("%d\n", open->front().PtrToNode);
+//    printf("%d\n", open->front().PtrToNode);
     // 遍历openlist，并输出其中的所有点坐标
     int center_x = open->front().PtrToNode->location_x;
     int center_y = open->front().PtrToNode->location_y;
 
-    output_nodelist(open, true);
+//    output_nodelist(open, true);
 
     // 利用传入的center xy信息开始check
     AddNode2Close(close, open);
@@ -231,22 +236,22 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::
             // 加入到 openlist中
 //            ROS_WARN_STREAM("Add to openlist" << i);
 
-//            ROS_INFO_STREAM(
-//                    "add node " << m_node[new_y][new_x].location_x << "," << m_node[new_y][new_x].location_y << ","
-//                                << ", h:" << m_node[new_y][new_x].value_h << "," << ", g:"
-//                                << m_node[new_y][new_x].value_g << ", f:" << m_node[new_y][new_x].value_f);
+            ROS_INFO_STREAM(
+                    "add node " << m_node[new_y][new_x].location_x << "," << m_node[new_y][new_x].location_y << ","
+                                << ", h:" << m_node[new_y][new_x].value_h << "," << ", g:"
+                                << m_node[new_y][new_x].value_g << ", f:" << m_node[new_y][new_x].value_f);
             AddNode2Open(open, &m_node[new_y][new_x]);
         }
-//        else
-//            ROS_INFO_STREAM(
-//                    "will not add node " << m_node[new_y][new_x].location_x << "," << m_node[new_y][new_x].location_y
-//                                         << "," << ", g:" << m_node[new_y][new_x].value_g << ", f:"
-//                                         << m_node[new_y][new_x].value_f);
+        else
+            ROS_INFO_STREAM(
+                    "will not add node " << m_node[new_y][new_x].location_x << "," << m_node[new_y][new_x].location_y
+                                         << "," << ", g:" << m_node[new_y][new_x].value_g << ", f:"
+                                         << m_node[new_y][new_x].value_f);
     }
 
     // 重排openlist
     IsChangeParent(open, center_x, center_y);
-    ROS_WARN_STREAM("Check_and_Put_to_Openlist FALSE!");
+    ROS_WARN_STREAM("keep next checking...");
     return false;
 }
 
@@ -259,16 +264,25 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
 
     // circulate check...
     while (!Check_and_Put_to_Openlist(open, close)) {
+        printf("#计算路径 %d\n", i - 1);
+
         int length = 8;
-        if (!open->front().PtrToNode || !open->size() || !open || ++i > length) {
+        if (++i > length) {
+//            ROS_INFO_STREAM("completed segment path.");
+//            ROS_INFO_STREAM(i);
+            printf("no destination in length %d\n", i);
+            break;
+        }
+
+        if (!open->front().PtrToNode || !open->size() || !open) {
 //            ROS_INFO_STREAM("completed segment path.");
 //            ROS_INFO_STREAM(i);
             printf("计算路径失敗！！%d\n", i);
+            noPath = true;
             break;
         }
-        printf("#计算路径 %d\n", i - 1);
     }
-    printf("计算路径成功！！\n");
+    printf("计算路径 process over！\n");
 
 
     // count path step.
@@ -282,80 +296,127 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
         closeAndopen->push_back(*it);
     closeAndopen->sort(Comp);
 
-//    ROS_INFO_STREAM("now points in closeAndopen: " << closeAndopen->size());
-//    for (list<ListNode>::iterator it = closeAndopen->begin(); it != closeAndopen->end(); ++it)
-//        if (it->PtrToNode->parent != NULL)
-//            ROS_INFO_STREAM(
-//                    it->PtrToNode->location_x << " " << it->PtrToNode->location_y << " flag" << it->PtrToNode->flag
-//                                              << " h" << it->PtrToNode->value_h << " g" << it->PtrToNode->value_g
-//                                              << " f" << it->PtrToNode->value_f << " parent-> "
-//                                              << it->PtrToNode->parent->location_x << " "
-//                                              << it->PtrToNode->parent->location_y);
+    ROS_INFO_STREAM("now points in closeAndopen: " << closeAndopen->size());
+    if(!closeAndopen->empty())
+    {
+        for (list<ListNode>::iterator it = closeAndopen->begin(); it != closeAndopen->end(); ++it)
+            if (it->PtrToNode->parent != NULL)
+                ROS_INFO_STREAM(
+                        it->PtrToNode->location_x << " " << it->PtrToNode->location_y << " flag" << it->PtrToNode->flag
+                                                  << " h" << it->PtrToNode->value_h << " g" << it->PtrToNode->value_g
+                                                  << " f" << it->PtrToNode->value_f << " parent-> "
+                                                  << it->PtrToNode->parent->location_x << " "
+                                                  << it->PtrToNode->parent->location_y);
+        Node *forstepcount;
+        forstepcount = &m_node[closeAndopen->front().PtrToNode->location_y][closeAndopen->front().PtrToNode->location_x];
 
-    Node *forstepcount;
-    forstepcount = &m_node[closeAndopen->front().PtrToNode->location_y][closeAndopen->front().PtrToNode->location_x];
-
-    plan.header.frame_id = plan.header.frame_id = "odom";
-    string path = "path: ";
-    while (forstepcount->flag != STARTPOINT) {
-        path += ("x" + intToString(forstepcount->location_x) + "y" + intToString(forstepcount->location_y) + " ::flag: "
-                 + intToString(forstepcount->flag) + ",  ");
+        plan.header.frame_id = plan.header.frame_id = "odom";
+        string path = "path: ";
+        while (forstepcount->flag != STARTPOINT) {
+            path += ("x" + intToString(forstepcount->location_x) + "y" + intToString(forstepcount->location_y) + " ::flag: "
+                     + intToString(forstepcount->flag) + ",  ");
 
 //        if (forstepcount->parent != NULL)
 //            path += ("px" + intToString(forstepcount->parent->location_x) + "py" + intToString(forstepcount->parent->location_y) + " ::pflag: "
 //                     + intToString(forstepcount->parent->flag) + ",  ");
 
+            geometry_msgs::PoseStamped point;
+            point.pose.position.x = forstepcount->location_x;
+            point.pose.position.y = forstepcount->location_y;
+
+//        ROS_INFO_STREAM("debug information1.");
+            if (forstepcount->parent == NULL) {
+//            ROS_INFO_STREAM("debug information2.");
+                break;
+            } else {
+//            ROS_INFO_STREAM("debug information3.");
+                plan.poses.push_back(point);
+                forstepcount = forstepcount->parent;
+            }
+//        if (forstepcount->flag == STARTPOINT)
+//            ROS_INFO_STREAM("reaching start.");
+        }
+        // here is the startpoint.
+        path += ("x" + intToString(forstepcount->location_x) + "y" + intToString(forstepcount->location_y) + " ::flag: "
+                 + intToString(forstepcount->flag) + ",  ");
+
+        ROS_INFO_STREAM(path);
+
         geometry_msgs::PoseStamped point;
         point.pose.position.x = forstepcount->location_x;
         point.pose.position.y = forstepcount->location_y;
+        plan.poses.push_back(point);
 
-//        ROS_INFO_STREAM("debug information1.");
-        if (forstepcount->parent == NULL) {
-//            ROS_INFO_STREAM("debug information2.");
-            break;
-        } else {
-//            ROS_INFO_STREAM("debug information3.");
-            plan.poses.push_back(point);
-            forstepcount = forstepcount->parent;
+        reverse(plan.poses.begin(), plan.poses.end());//TODO 估计是这儿出了问题，后头把起点当终点了
+
+        int path_length = 4;
+        int path_length0 = plan.poses.size();
+        if (path_length0 > path_length) {
+            plan.poses.erase(plan.poses.end() - (path_length0 - path_length), plan.poses.end());
+        } else
+        {
+            for(int i = 0; i< path_length - path_length0; i++)
+                plan.poses.push_back(plan.poses.back());
         }
-//        if (forstepcount->flag == STARTPOINT)
-//            ROS_INFO_STREAM("reaching start.");
+
+        if (plan.poses.back().pose.position.x == endpoint_x && plan.poses.back().pose.position.y == endpoint_y)
+            arrived = true;
+
+//    printf("check arriv: curr%d%d start%d%d end%d%d des%d%d xy%d%d\n", plan.poses.back().pose.position.x,
+//           plan.poses.back().pose.position.y, startpoint_x,
+//           startpoint_y, endpoint_x, endpoint_y, des_x, des_y, x, y);
+        ROS_WARN_STREAM("check arriv: curr"<<plan.poses.back().pose.position.x<<plan.poses.back().pose.position.y<<" start"<<startpoint_x<<
+                                           startpoint_y<<" end"<<endpoint_x<<endpoint_y<<" des"<<des_x<<des_y<<" xy"<<x<<y);
+
+        // return tpath.
+        Tpoint tpoint;
+        for (int i = 0; i < plan.poses.size(); i++) {
+            tpoint.robot_id = this->robot_id;
+            tpoint.x = plan.poses.at(i).pose.position.x;
+            tpoint.y = plan.poses.at(i).pose.position.y;
+            tpoint.t = i * DISTANCE;
+            group_ptr->tpath.push_back(tpoint);
+        }
+    } else
+    {
+        geometry_msgs::PoseStamped point;
+        point.pose.position.x = startpoint_x;
+        point.pose.position.y = startpoint_y;
+        plan.poses.push_back(point);
+
+        reverse(plan.poses.begin(), plan.poses.end());//TODO 估计是这儿出了问题，后头把起点当终点了
+
+        int path_length = 4;
+        int path_length0 = plan.poses.size();
+        if (path_length0 > path_length) {
+            plan.poses.erase(plan.poses.end() - (path_length0 - path_length), plan.poses.end());
+        } else
+        {
+            for(int i = 0; i< path_length - path_length0; i++)
+                plan.poses.push_back(plan.poses.back());
+        }
+
+        if (plan.poses.back().pose.position.x == endpoint_x && plan.poses.back().pose.position.y == endpoint_y)
+            arrived = true;
+
+//    printf("check arriv: curr%d%d start%d%d end%d%d des%d%d xy%d%d\n", plan.poses.back().pose.position.x,
+//           plan.poses.back().pose.position.y, startpoint_x,
+//           startpoint_y, endpoint_x, endpoint_y, des_x, des_y, x, y);
+        ROS_WARN_STREAM("check arriv: curr"<<plan.poses.back().pose.position.x<<plan.poses.back().pose.position.y<<" start"<<startpoint_x<<
+                                           startpoint_y<<" end"<<endpoint_x<<endpoint_y<<" des"<<des_x<<des_y<<" xy"<<x<<y);
+
+        // return tpath.
+        Tpoint tpoint;
+        for (int i = 0; i < plan.poses.size(); i++) {
+            tpoint.robot_id = this->robot_id;
+            tpoint.x = plan.poses.at(i).pose.position.x;
+            tpoint.y = plan.poses.at(i).pose.position.y;
+            tpoint.t = i * DISTANCE;
+            group_ptr->tpath.push_back(tpoint);
+        }
     }
-    // here is the startpoint.
-    path += ("x" + intToString(forstepcount->location_x) + "y" + intToString(forstepcount->location_y) + " ::flag: "
-             + intToString(forstepcount->flag) + ",  ");
 
-    ROS_INFO_STREAM(path);
 
-    geometry_msgs::PoseStamped point;
-    point.pose.position.x = forstepcount->location_x;
-    point.pose.position.y = forstepcount->location_y;
-    plan.poses.push_back(point);
-
-    reverse(plan.poses.begin(), plan.poses.end());//TODO 估计是这儿出了问题，后头把起点当终点了
-
-    int path_length = 4;
-    int path_length0 = plan.poses.size();
-    if (path_length0 > path_length) {
-        plan.poses.erase(plan.poses.end() - (path_length0 - path_length), plan.poses.end());
-    }
-
-    if (plan.poses.back().pose.position.x == endpoint_x && plan.poses.back().pose.position.y == endpoint_y)
-        arrived = true;
-
-    printf("check arriv: curr%d%d start%d%d end%d%d des%d%d xy%d%d\n", plan.poses.back().pose.position.x,
-           plan.poses.back().pose.position.y, startpoint_x,
-           startpoint_y, endpoint_x, endpoint_y, des_x, des_y, x, y);
-
-    // return tpath.
-    Tpoint tpoint;
-    for (int i = 0; i < plan.poses.size(); i++) {
-        tpoint.robot_id = this->robot_id;
-        tpoint.x = plan.poses.at(i).pose.position.x;
-        tpoint.y = plan.poses.at(i).pose.position.y;
-        tpoint.t = i * DISTANCE;
-        group_ptr->tpath.push_back(tpoint);
-    }
 
 
 //

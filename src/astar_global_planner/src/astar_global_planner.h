@@ -143,6 +143,8 @@ public:
 
     int feedback;
     int prior;
+
+    bool noPath = false;
 };
 
 

@@ -32,6 +32,7 @@ public:
     vector<AStartFindPath *> planners;
 
     int feedback = 9999;
+    bool noPath = false;
     vector <Tpoint> tpath;
 
     vector <nav_msgs::Path> pathes;
@@ -43,15 +44,15 @@ public:
     tree<planner_group>::iterator self_loc;
     tree<planner_group>::iterator child_loc;
 
-    void add_feedback_from_path(nav_msgs::Path path, int idx) {
+    void add_feedback_from_path(AStartFindPath* planner, int idx) {
         if (feedback == 9999) { feedback = 0; }
-        feedback += DistManhattan(endpoint_x.at(idx), endpoint_y.at(idx),
-                                  path.poses.back().pose.position.x,
-                                  path.poses.back().pose.position.y);
-    }
-
-    int get_feedback(int idx) {
-        return this->planners.at(idx)->feedback;
+        if(planner->noPath == true)
+        {
+            feedback += 10000;
+        } else
+            feedback += DistManhattan(endpoint_x.at(idx), endpoint_y.at(idx),
+                                      planner->plan.poses.back().pose.position.x,
+                                      planner->plan.poses.back().pose.position.y);
     }
 
     void get_start_and_goal(vector<int> sx, vector<int> sy, vector<int> ex, vector<int> ey) {

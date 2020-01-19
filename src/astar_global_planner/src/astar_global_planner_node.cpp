@@ -11,7 +11,7 @@ int robots_start_end_points[][4] = {
 //        {7, 4, 1, 2},
 };
 int num_robots = 2;
-int layer_depth = 2;
+int layer_depth = 4;
 
 std::vector<int> vlast_endpoint_x, vlast_endpoint_y;
 
@@ -36,6 +36,7 @@ grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null
     tree<planner_group>::iterator newpg;
     newpg = last_leaf->grow_new_leaf();
 //    ROS_INFO_STREAM("newpg got in grow tree.");
+    last_leaf->feedback += 10000;
 
     newpg->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
     //TODO: set_planner_group把startpoint给改了，改成currentpoint的位置
@@ -49,6 +50,7 @@ grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null
         newpg->planners.at(permti[i])->de_map_Callback(mapmsg);
 
         newpg->planners.at(permti[i])->setTarget();
+        newpg->print_tpath();
     }
 
     // 让pathes还是按照 机器人ID（0，1...） 顺序
@@ -56,20 +58,22 @@ grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null
         if (!newpg->planners.at(i)->plan.poses.empty()) {
             nav_msgs::Path new_path = newpg->planners.at(i)->plan;
             null_path.push_back(new_path);
-            (*newpg).add_feedback_from_path(new_path, i); //TODO: 是在这里吗？　还是应该在main函数里
+            (*newpg).add_feedback_from_path(newpg->planners.at(i), i); //TODO: 是在这里吗？　还是应该在main函数里
 //            ROS_INFO_STREAM("Got init_plan_segment in grow_tree.");
+        }
+        if((*newpg).planners.at(i)->noPath == true)
+        {
+            (*newpg).noPath = true;
         }
     }
     for (int i = 0; i < num_robots; ++i) {
         newpg->pathes.push_back(newpg->get_planner_by_robot_ID(i)->plan);
-        newpg->print_tpath();
     }
     return newpg;
 }
 
 void print_open_planner_group_vec(vector <tree<planner_group>::iterator> &open_planner_group_vec) {
     for (int i = 0; i < open_planner_group_vec.size(); ++i) {
-
         ROS_WARN_STREAM("feedback: " << open_planner_group_vec.at(i)->feedback);
     }
 }
@@ -157,13 +161,14 @@ int main(int argc, char **argv) {
                 for (int idx = 0; idx < num_robots; ++idx) {
                     init_planner_group->planners.at(permt[j][idx])->de_map_Callback(mapmsg);
                     init_planner_group->planners.at(permt[j][idx])->setTarget();
+                    init_planner_group->print_tpath();
 //                if (init_planner_group->planners.empty())
 //                    ROS_INFO_STREAM("planners init failed.");
                     if (!init_planner_group->planners.at(permt[j][idx])->plan.poses.empty()) {
-                        nav_plans[idx].publish(
-                                init_planner_group->planners.at(permt[j][idx])->plan); //TODO check 下标
+//                        nav_plans[idx].publish(
+//                                init_planner_group->planners.at(permt[j][idx])->plan); //TODO check 下标
                         init_planner_group->add_feedback_from_path(
-                                init_planner_group->planners.at(permt[j][idx])->plan,
+                                init_planner_group->planners.at(permt[j][idx]),
                                 permt[j][idx]);
                     }
                 }
@@ -171,20 +176,39 @@ int main(int argc, char **argv) {
                     init_planner_group->pathes.push_back(init_planner_group->get_planner_by_robot_ID(idx)->plan);
                     ROS_INFO_STREAM("Got init_plan_segment in main.");
                 }
-                init_planner_group->print_tpath();
             }
             init_already = true;
         }
         ROS_INFO_STREAM("INIT DONE");
 
+        vector <tree<planner_group>::iterator> open_planner_group_vec;
 
-        for (int j = 0; j < permt.size(); ++j) {// 对每一个init_planner_group做一次树的扩展
-            vector <tree<planner_group>::iterator> open_planner_group_vec;
-            for (int k = 0; k < permt.size(); ++k) {
-                open_planner_group_vec.push_back(init_pg_locs.at(k));
-            }
-            tree<planner_group>::iterator last_planner_group = init_pg_locs.at(j);
-            ROS_WARN_STREAM("find the right init_planner_group.");
+        for (int k = 0; k < permt.size(); ++k) {
+            open_planner_group_vec.push_back(init_pg_locs.at(k));
+        }
+//        ROS_INFO_STREAM("INIT sort");
+//        sort_open_planner_group_vec(open_planner_group_vec);
+//        int count = 0;
+//        for (auto it = open_planner_group_vec.begin(); it != open_planner_group_vec.end(); ++it)
+//        {
+//            bool remove = false;
+//            for (int k = 0; k < permt.size(); ++k) {
+//                if((*it)->planners.at(k)->noPath == true)
+//                {
+//                    remove = true;
+//                }
+//            }
+//            if(remove == true)
+//            {
+//                open_planner_group_vec.erase(it);
+//                ROS_WARN_STREAM("remove pg "<<count);
+//            }
+//            count++;
+//        }
+
+//        for (int j = 0; j < permt.size(); ++j) {// 对每一个init_planner_group做一次树的扩展
+
+//            tree<planner_group>::iterator last_planner_group = init_pg_locs.at(j);
 
             //开始纵深扩展，树已经
 
@@ -198,11 +222,40 @@ int main(int argc, char **argv) {
             // .....(op6,7,8,9)..........
             // ..........................
             // ..........................
-
+            tree<planner_group>::iterator last_planner_group;
             for (int idx = 0; idx < layer_depth; ++idx) {
+                ROS_WARN_STREAM("finding the right planner_group."<<" and idx:"<<idx);
                 //TODO: sort open_planner_group_vec by feedback
                 sort_open_planner_group_vec(open_planner_group_vec);
-                last_planner_group = open_planner_group_vec.at(0); //last_planner_group is already sorted
+                // remove the dead pg.
+//                int count = 0;
+//                for (auto it = open_planner_group_vec.begin(); it != open_planner_group_vec.end(); ++it)
+//                {
+//                    bool remove = false;
+//                    for (int k = 0; k < permt.size(); ++k) {
+//                        if((*it)->planners.at(k)->noPath == true)
+//                        {
+//                            remove = true;
+//                        }
+//                    }
+//                    if(remove == true)
+//                    {
+//                        open_planner_group_vec.erase(it);
+//                        ROS_WARN_STREAM("remove pg "<<count);
+//                    }
+//                    count++;
+//                }
+//                sort_open_planner_group_vec(open_planner_group_vec);
+//                print_open_planner_group_vec(open_planner_group_vec);
+//                if(idx == 0)
+//                    last_planner_group = open_planner_group_vec.back(); //last_planner_group is already sorted
+//                if(idx == 1)
+//                    last_planner_group = open_planner_group_vec.front();
+//                if(idx == 3)
+//                    last_planner_group = open_planner_group_vec.back();
+//                if(idx == 4)
+//                    last_planner_group = open_planner_group_vec.front();
+                last_planner_group = open_planner_group_vec.front();
 
                 // 从feedback最小的一个pg开始扩展
                 vector <nav_msgs::Path> nullpaths;
@@ -232,8 +285,8 @@ int main(int argc, char **argv) {
                 }
                 ROS_WARN_STREAM(
                         "tree size: " << test.tr->size() << ", tree depth: " << test.tr->depth(last_planner_group));
-                ROS_WARN_STREAM(
-                        "current node: middle " << idx << ", outer: " << j);
+//                ROS_WARN_STREAM(
+//                        "current node: middle " << idx << ", outer: " << j);
 
 
                 //取feedback最小的一个pg，试探是否有planner已经到达终点，如果全部到达则发布path信息
@@ -256,7 +309,7 @@ int main(int argc, char **argv) {
 //                }
             }
             //至此，指定层数的扩展已经进行完毕
-        }
+//        }
 
         loop_count++;
 //
