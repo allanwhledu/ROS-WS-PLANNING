@@ -276,7 +276,7 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
 
 //        ROS_INFO_STREAM("completed segment path.");
 //        ROS_INFO_STREAM(i);
-        int length = 8;
+        int length = 4;
         if (++i > length) {
             printf("no destination in length %d\n", i);
             break;
@@ -355,7 +355,7 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
 
     reverse(plan.poses.begin(), plan.poses.end()); //TODO 估计是这儿出了问题，后头把起点当终点了
 
-    int path_length = 4;
+    int path_length = 2;
     int path_length0 = plan.poses.size();
     if (path_length0 > path_length) {
         plan.poses.erase(plan.poses.end() - (path_length0 - path_length), plan.poses.end());

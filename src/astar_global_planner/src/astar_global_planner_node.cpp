@@ -7,10 +7,10 @@ int m_height, m_width, m_resolution;
 int robots_start_end_points[][4] = {
         {1, 1, 7, 1},
         {7, 1, 1, 1},
-//        {7, 1, 1, 3},
+        {6, 5, 1, 3},
         {7, 4, 3, 1},
 };
-int num_robots = 3;
+int num_robots = 4;
 int layer_depth = 4;
 
 std::vector<int> vlast_endpoint_x, vlast_endpoint_y;
@@ -192,7 +192,7 @@ int main(int argc, char **argv) {
         // ..........................
 
         tree<planner_group>::iterator last_planner_group;
-        int num_nodes_to_expand = 10;
+        int num_nodes_to_expand = 30;
         for (int idx = 0; idx < num_nodes_to_expand; ++idx) {
             ROS_WARN_STREAM("finding the right planner_group." << " and idx:" << idx);
             //TODO: sort open_planner_group_vec by feedback
