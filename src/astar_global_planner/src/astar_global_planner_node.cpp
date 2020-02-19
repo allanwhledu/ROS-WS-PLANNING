@@ -1,17 +1,24 @@
 #include "multi_robot_astar_planner.h"
 
+// this is the main cpp.
+
 nav_msgs::OccupancyGrid::ConstPtr mapmsg;
 bool isCenterMapGet = false;
 int m_height, m_width, m_resolution;
 
+//int robots_start_end_points[][4] = {
+//        {1, 1, 7, 1},
+//        {7, 1, 1, 1},
+//        {6, 5, 1, 3},
+//        {7, 4, 3, 1},
+//};
+//int num_robots = 4;
+
 int robots_start_end_points[][4] = {
         {1, 1, 7, 1},
         {7, 1, 1, 1},
-        {6, 5, 1, 3},
-        {7, 4, 3, 1},
 };
-int num_robots = 4;
-int layer_depth = 4;
+int num_robots = 2;
 
 std::vector<int> vlast_endpoint_x, vlast_endpoint_y;
 

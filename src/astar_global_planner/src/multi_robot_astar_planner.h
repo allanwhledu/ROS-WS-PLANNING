@@ -11,6 +11,8 @@
 #include "utils.h"
 #include <string>
 
+// this class is for construct group-searching.
+
 using namespace std;
 
 #define ARR_LEN(array, length){ length =  sizeof(array) / sizeof(array[0]); }

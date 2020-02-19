@@ -23,6 +23,7 @@
 
 #include "multi_robot_astar_planner.h"
 
+//this class is for searching.
 
 using namespace std;
 
