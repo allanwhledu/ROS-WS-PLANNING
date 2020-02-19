@@ -118,12 +118,14 @@ public:
                 reverse(pointer_group->pathes.at(i).poses.begin(), pointer_group->pathes.at(i).poses.end());
                 fullpath.poses.insert(fullpath.poses.end(), pointer_group->pathes.at(i).poses.begin(),
                                       pointer_group->pathes.at(i).poses.end());
+                reverse(pointer_group->pathes.at(i).poses.begin(), pointer_group->pathes.at(i).poses.end());
                 pointer_group = pointer_group->parent_loc;
                 dep++;
             }
             reverse(pointer_group->pathes.at(i).poses.begin(), pointer_group->pathes.at(i).poses.end());
             fullpath.poses.insert(fullpath.poses.end(), pointer_group->pathes.at(i).poses.begin(),
                                   pointer_group->pathes.at(i).poses.end());
+            reverse(pointer_group->pathes.at(i).poses.begin(), pointer_group->pathes.at(i).poses.end());
             //                for(int i = 1; i < last_planner_group->pathes.size(); i++)
             //                {
             //                    fullpath.poses.insert(fullpath.poses.end(),last_planner_group->pathes.at(i).poses.begin(),last_planner_group->pathes.at(i).poses.end());
@@ -131,7 +133,7 @@ public:
 
             ROS_INFO_STREAM("dep: " << dep);
             ROS_INFO_STREAM("now we will pub full path...");
-            if (!published)
+            if (1)
                 for (auto j = 0; j<fullpath.poses.size(); j++)
                 {
                     ROS_INFO_STREAM("points in fullpath: " << fullpath.poses.at(j).pose.position.y<< " " << fullpath.poses.at(j).pose.position.x<<" "<<j);
