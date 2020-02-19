@@ -7,10 +7,10 @@ bool isCenterMapGet = false;
 int m_height, m_width, m_resolution;
 
 int robots_start_end_points[][4] = {
-        {1, 1, 7, 1},
-        {7, 1, 1, 1},
-        {6, 5, 1, 3},
-        {7, 4, 3, 1},
+        {1, 1, 9, 9},
+        {9, 9, 1, 1},
+        {5, 5, 1, 3},
+        {8, 5, 1, 9},
 };
 int num_robots = 4;
 
@@ -200,7 +200,7 @@ int main(int argc, char **argv) {
         // ..........................
 
         tree<planner_group>::iterator last_planner_group;
-        int num_nodes_to_expand = 30;
+        int num_nodes_to_expand = 120;
         for (int idx = 0; idx < num_nodes_to_expand; ++idx) {
             ROS_WARN_STREAM("finding the right planner_group." << " and idx:" << idx);
             //TODO: sort open_planner_group_vec by feedback
@@ -213,13 +213,18 @@ int main(int argc, char **argv) {
                 open_planner_group_vec.push_back(grow_tree(last_planner_group, nullpaths, permt[i]));
                 ROS_WARN_STREAM("grow_tree complete.");
                 //每长出一个sub pg，就放入open_planner_group_vec的末尾，并插入到tree
+                ROS_WARN_STREAM("debug 1");
                 test.tr->append_child(last_planner_group, open_planner_group_vec.back());
+                ROS_WARN_STREAM("debug 2");
                 //新长出来sub pg遍历其planner进行publish
                 bool all_arrived = true;
                 for (int k = 0; k < num_robots; ++k) {
-                    nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
+                    ROS_WARN_STREAM("debug 3");
+//                    nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
+                    ROS_WARN_STREAM("debug 4");
                     all_arrived &= open_planner_group_vec.back()->planners.at(permt[i][k])->arrived;
                 }
+
                 if (all_arrived) {
                     ROS_WARN_STREAM("ALL ARRIVED AND EXIT");
                     vector <nav_msgs::Path> fullpaths(num_robots);
