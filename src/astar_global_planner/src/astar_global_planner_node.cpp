@@ -6,19 +6,20 @@ nav_msgs::OccupancyGrid::ConstPtr mapmsg;
 bool isCenterMapGet = false;
 int m_height, m_width, m_resolution;
 
+int robots_start_end_points[][4] = {
+        {1, 1, 7, 1},
+        {7, 1, 1, 1},
+        {6, 5, 1, 3},
+        {7, 4, 3, 1},
+};
+int num_robots = 4;
+
 //int robots_start_end_points[][4] = {
 //        {1, 1, 7, 1},
 //        {7, 1, 1, 1},
 //        {6, 5, 1, 3},
-//        {7, 4, 3, 1},
 //};
-//int num_robots = 4;
-
-int robots_start_end_points[][4] = {
-        {1, 1, 7, 1},
-        {7, 1, 1, 1},
-};
-int num_robots = 2;
+//int num_robots = 3;
 
 std::vector<int> vlast_endpoint_x, vlast_endpoint_y;
 
