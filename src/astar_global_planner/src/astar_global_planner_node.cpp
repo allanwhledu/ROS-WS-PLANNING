@@ -1,4 +1,5 @@
 #include "multi_robot_astar_planner.h"
+#include <locale.h>
 
 // this is the main cpp.
 
@@ -7,12 +8,12 @@ bool isCenterMapGet = false;
 int m_height, m_width, m_resolution;
 
 int robots_start_end_points[][4] = {
-        {1, 1, 9, 9},
-        {9, 9, 1, 1},
-        {5, 5, 1, 3},
-        {8, 5, 1, 9},
+        {5, 4, 5, 1},
+        {1, 1, 9, 1},
+//        {5, 5, 1, 3},
+//        {8, 5, 1, 9},
 };
-int num_robots = 4;
+int num_robots = 2;
 
 //int robots_start_end_points[][4] = {
 //        {1, 1, 7, 1},
@@ -29,7 +30,7 @@ void center_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr &msg) {
     m_width = msg->info.width;
     m_resolution = msg->info.resolution;
     isCenterMapGet = true;
-    ROS_INFO_STREAM("get map.");
+    ROS_INFO_STREAM("已获得地图");
 }
 
 struct leaf {
@@ -48,23 +49,24 @@ grow_tree(tree<planner_group>::iterator last_leaf, vector <nav_msgs::Path> &null
 
     newpg->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
     //TODO: set_planner_group把startpoint给改了，改成currentpoint的位置
-    newpg->set_planner_group(num_robots, permti); //TODO 这地方卡住了
+    newpg->set_planner_group(num_robots, permti);
     if (newpg->planners.empty())
-        ROS_INFO_STREAM("planners init failed.");
+        ROS_INFO_STREAM("no...规划器组未得到正确填充!");
 
     for (int i = 0; i < num_robots; ++i) {
-        ROS_INFO_STREAM("# grow tree " << num_robots << " leaf!");
+        ROS_INFO_STREAM("执行本规划器组中，对应第" << i+1 << "个机器人的规划器!");
 //        ROS_INFO_STREAM("we can access the tr.planner.");
         newpg->planners.at(permti[i])->de_map_Callback(mapmsg);
         newpg->planners.at(permti[i])->setTarget();
-        if ((*newpg).planners.at(permti[i])->noPath == true) {
-            (*newpg).noPath = true;
-        }
+//        if ((*newpg).planners.at(permti[i])->noPath == true) {
+//            (*newpg).noPath = true;
+//        }
     }
-    if (!(*newpg).noPath)
-        newpg->print_tpath();
-    else
-        std::cout << "tpath: no path!" << endl;
+//    if (!(*newpg).noPath)
+//        newpg->print_tpath();
+//    else
+//        std::cout << "tpath: no path!" << endl;
+    newpg->print_tpath();
 
     // 让pathes还是按照 机器人ID（0，1...） 顺序
     for (int i = 0; i < num_robots; ++i) {
@@ -96,6 +98,7 @@ void sort_open_planner_group_vec(vector <tree<planner_group>::iterator> &open_pl
 
 // 节点主函数
 int main(int argc, char **argv) {
+    setlocale( LC_ALL, "" );
     ARR_LEN(robots_start_end_points, num_robots);
 
     ros::init(argc, argv, "astar_planner");
@@ -139,7 +142,7 @@ int main(int argc, char **argv) {
         }
     }
 
-    ROS_INFO_STREAM("solid multi_robot_planner.");
+    ROS_INFO_STREAM("开始实例化规划器组...");
 
     std::vector < AStartFindPath * > vec_planner;
 
@@ -148,12 +151,13 @@ int main(int argc, char **argv) {
     bool arrived = false;
     while ((ros::ok() && !arrived) && loop_count < 1) { //TODO
         ros::spinOnce();
-        ROS_INFO_STREAM("spin passed.");
+        ROS_INFO_STREAM("回调函数已调用.");
 
         // only init once
         if (!init_already) {
             for (int j = 0; j < permt.size(); ++j) {
-                ROS_INFO_STREAM("INIT_PG IDX:" << j);
+                ROS_WARN_STREAM("------------");
+                ROS_WARN_STREAM("填充root层的第"<<j+1<<"个规划器组");
                 tree<planner_group>::iterator init_planner_group = test.tr->child(test.top, j);
                 init_planner_group->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
                 init_planner_group->set_planner_group(num_robots, permt[j]);
@@ -163,13 +167,14 @@ int main(int argc, char **argv) {
                     init_planner_group->planners.at(permt[j][idx])->de_map_Callback(mapmsg);
                     init_planner_group->planners.at(permt[j][idx])->setTarget();
                     if (init_planner_group->planners.empty())
-                        ROS_INFO_STREAM("planners init failed.");
+                        ROS_INFO_STREAM("规划器并没有添加到当前规划器组中!");
                     if (!init_planner_group->planners.at(permt[j][idx])->plan.poses.empty()) {
                         init_planner_group->add_feedback_from_path(
                                 init_planner_group->planners.at(permt[j][idx]),
                                 permt[j][idx]);
                     }
                 }
+                ROS_INFO_STREAM("本规划器组规划已规划完成，tpath为：");
                 init_planner_group->print_tpath();
                 for (int idx = 0; idx < num_robots; ++idx) {
                     init_planner_group->pathes.push_back(init_planner_group->get_planner_by_robot_ID(idx)->plan);
@@ -178,7 +183,7 @@ int main(int argc, char **argv) {
             }
             init_already = true;
         }
-        ROS_INFO_STREAM("INIT DONE");
+        ROS_INFO_STREAM("root层的规划器组初始化成功.");
 
         vector <tree<planner_group>::iterator> open_planner_group_vec;
 
@@ -198,38 +203,40 @@ int main(int argc, char **argv) {
         // .....(op6,7,8,9)..........
         // ..........................
         // ..........................
-
+        ROS_WARN_STREAM("搜索树的root层已经搭建完成，接下来开始生长...");
         tree<planner_group>::iterator last_planner_group;
         int num_nodes_to_expand = 120;
         for (int idx = 0; idx < num_nodes_to_expand; ++idx) {
-            ROS_WARN_STREAM("finding the right planner_group." << " and idx:" << idx);
+            ROS_WARN_STREAM("正在搜索最优规划器组，本次为第"<< idx+1<<"次尝试.");
             //TODO: sort open_planner_group_vec by feedback
             sort_open_planner_group_vec(open_planner_group_vec);
             last_planner_group = open_planner_group_vec.front();
 
+            ROS_WARN_STREAM("最优规划器组已找到，其feedback值为： "<<last_planner_group->feedback);
             // 从feedback最小的一个pg开始扩展
+            ROS_INFO_STREAM("扩展最优规划器中...");
             vector <nav_msgs::Path> nullpaths;
             for (int i = 0; i < permt.size(); ++i) {
+
                 open_planner_group_vec.push_back(grow_tree(last_planner_group, nullpaths, permt[i]));
-                ROS_WARN_STREAM("grow_tree complete.");
+                ROS_INFO_STREAM("按照优先级的类型需要生成"<<permt.size()<<"个规划器组，已生成第"<<i+1<<"个规划器组");
                 //每长出一个sub pg，就放入open_planner_group_vec的末尾，并插入到tree
-                ROS_WARN_STREAM("debug 1");
+
                 test.tr->append_child(last_planner_group, open_planner_group_vec.back());
-                ROS_WARN_STREAM("debug 2");
+
                 //新长出来sub pg遍历其planner进行publish
                 bool all_arrived = true;
                 for (int k = 0; k < num_robots; ++k) {
-                    ROS_WARN_STREAM("debug 3");
+
 //                    nav_plans[k].publish(nullpaths[-1]); //TODO: 应该输出对当前机器人最优的路径　//TODO check 下标
-                    ROS_WARN_STREAM("debug 4");
+
                     all_arrived &= open_planner_group_vec.back()->planners.at(permt[i][k])->arrived;
                 }
 
                 if (all_arrived) {
-                    ROS_WARN_STREAM("ALL ARRIVED AND EXIT");
+                    ROS_WARN_STREAM("所有机器人已到达目标位置.");
                     vector <nav_msgs::Path> fullpaths(num_robots);
 
-                    ROS_WARN_STREAM("OKOK");
                     for (int i = 0; i < 100; i++) {
                         (*open_planner_group_vec.back()).publish_path(fullpaths, open_planner_group_vec.back(),
                                                                       nav_plans);

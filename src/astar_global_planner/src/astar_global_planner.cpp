@@ -190,8 +190,8 @@ void AStartFindPath::AddNode2Close(std::list <ListNode> *close, std::list <ListN
 
     open->pop_front();
     if (!close->empty()) {
-        ROS_WARN_STREAM("put to close and check...(startpoint would not into close)");
-        ROS_WARN_STREAM(close->back().PtrToNode->location_x << close->back().PtrToNode->location_y << " "
+        ROS_INFO_STREAM("put to close and check...(startpoint would not into close)");
+        ROS_INFO_STREAM(close->back().PtrToNode->location_x << close->back().PtrToNode->location_y << " "
                                                             << close->back().PtrToNode->flag);
         if (no_nullptr_in_close(close)) {
             close->sort(Comp); //TODO: bug
@@ -241,21 +241,22 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::
             // 加入到 openlist中
 //            ROS_WARN_STREAM("Add to openlist" << i);
 
-            ROS_INFO_STREAM(
-                    "add node " << m_node[new_y][new_x].location_x << "," << m_node[new_y][new_x].location_y << ","
-                                << ", h:" << m_node[new_y][new_x].value_h << "," << ", g:"
-                                << m_node[new_y][new_x].value_g << ", f:" << m_node[new_y][new_x].value_f);
+//            ROS_INFO_STREAM(
+//                    "add node " << m_node[new_y][new_x].location_x << "," << m_node[new_y][new_x].location_y << ","
+//                                << ", h:" << m_node[new_y][new_x].value_h << "," << ", g:"
+//                                << m_node[new_y][new_x].value_g << ", f:" << m_node[new_y][new_x].value_f);
             AddNode2Open(open, &m_node[new_y][new_x]);
-        } else
-            ROS_INFO_STREAM(
-                    "will not add node " << m_node[new_y][new_x].location_x << "," << m_node[new_y][new_x].location_y
-                                         << "," << ", g:" << m_node[new_y][new_x].value_g << ", f:"
-                                         << m_node[new_y][new_x].value_f);
+        }
+//        else
+//            ROS_INFO_STREAM(
+//                    "will not add node " << m_node[new_y][new_x].location_x << "," << m_node[new_y][new_x].location_y
+//                                         << "," << ", g:" << m_node[new_y][new_x].value_g << ", f:"
+//                                         << m_node[new_y][new_x].value_f);
     }
 
     // 重排openlist
     IsChangeParent(open, center_x, center_y);
-    ROS_WARN_STREAM("keep next checking...");
+    ROS_INFO_STREAM("keep next checking...");
     return false;
 }
 
@@ -365,13 +366,18 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
         for (int i = 0; i < path_length - path_length0; i++)
             plan.poses.push_back(plan.poses.back());
     }
-
+    ROS_INFO_STREAM("本次规划已完成，按照移动速度"<<path_length<<"来确认是否到达目标点中：");
+    ROS_INFO_STREAM("当前位置:" << plan.poses.back().pose.position.x << plan.poses.back().pose.position.y
+                                        << " 起点位置:" << startpoint_x <<
+                                        startpoint_y << " 终点位置:" << endpoint_x << endpoint_y);
     if (plan.poses.back().pose.position.x == endpoint_x && plan.poses.back().pose.position.y == endpoint_y)
+    {
+        ROS_INFO_STREAM("yes...已到达本规划器的终点.");
         arrived = true;
-    ROS_WARN_STREAM("check arriv: curr" << plan.poses.back().pose.position.x << plan.poses.back().pose.position.y
-                                        << " start" << startpoint_x <<
-                                        startpoint_y << " end" << endpoint_x << endpoint_y << " des" << des_x
-                                        << des_y << " xy" << x << y);
+    } else
+        ROS_INFO_STREAM("no...尚未到达本规划器的终点.");
+
+
     // return tpath.
     Tpoint tpoint;
     for (int i = 0; i < plan.poses.size(); i++) {
@@ -381,6 +387,15 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
         tpoint.t = i * DISTANCE;
         group_ptr->tpath.push_back(tpoint);
     }
+    if(plan.poses.empty())
+    {
+        tpoint.robot_id = this->robot_id;
+        tpoint.x = startpoint_x;
+        tpoint.y = startpoint_y;
+        tpoint.t = 0;
+        group_ptr->tpath.push_back(tpoint);
+    }
+    ROS_WARN_STREAM("结束本次规划-------------------------------");
 }
 
 // get map to planner class.

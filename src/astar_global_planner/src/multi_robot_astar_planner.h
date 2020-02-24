@@ -80,8 +80,16 @@ public:
                 init_planner->robot_id = i;
                 init_planner->startpoint_x = (*parent_loc).pathes.at(i).poses.back().pose.position.x;
                 init_planner->startpoint_y = (*parent_loc).pathes.at(i).poses.back().pose.position.y;
-                ROS_INFO_STREAM("got last currentpoint as now startpoint." << init_planner->startpoint_x
-                                                                           << init_planner->startpoint_y);
+                ROS_INFO_STREAM("获得当前位置作为本次规划的起点:" << init_planner->startpoint_x
+                                                                           <<" "<< init_planner->startpoint_y);
+
+                Tpoint tpoint;
+                tpoint.robot_id = i;
+                tpoint.x = (*parent_loc).pathes.at(i).poses.back().pose.position.x;
+                tpoint.y = (*parent_loc).pathes.at(i).poses.back().pose.position.y;
+                tpoint.t = 0;
+                this->tpath.push_back(tpoint);
+
             } else {
                 init_planner->robot_id = i;
                 init_planner->startpoint_x = startpoint_x[i];
@@ -162,7 +170,7 @@ public:
     void print_tpath() {
         std::cout << "tpath: ";
         for (auto &Tpoint : tpath)
-            std::cout << "[id " << Tpoint.robot_id << " xy " << Tpoint.x << Tpoint.y << " t" << Tpoint.t << "] ,";
+            std::cout << "[id-" << Tpoint.robot_id << " p:" << Tpoint.x <<" "<< Tpoint.y << " t:" << Tpoint.t << "] ,";
         std::cout << endl;
     }
 
