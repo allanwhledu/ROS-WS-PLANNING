@@ -205,7 +205,7 @@ int main(int argc, char **argv) {
         // ..........................
         ROS_WARN_STREAM("搜索树的root层已经搭建完成，接下来开始生长...");
         tree<planner_group>::iterator last_planner_group;
-        int num_nodes_to_expand = 120;
+        int num_nodes_to_expand = 240;
         for (int idx = 0; idx < num_nodes_to_expand; ++idx) {
             ROS_WARN_STREAM("正在搜索最优规划器组，本次为第"<< idx+1<<"次尝试.");
             //TODO: sort open_planner_group_vec by feedback
