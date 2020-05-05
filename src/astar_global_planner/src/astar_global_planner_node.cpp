@@ -7,20 +7,23 @@ nav_msgs::OccupancyGrid::ConstPtr mapmsg;
 bool isCenterMapGet = false;
 int m_height, m_width, m_resolution;
 
-int robots_start_end_points[][4] = {
-        {5, 4, 5, 1},
-        {1, 1, 9, 1},
-//        {5, 5, 1, 3},
-//        {8, 5, 1, 9},
-};
-int num_robots = 2;
-
 //int robots_start_end_points[][4] = {
-//        {1, 1, 7, 1},
-//        {7, 1, 1, 1},
-//        {6, 5, 1, 3},
+//        {5, 4, 5, 1},
+//        {1, 1, 9, 1},
+////        {5, 5, 1, 3},
+////        {8, 5, 1, 9},
 //};
-//int num_robots = 3;
+//int num_robots = 2;
+
+int robots_start_end_points[][4] = {
+        {1, 1, 9, 9},
+        {9, 9, 1, 1},
+        {9, 5, 3, 3},
+        {3, 3, 9, 5},
+        {8, 5, 1, 9},
+//        {1, 9, 8, 5},
+};
+int num_robots = 5;
 
 std::vector<int> vlast_endpoint_x, vlast_endpoint_y;
 
@@ -160,7 +163,7 @@ int main(int argc, char **argv) {
                 ROS_WARN_STREAM("填充root层的第"<<j+1<<"个规划器组");
                 tree<planner_group>::iterator init_planner_group = test.tr->child(test.top, j);
                 init_planner_group->get_start_and_goal(startpoint_x, startpoint_y, endpoint_x, endpoint_y);
-                init_planner_group->set_planner_group(num_robots, permt[j]);
+                init_planner_group->set_planner_group(num_robots, permt[j]); //这里的j控制了优先级序列的生成
 
                 init_pg_locs.push_back(init_planner_group);
                 for (int idx = 0; idx < num_robots; ++idx) {
@@ -205,8 +208,8 @@ int main(int argc, char **argv) {
         // ..........................
         ROS_WARN_STREAM("搜索树的root层已经搭建完成，接下来开始生长...");
         tree<planner_group>::iterator last_planner_group;
-        int num_nodes_to_expand = 240;
-        for (int idx = 0; idx < num_nodes_to_expand; ++idx) {
+        int max_iter_num = 120;
+        for (int idx = 0; idx < max_iter_num; ++idx) {
             ROS_WARN_STREAM("正在搜索最优规划器组，本次为第"<< idx+1<<"次尝试.");
             //TODO: sort open_planner_group_vec by feedback
             sort_open_planner_group_vec(open_planner_group_vec);
@@ -218,7 +221,7 @@ int main(int argc, char **argv) {
             vector <nav_msgs::Path> nullpaths;
             for (int i = 0; i < permt.size(); ++i) {
 
-                open_planner_group_vec.push_back(grow_tree(last_planner_group, nullpaths, permt[i]));
+                open_planner_group_vec.push_back(grow_tree(last_planner_group, nullpaths, permt[i])); //这里的i控制了优先级序列的生成
                 ROS_INFO_STREAM("按照优先级的类型需要生成"<<permt.size()<<"个规划器组，已生成第"<<i+1<<"个规划器组");
                 //每长出一个sub pg，就放入open_planner_group_vec的末尾，并插入到tree
 

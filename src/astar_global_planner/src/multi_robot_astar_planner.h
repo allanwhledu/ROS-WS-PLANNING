@@ -144,7 +144,7 @@ public:
             if (1)
                 for (auto j = 0; j<fullpath.poses.size(); j++)
                 {
-                    ROS_INFO_STREAM("points in fullpath: " << fullpath.poses.at(j).pose.position.y<< " " << fullpath.poses.at(j).pose.position.x<<" "<<j);
+                    ROS_INFO_STREAM("points in fullpath: " << fullpath.poses.at(j).pose.position.x<< " " << fullpath.poses.at(j).pose.position.y<<" "<<j);
                 }
 
             nav_plans[i].publish(fullpath);
