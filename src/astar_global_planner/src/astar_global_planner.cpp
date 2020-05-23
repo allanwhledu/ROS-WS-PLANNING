@@ -260,11 +260,11 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::
     return false;
 }
 
-bool check_tpath_valid(vector <Tpoint> &tpath) {
-    for (int i = 0; i < tpath.size(); ++i) {
-
-    }
-}
+//bool check_tpath_valid(vector <Tpoint> &tpath) {
+//    for (int i = 0; i < tpath.size(); ++i) {
+//
+//    }
+//}
 
 void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <ListNode> *close) {
     int i = 0;
