@@ -1,4 +1,4 @@
-#include "multi_robot_astar_planner.h"
+#include "planning_tree.h"
 #include <string>
 
 // this cpp is the set of function that used in process.
@@ -89,7 +89,7 @@ bool AStartFindPath::IsAvailable(int x, int y, int time) {
     if (m_node[y][x].flag == WALL || m_node[y][x].flag == STARTPOINT)
         return false;
 
-    for (auto it = group_ptr->tpath.begin(); it != group_ptr->tpath.end(); it++) {
+    for (auto it = leaf_ptr->tpath.begin(); it != leaf_ptr->tpath.end(); it++) {
         bool xy_conflict = x == it->x && y == it->y;
         // this is not very good if
         if (xy_conflict )
@@ -385,7 +385,7 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
         tpoint.x = plan.poses.at(i).pose.position.x;
         tpoint.y = plan.poses.at(i).pose.position.y;
         tpoint.t = i * DISTANCE;
-        group_ptr->tpath.push_back(tpoint);
+        leaf_ptr->tpath.push_back(tpoint);
     }
     if(plan.poses.empty())
     {
@@ -393,7 +393,7 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
         tpoint.x = startpoint_x;
         tpoint.y = startpoint_y;
         tpoint.t = 0;
-        group_ptr->tpath.push_back(tpoint);
+        leaf_ptr->tpath.push_back(tpoint);
     }
     ROS_WARN_STREAM("结束本次规划-------------------------------");
 }
@@ -432,9 +432,9 @@ void AStartFindPath::de_map_Callback(const nav_msgs::OccupancyGrid::ConstPtr &ms
 }
 
 void AStartFindPath::setTarget() {
-    int delay;
-    ros::param::get("~delay", delay);
-    ros::Duration(delay).sleep();
+//    int delay;
+//    ros::param::get("~delay", delay);
+//    ros::Duration(delay).sleep();
 
     // set target.
     des_x = endpoint_x;

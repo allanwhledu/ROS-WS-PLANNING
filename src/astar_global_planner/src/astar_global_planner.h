@@ -21,7 +21,7 @@
 #include <tf/LinearMath/Vector3.h>
 #include "tree.hh"
 
-#include "multi_robot_astar_planner.h"
+#include "planning_tree.h"
 
 //this class is for searching.
 
@@ -41,7 +41,7 @@ extern int m_height;
 extern int m_width;
 extern int m_resolution;
 
-//extern class planner_group;
+//extern class planning_leaf;
 
 
 struct Node {
@@ -69,7 +69,7 @@ struct ListNode {
 
 extern bool Comp(ListNode first, ListNode second);
 
-class planner_group;
+class planning_leaf;
 
 class AStartFindPath {
 public:
@@ -77,7 +77,7 @@ public:
     nav_msgs::Path plan;
     nav_msgs::Path Null_plan;
 
-    planner_group *group_ptr;
+    planning_leaf *leaf_ptr;
 
     Node **m_node;
 

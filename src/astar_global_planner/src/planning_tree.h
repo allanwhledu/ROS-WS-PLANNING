@@ -24,14 +24,14 @@ struct Tpoint {
     int t = 0;
 };
 
-class planner_group {
+class planning_leaf {
 public:
     vector<int> startpoint_x;
     vector<int> startpoint_y;
     vector<int> endpoint_x;
     vector<int> endpoint_y;
 
-    vector<AStartFindPath *> planners;
+    vector<AStartFindPath*> planners;
 
     int feedback = 9999;
     bool noPath = false;
@@ -41,11 +41,11 @@ public:
     vector <nav_msgs::Path> pathes;
 
 
-    tree<planner_group> *tree_ptr = nullptr;
-    tree<planner_group>::iterator top_loc;
-    tree<planner_group>::iterator parent_loc;
-    tree<planner_group>::iterator self_loc;
-    tree<planner_group>::iterator child_loc;
+    tree<planning_leaf> *tree_ptr = nullptr;
+    tree<planning_leaf>::iterator top_loc;
+    tree<planning_leaf>::iterator parent_loc;
+    tree<planning_leaf>::iterator self_loc;
+    tree<planning_leaf>::iterator child_loc;
 
     void add_feedback_from_path(AStartFindPath *planner, int idx) {
         if (feedback == 9999) { feedback = 0; }
@@ -65,23 +65,21 @@ public:
             endpoint_y.push_back(ey[i]);
         }
 
-        ROS_INFO_STREAM("pg pointer in s and g: " << this);
+        ROS_INFO_STREAM("pl pointer in s and g: " << this);
     }
 
 
-    void set_planner_group(int num_robots, vector<int> &permti) {
+    void set_planning_leaf(int num_robots, vector<int> &permti) {
         for (int i = 0; i < num_robots; ++i) {
-            AStartFindPath *init_planner;
-            init_planner = new AStartFindPath;
-//            ROS_INFO_STREAM("init planner completed.");
+            AStartFindPath *planner;
+            planner = new AStartFindPath;
 
             if (parent_loc != top_loc) {
-//                ROS_INFO_STREAM("getting last endpoint...");
-                init_planner->robot_id = i;
-                init_planner->startpoint_x = (*parent_loc).pathes.at(i).poses.back().pose.position.x;
-                init_planner->startpoint_y = (*parent_loc).pathes.at(i).poses.back().pose.position.y;
-                ROS_INFO_STREAM("获得当前位置作为本次规划的起点:" << init_planner->startpoint_x
-                                                                           <<" "<< init_planner->startpoint_y);
+                planner->robot_id = i;
+                planner->startpoint_x = (*parent_loc).pathes.at(i).poses.back().pose.position.x;
+                planner->startpoint_y = (*parent_loc).pathes.at(i).poses.back().pose.position.y;
+                ROS_INFO_STREAM("获得当前位置作为本次规划的起点:" << planner->startpoint_x
+                                                   << " " << planner->startpoint_y);
 
                 Tpoint tpoint;
                 tpoint.robot_id = i;
@@ -91,17 +89,18 @@ public:
                 this->tpath.push_back(tpoint);
 
             } else {
-                init_planner->robot_id = i;
-                init_planner->startpoint_x = startpoint_x[i];
-                init_planner->startpoint_y = startpoint_y[i];
+                planner->robot_id = i;
+                planner->startpoint_x = startpoint_x[i];
+                planner->startpoint_y = startpoint_y[i];
             }
-            init_planner->endpoint_x = endpoint_x[i];
-            init_planner->endpoint_y = endpoint_y[i];
-            ROS_INFO_STREAM("got destination." << init_planner->endpoint_x << init_planner->endpoint_y);
+            planner->endpoint_x = endpoint_x[i];
+            planner->endpoint_y = endpoint_y[i];
+            ROS_INFO_STREAM("got destination." << planner->endpoint_x << planner->endpoint_y);
 
-            init_planner->group_ptr = this;
-
-            this->planners.push_back(init_planner);
+            // 将本planner所在的leaf的指针存入planner中;
+            // 将本planner的指针存入所在leaf中;
+            planner->leaf_ptr = this;
+            this->planners.push_back(planner);
         }
 
     }
@@ -114,14 +113,14 @@ public:
     }
 
 
-    void publish_path(vector <nav_msgs::Path> &fullpaths, tree<planner_group>::iterator &last_planner_group,
+    void publish_path(vector <nav_msgs::Path> &fullpaths, tree<planning_leaf>::iterator &last_planner_group,
                       vector <ros::Publisher> &nav_plans) {
         for (int i = 0; i < (*last_planner_group).planners.size(); ++i) {
             ROS_WARN_STREAM("planners size: " << (*last_planner_group).planners.size());
             nav_msgs::Path fullpath = fullpaths.at(i);
             fullpath.header.frame_id = "odom";
             int dep = 0;
-            tree<planner_group>::iterator pointer_group = last_planner_group;
+            tree<planning_leaf>::iterator pointer_group = last_planner_group;
             while (pointer_group->parent_loc != pointer_group->top_loc) {
                 reverse(pointer_group->pathes.at(i).poses.begin(), pointer_group->pathes.at(i).poses.end());
                 fullpath.poses.insert(fullpath.poses.end(), pointer_group->pathes.at(i).poses.begin(),
@@ -152,9 +151,9 @@ public:
         published = true;
     }
 
-    tree<planner_group>::iterator grow_new_leaf() {
+    tree<planning_leaf>::iterator grow_new_leaf() {
         //init a planer_group
-        planner_group pg;
+        planning_leaf pg;
 
         child_loc = tree_ptr->append_child(self_loc, pg);
 
@@ -177,44 +176,46 @@ public:
 
 };
 
-class multi_robot_astar_planner {
+class planning_tree {
 public:
-    tree<planner_group> *tr;
-    tree<planner_group>::iterator top;
+    tree<planning_leaf> *tr;
+    tree<planning_leaf>::iterator top;
 
-    multi_robot_astar_planner() {
-        tr = new tree<planner_group>;
+    planning_tree() {
+        tr = new tree<planning_leaf>;
         ROS_INFO_STREAM("solidding the tree.");
         top = tr->begin();
         ROS_INFO_STREAM("top is the begin.");
     }
 
-    vector <tree<planner_group>::iterator> init_set_multi_robot_astar_planner(int permt_size) {
-        vector <tree<planner_group>::iterator> init_pg_locs;
+    vector <tree<planning_leaf>::iterator> init_set_multi_robot_astar_planner(int permt_size) {
+        vector <tree<planning_leaf>::iterator> init_pl_locs;
         for (int i = 0; i < permt_size; ++i) {
-            planner_group pg;
+            // 这里面tr是树,top是树的顶端,本次添加的pl是第一层树叶,通过循环permt_size次添加多个树叶
+            planning_leaf pl;
             ROS_INFO_STREAM("treeeeee: " << tr);
-            tree<planner_group>::iterator pg_loc = tr->append_child(top, pg);
+            tree<planning_leaf>::iterator pl_locs = tr->append_child(top, pl);
+
             // so the appen_child is a deep copy!
             // and will not print out the solid process's msg.
 
-            (*pg_loc).tree_ptr = tr;
-            (*pg_loc).top_loc = top;
-            (*pg_loc).self_loc = pg_loc;
-            (*pg_loc).parent_loc = tr->parent(pg_loc);
-            init_pg_locs.push_back(pg_loc);
+            (*pl_locs).tree_ptr = tr;
+            (*pl_locs).top_loc = top;
+            (*pl_locs).self_loc = pl_locs;
+            (*pl_locs).parent_loc = tr->parent(pl_locs);
+            init_pl_locs.push_back(pl_locs);
         }
-        return init_pg_locs;
+        return init_pl_locs;
     }
 
 };
 
 
-inline void sort_vector_ascend(vector <tree<planner_group>::iterator> open_planner_group_vec) {
+inline void sort_vector_ascend(vector <tree<planning_leaf>::iterator> open_planner_group_vec) {
 
 }
 
-inline bool feedback_smaller_than(tree<planner_group>::iterator &pg, tree<planner_group>::iterator &pg_other) {
+inline bool feedback_smaller_than(tree<planning_leaf>::iterator &pg, tree<planning_leaf>::iterator &pg_other) {
     return pg->feedback < pg_other->feedback;
 }
 
