@@ -72,7 +72,7 @@ void AStartFindPath::IsChangeParent(std::list <ListNode> *open, int center_x, in
         int new_y = center_y + direction[i][1];
         if (new_x >= 0 && new_y >= 0 && new_y < m_height && new_x < m_width && IsInOpenList(new_x, new_y)) {
             if (m_node[new_y][new_x].value_g > m_node[center_y][center_x].value_g + 10) {
-                ROS_INFO_STREAM("changing parents.");
+//                ROS_INFO_STREAM("changing parents.");
                 m_node[new_y][new_x].parent = &m_node[center_y][center_x];
                 m_node[new_y][new_x].value_g = m_node[center_y][center_x].value_g + 10;
             }
@@ -173,7 +173,7 @@ bool no_nullptr_in_close(std::list <ListNode> *close) {
 
 void AStartFindPath::AddNode2Close(std::list <ListNode> *close, std::list <ListNode> *open) {
     if (!open->size() || !open->front().PtrToNode) {
-        ROS_INFO_STREAM("no data in openlist!");
+//        ROS_INFO_STREAM("no data in openlist!");
         return;
     }
 
@@ -190,9 +190,9 @@ void AStartFindPath::AddNode2Close(std::list <ListNode> *close, std::list <ListN
 
     open->pop_front();
     if (!close->empty()) {
-        ROS_INFO_STREAM("put to close and check...(startpoint would not into close)");
-        ROS_INFO_STREAM(close->back().PtrToNode->location_x << close->back().PtrToNode->location_y << " "
-                                                            << close->back().PtrToNode->flag);
+//        ROS_INFO_STREAM("put to close and check...(startpoint would not into close)");
+//        ROS_INFO_STREAM(close->back().PtrToNode->location_x << close->back().PtrToNode->location_y << " "
+//                                                            << close->back().PtrToNode->flag);
         if (no_nullptr_in_close(close)) {
             close->sort(Comp); //TODO: bug
 //            ROS_INFO_STREAM("end sort");
@@ -213,10 +213,10 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::
     // 利用传入的center xy信息开始check
     AddNode2Close(close, open);
 
-    ROS_INFO_STREAM(
-            "checking point " << m_node[center_y][center_x].location_x << "," << m_node[center_y][center_x].location_y
-                              << "," << ", g:" << m_node[center_y][center_x].value_g << ", f:"
-                              << m_node[center_y][center_x].value_f << ", flag:" << m_node[center_y][center_x].flag);
+//    ROS_INFO_STREAM(
+//            "checking point " << m_node[center_y][center_x].location_x << "," << m_node[center_y][center_x].location_y
+//                              << "," << ", g:" << m_node[center_y][center_x].value_g << ", f:"
+//                              << m_node[center_y][center_x].value_f << ", flag:" << m_node[center_y][center_x].flag);
     for (int i = 0; i < 4; i++) {
         int new_x = center_x + direction[i][0];
         int new_y = center_y + direction[i][1];
@@ -256,7 +256,7 @@ bool AStartFindPath::Check_and_Put_to_Openlist(std::list <ListNode> *open, std::
 
     // 重排openlist
     IsChangeParent(open, center_x, center_y);
-    ROS_INFO_STREAM("keep next checking...");
+//    ROS_INFO_STREAM("keep next checking...");
     return false;
 }
 
@@ -275,7 +275,7 @@ void AStartFindPath::FindDestinnation(std::list <ListNode> *open, std::list <Lis
 
     // circulate check...
     while (!Check_and_Put_to_Openlist(open, close)) {
-        printf("#计算路径 %d\n", i - 1);
+//        printf("#计算路径 %d\n", i - 1);
 
 //        ROS_INFO_STREAM("completed segment path.");
 //        ROS_INFO_STREAM(i);
